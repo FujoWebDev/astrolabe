@@ -21,7 +21,12 @@ export default {
               backgroundColor: "antiquewhite",
             }}
           >
-            <Story args={{ ...ctx.args, onTextChange: setCurrentContent }} />
+            <Story
+              args={{
+                ...ctx.args,
+                onTextChange: setCurrentContent,
+              }}
+            />
           </div>
           <div>
             <ReactJsonView src={currentContent as object} />

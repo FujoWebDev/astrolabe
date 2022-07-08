@@ -1,6 +1,12 @@
-import { EditorContent, JSONContent, useEditor } from "@tiptap/react";
+import {
+  EditorContent,
+  FloatingMenu,
+  JSONContent,
+  useEditor,
+} from "@tiptap/react";
 
 import Document from "@tiptap/extension-document";
+import { FloatingMenuOptions } from "./FloatingMenu";
 import HardBreak from "@tiptap/extension-hard-break";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
@@ -9,6 +15,7 @@ interface EditorProps {
   editable: boolean;
   initialContent: string;
   onTextChange: (newText: JSONContent) => void;
+  floatingMenuRef: React.MutableRefObject<HTMLDivElement | null>;
 }
 export const Editor = (props: EditorProps) => {
   const editor = useEditor({
@@ -28,5 +35,14 @@ export const Editor = (props: EditorProps) => {
       props.onTextChange(editor.getJSON());
     },
   });
-  return <EditorContent editor={editor} />;
+  return (
+    <>
+      <EditorContent editor={editor} />
+      {editor && (
+        <FloatingMenu editor={editor}>
+          <FloatingMenuOptions />
+        </FloatingMenu>
+      )}
+    </>
+  );
 };
