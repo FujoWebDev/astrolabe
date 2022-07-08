@@ -8,14 +8,14 @@ import {
 import Document from "@tiptap/extension-document";
 import { FloatingMenuOptions } from "./FloatingMenu";
 import HardBreak from "@tiptap/extension-hard-break";
+import { ImagePlugin } from "./plugins/Image";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 
 interface EditorProps {
   editable: boolean;
   initialContent: string;
-  onTextChange: (newText: JSONContent) => void;
-  floatingMenuRef: React.MutableRefObject<HTMLDivElement | null>;
+  onContentChange: (newContent: { json: JSONContent; html: string }) => void;
 }
 export const Editor = (props: EditorProps) => {
   const editor = useEditor({
@@ -25,6 +25,7 @@ export const Editor = (props: EditorProps) => {
       Text,
       // TODO: figure out how to set this up so it can be used on mobile
       HardBreak,
+      ImagePlugin,
     ],
     // TODO: this will likely need to be kept in sync with the props
     // through other means
@@ -32,7 +33,10 @@ export const Editor = (props: EditorProps) => {
       if (!editor) {
         return;
       }
-      props.onTextChange(editor.getJSON());
+      props.onContentChange({
+        json: editor.getJSON(),
+        html: editor.getHTML(),
+      });
     },
   });
   return (
@@ -40,7 +44,7 @@ export const Editor = (props: EditorProps) => {
       <EditorContent editor={editor} />
       {editor && (
         <FloatingMenu editor={editor}>
-          <FloatingMenuOptions />
+          <FloatingMenuOptions editor={editor} />
         </FloatingMenu>
       )}
     </>

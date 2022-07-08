@@ -1,9 +1,39 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
+import CodeMirror from "@uiw/react-codemirror";
 import { Editor } from "../src/Editor";
-import type { JSONContent } from "@tiptap/core";
 import React from "react";
 import ReactJsonView from "react-json-view";
+import { dracula } from "@uiw/codemirror-theme-dracula";
+import { html } from "@codemirror/lang-html";
+import htmlParsers from "prettier/parser-html";
+import prettier from "prettier/standalone";
+
+type EventDataFromProps<T, U extends string> = T extends Record<
+  U,
+  (props: infer V) => any
+>
+  ? V
+  : never;
+type EventHandlerData<T, U extends string> = T extends (props: infer V) => any
+  ? EventDataFromProps<V, U>
+  : any;
+
+const formatHtml = (html: string) => {
+  return prettier.format(
+    html
+      // linebreaks preceeded by text (that is not a closing tag) should break
+      // on their own line
+      .replaceAll(/[^>]<br( \/)?>/g, "\n<br />\n")
+      // linebreaks followed by text (that is not an opening tag) should move
+      // the text to the following line
+      .replaceAll(/<br( \/)?>[^<]/g, "<br />\n"),
+    {
+      parser: "html",
+      plugins: [htmlParsers],
+    }
+  );
+};
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -11,9 +41,10 @@ export default {
   component: Editor,
   decorators: [
     (Story, ctx) => {
-      const [currentContent, setCurrentContent] = React.useState<JSONContent>();
+      const [currentContent, setCurrentContent] =
+        React.useState<EventHandlerData<typeof Editor, "onContentChange">>();
       return (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
               maxWidth: "500px",
@@ -24,12 +55,23 @@ export default {
             <Story
               args={{
                 ...ctx.args,
-                onTextChange: setCurrentContent,
+                onContentChange: setCurrentContent,
               }}
             />
           </div>
           <div>
-            <ReactJsonView src={currentContent as object} />
+            <CodeMirror
+              value={
+                currentContent ? formatHtml(currentContent.html.trim()) : ""
+              }
+              height="200px"
+              extensions={[html()]}
+              theme={dracula}
+              editable={false}
+            />
+          </div>
+          <div>
+            <ReactJsonView src={currentContent ? currentContent.json : {}} />
           </div>
         </div>
       );
