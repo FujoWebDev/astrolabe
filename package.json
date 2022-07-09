@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:output-inspector": "rm -rf stories/utilities/OutputInspectorAddon/dist/ &&tsc && vite build --config stories/utilities/OutputInspectorAddon/vite.config.ts --mode development",
     "preview": "vite preview",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
