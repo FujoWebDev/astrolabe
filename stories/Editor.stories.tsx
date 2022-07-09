@@ -21,7 +21,6 @@ type EventHandlerData<T, U extends string> = T extends (props: infer V) => any
   : any;
 
 const formatHtml = (json: JSONContent) => {
-  console.log(json);
   const trimmedJson = {
     ...json,
     content: json.content?.map((item) => {
