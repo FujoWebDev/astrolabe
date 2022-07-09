@@ -15,28 +15,28 @@ import Text from "@tiptap/extension-text";
 interface EditorProps {
   editable: boolean;
   initialContent: string;
-  onContentChange: (newContent: { json: JSONContent; html: string }) => void;
+  onContentChange: (newContent: JSONContent) => void;
 }
+
+export const EXTENSIONS = [
+  Document,
+  Paragraph,
+  Text,
+  // TODO: figure out how to set this up so it can be used on mobile
+  HardBreak,
+  ImagePlugin,
+];
+
 export const Editor = (props: EditorProps) => {
   const editor = useEditor({
-    extensions: [
-      Document,
-      Paragraph,
-      Text,
-      // TODO: figure out how to set this up so it can be used on mobile
-      HardBreak,
-      ImagePlugin,
-    ],
+    extensions: EXTENSIONS,
     // TODO: this will likely need to be kept in sync with the props
     // through other means
     onUpdate: ({ editor }) => {
       if (!editor) {
         return;
       }
-      props.onContentChange({
-        json: editor.getJSON(),
-        html: editor.getHTML(),
-      });
+      props.onContentChange(editor.getJSON());
     },
   });
   return (
