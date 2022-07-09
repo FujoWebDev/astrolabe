@@ -19,7 +19,6 @@ export default {
           <div
             style={{
               maxWidth: "500px",
-              width: "40%",
               backgroundColor: "antiquewhite",
             }}
           >
