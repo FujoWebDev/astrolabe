@@ -12,7 +12,7 @@ import { ImagePlugin } from "./plugins/Image";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 
-interface EditorProps {
+export interface EditorProps {
   editable: boolean;
   initialContent: string;
   onContentChange: (newContent: JSONContent) => void;

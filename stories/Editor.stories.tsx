@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { EXTENSIONS, Editor } from "../src/Editor";
+import { EXTENSIONS, Editor, EditorProps } from "../src/Editor";
 import { JSONContent, generateHTML } from "@tiptap/core";
 
 import CodeMirror from "@uiw/react-codemirror";
@@ -20,8 +20,8 @@ type EventHandlerData<T, U extends string> = T extends (props: infer V) => any
   ? EventDataFromProps<V, U>
   : any;
 
-const formatHtml = (json: JSONContent) => {
-  const trimmedJson = {
+const sanitizeJson = (json: JSONContent) => {
+  return {
     ...json,
     content: json.content?.map((item) => {
       if (!item.attrs || !("src" in item.attrs)) {
@@ -37,7 +37,10 @@ const formatHtml = (json: JSONContent) => {
       };
     }),
   };
-  const html = generateHTML(trimmedJson, EXTENSIONS);
+};
+
+const formatHtml = (json: JSONContent) => {
+  const html = generateHTML(json, EXTENSIONS);
   return prettier
     .format(
       html
@@ -73,10 +76,13 @@ export default {
             }}
           >
             <Story
-              args={{
-                ...ctx.args,
-                onContentChange: setCurrentContent,
-              }}
+              args={
+                {
+                  ...ctx.args,
+                  onContentChange: (json) =>
+                    setCurrentContent(sanitizeJson(json)),
+                } as EditorProps
+              }
             />
           </div>
           <div>
@@ -88,9 +94,9 @@ export default {
               editable={false}
             />
           </div>
-          {/* <div>
-            <ReactJsonView src={currentContent ? currentContent.json : {}} />
-          </div> */}
+          <div>
+            <ReactJsonView src={currentContent ?? {}} />
+          </div>
         </div>
       );
     },
