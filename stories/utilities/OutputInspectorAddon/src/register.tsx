@@ -24,5 +24,6 @@ addons.register("output-inspector", () => {
         </AddonPanel>
       );
     },
+    paramKey: "outputInspector",
   });
 });

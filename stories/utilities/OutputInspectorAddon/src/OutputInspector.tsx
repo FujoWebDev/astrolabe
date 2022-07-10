@@ -72,7 +72,7 @@ export const OutputInspector = () => {
   }, []);
 
   if (!content) {
-    return <div></div>;
+    return <div>Add content to the editor to see a preview of its output.</div>;
   }
   return (
     <div>
