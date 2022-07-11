@@ -1,3 +1,5 @@
+import "./editor.css";
+
 import {
   EditorContent,
   FloatingMenu,
