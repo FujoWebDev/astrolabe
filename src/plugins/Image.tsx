@@ -7,7 +7,6 @@ import {
 import { PluginKey, TextSelection, Transaction } from "prosemirror-state";
 
 import { Node } from "@tiptap/core";
-import Paragraph from "@tiptap/extension-paragraph";
 import { renderToStaticMarkup } from "react-dom/server";
 
 export const ImagePluginKey = new PluginKey("ImagePlugin");
@@ -30,9 +29,9 @@ declare module "@tiptap/core" {
 }
 
 /**
- * Set selection to the node following the inserted image.
- * If the image is not followed by another node, add one after it then
- * set the selection.
+ * Return selection corresponding to the node following the inserted image.
+ * If the image is not followed by another node, add a text node after it then
+ * set the selection to it.
  *
  * Lifted from https://github.com/ueberdosis/tiptap/blob/main/packages/extension-horizontal-rule/src/horizontal-rule.ts#L51
  */
@@ -41,12 +40,12 @@ const maybeAddNewTrailingParagraph = (tr: Transaction) => {
   const posAfter = $to.end();
 
   if ($to.nodeAfter) {
-    return posAfter;
+    return TextSelection.create(tr.doc, $to.pos);
   } else {
     const node = $to.parent.type.contentMatch.defaultType?.create();
     if (node) {
       tr.insert(posAfter, node);
-      return posAfter + 1;
+      return TextSelection.create(tr.doc, posAfter + 1);
     }
   }
 };
@@ -168,10 +167,10 @@ export const ImagePlugin = Node.create<ImageOptions>({
                 // Request animation frame is necessary or the focus won't actually happen.
                 // see: https://github.com/ueberdosis/tiptap/issues/1520
                 setTimeout(() => {
-                  if (!editor.isDestroyed && !editor.isFocused) {
+                  if (!editor.isDestroyed && !editor.isFocused && selection) {
                     editor.view.focus();
-                    editor.commands.scrollIntoView();
                     editor.commands.setTextSelection(selection);
+                    editor.commands.scrollIntoView();
                   }
                 }, 50);
               }
