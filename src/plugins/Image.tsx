@@ -1,4 +1,4 @@
-import { EyeAlt, EyeOff } from "iconoir-react";
+import { EyeAlt, EyeOff, Trash } from "iconoir-react";
 import {
   NodeViewProps,
   NodeViewWrapper,
@@ -57,9 +57,11 @@ const Image = ({
   spoilers,
   editable,
   onToggleSpoilers,
+  onDeleteRequest,
 }: ImageOptions & {
   editable: boolean;
   onToggleSpoilers: (spoilers: boolean) => void;
+  onDeleteRequest: () => void;
 }): JSX.Element => {
   const image = (
     <img src={src} alt={alt} style={{ display: "block", maxWidth: "100%" }} />
@@ -69,12 +71,15 @@ const Image = ({
   }
   return (
     <div>
-      <div>
+      <div className="plugin-options">
         <button
           title="toggle spoilers"
           onClick={(e) => onToggleSpoilers(!spoilers)}
         >
           {spoilers ? <EyeAlt /> : <EyeOff />}
+        </button>
+        <button title="delete image" onClick={(e) => onDeleteRequest()}>
+          <Trash />
         </button>
       </div>
       {image}
@@ -102,6 +107,7 @@ const WrappedImage = (
             spoilers,
           });
         }}
+        onDeleteRequest={() => props.deleteNode?.()}
       />
     </NodeViewWrapper>
   );
