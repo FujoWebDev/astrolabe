@@ -29,7 +29,6 @@ const sanitizeJson = (json: JSONContent) => {
 };
 
 const formatHtml = (json: JSONContent, extensions: Extensions) => {
-  console.log(extensions);
   const html = generateHTML(json, extensions);
   return prettier
     .format(
