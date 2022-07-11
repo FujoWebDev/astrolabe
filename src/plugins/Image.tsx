@@ -6,6 +6,7 @@ import {
 } from "@tiptap/react";
 import { PluginKey, TextSelection, Transaction } from "prosemirror-state";
 
+import FloatingMenu from "@tiptap/extension-floating-menu";
 import { Node } from "@tiptap/core";
 import { renderToStaticMarkup } from "react-dom/server";
 
@@ -181,4 +182,8 @@ export const ImagePlugin = Node.create<ImageOptions>({
         },
     };
   },
+
+  // TODO: if we're in edit mode and the image is the last element of the editor, make
+  // sure that a paragraph stays at the end of it
+  // onTransaction() {}
 });
