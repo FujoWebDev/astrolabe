@@ -166,13 +166,13 @@ export const ImagePlugin = Node.create<ImageOptions>({
                 const selection = maybeAddNewTrailingParagraph(tr);
                 // Request animation frame is necessary or the focus won't actually happen.
                 // see: https://github.com/ueberdosis/tiptap/issues/1520
-                setTimeout(() => {
+                requestAnimationFrame(() => {
                   if (!editor.isDestroyed && !editor.isFocused && selection) {
                     editor.view.focus();
                     editor.commands.setTextSelection(selection);
                     editor.commands.scrollIntoView();
                   }
-                }, 50);
+                });
               }
 
               return true;
