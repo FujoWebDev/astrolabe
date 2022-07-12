@@ -1,3 +1,8 @@
+import {
+  BlockSettingsMenu,
+  Button,
+  ToggleButton,
+} from "./BlockSettingsMenu/BlockSettingsMenu";
 import { EyeAlt, EyeOff, Trash } from "iconoir-react";
 import {
   NodeViewProps,
@@ -6,7 +11,6 @@ import {
 } from "@tiptap/react";
 import { PluginKey, TextSelection, Transaction } from "prosemirror-state";
 
-import FloatingMenu from "@tiptap/extension-floating-menu";
 import { Node } from "@tiptap/core";
 import { renderToStaticMarkup } from "react-dom/server";
 
@@ -71,17 +75,18 @@ const Image = ({
   }
   return (
     <div>
-      <div className="plugin-options">
-        <button
+      <BlockSettingsMenu>
+        <ToggleButton
+          value={!!spoilers}
           title="toggle spoilers"
-          onClick={(e) => onToggleSpoilers(!spoilers)}
+          onValueChange={(nextValue) => onToggleSpoilers(nextValue)}
         >
           {spoilers ? <EyeAlt /> : <EyeOff />}
-        </button>
-        <button title="delete image" onClick={(e) => onDeleteRequest()}>
+        </ToggleButton>
+        <Button title="delete image" onClick={(e) => onDeleteRequest()}>
           <Trash />
-        </button>
-      </div>
+        </Button>
+      </BlockSettingsMenu>
       {image}
     </div>
   );
