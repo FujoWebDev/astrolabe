@@ -126,6 +126,8 @@ export const ImagePlugin = Node.create<ImageOptions>({
     return {
       src: {
         default: "",
+        parseHTML: (element) =>
+          element.querySelector("img")?.getAttribute("src"),
       },
       spoilers: {
         default: false,
