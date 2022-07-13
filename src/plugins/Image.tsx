@@ -4,6 +4,7 @@ import {
   ToggleButton,
 } from "./BlockSettingsMenu/BlockSettingsMenu";
 import { EyeAlt, EyeOff, Trash } from "iconoir-react";
+import { Node, mergeAttributes } from "@tiptap/core";
 import {
   NodeViewProps,
   NodeViewWrapper,
@@ -11,7 +12,6 @@ import {
 } from "@tiptap/react";
 import { PluginKey, TextSelection, Transaction } from "prosemirror-state";
 
-import { Node } from "@tiptap/core";
 import { renderToStaticMarkup } from "react-dom/server";
 
 export const ImagePluginKey = new PluginKey("ImagePlugin");
@@ -40,6 +40,8 @@ declare module "@tiptap/core" {
  *
  * Lifted from https://github.com/ueberdosis/tiptap/blob/main/packages/extension-horizontal-rule/src/horizontal-rule.ts#L51
  */
+// TODO: this might need to be automatically added in edit mode if we're preloading
+// existing content and the last element is an image.
 const maybeAddNewTrailingParagraph = (tr: Transaction) => {
   const { $to } = tr.selection;
   const posAfter = $to.end();
@@ -55,66 +57,75 @@ const maybeAddNewTrailingParagraph = (tr: Transaction) => {
   }
 };
 
-const Image = ({
-  src,
-  alt,
-  spoilers,
-  editable,
-  onToggleSpoilers,
-  onDeleteRequest,
-}: ImageOptions & {
-  editable: boolean;
-  onToggleSpoilers: (spoilers: boolean) => void;
-  onDeleteRequest: () => void;
-}): JSX.Element => {
-  const image = (
-    <img src={src} alt={alt} style={{ display: "block", maxWidth: "100%" }} />
-  );
-  if (!editable) {
-    return image;
-  }
+const ImageComponent = (props: ImageOptions) => {
   return (
-    <div>
-      <BlockSettingsMenu>
-        <ToggleButton
-          value={!!spoilers}
-          title="toggle spoilers"
-          onValueChange={(nextValue) => onToggleSpoilers(nextValue)}
-        >
-          {spoilers ? <EyeAlt /> : <EyeOff />}
-        </ToggleButton>
-        <Button title="delete image" onClick={(e) => onDeleteRequest()}>
-          <Trash />
-        </Button>
-      </BlockSettingsMenu>
-      {image}
-    </div>
+    <picture
+      data-type={PLUGIN_NAME}
+      data-spoilers={props.spoilers}
+      style={{ display: "block", maxWidth: "100%" }}
+    >
+      <img
+        src={props.src}
+        alt={props.alt}
+        style={{ display: "block", maxWidth: "100%" }}
+      />
+    </picture>
   );
 };
 
-const WrappedImage = (
-  props: Partial<NodeViewProps> &
-    Required<Pick<NodeViewProps, "node"> & { editable?: boolean }>
+const WrappedImageComponent = (
+  props: Partial<NodeViewProps> & Required<Pick<NodeViewProps, "node">>
 ) => {
   const attributes = props.node.attrs as ImageOptions;
   return (
-    <NodeViewWrapper
-      data-type={PLUGIN_NAME}
-      as="picture"
-      data-spoilers={attributes.spoilers}
-      style={{ display: "block", maxWidth: "100%" }}
-    >
-      <Image
-        {...attributes}
-        editable={props.editable ?? "true"}
-        onToggleSpoilers={(spoilers) => {
+    <NodeViewWrapper data-type={PLUGIN_NAME}>
+      <ImageComponent {...attributes} />
+    </NodeViewWrapper>
+  );
+};
+
+const EditableImageComponent = (
+  props: Partial<NodeViewProps> & Required<Pick<NodeViewProps, "node">>
+) => {
+  const attributes = props.node.attrs as ImageOptions;
+  return (
+    <NodeViewWrapper data-type={PLUGIN_NAME}>
+      <ImageOptionsMenu
+        spoilers={!!attributes.spoilers}
+        onToggleSpoilers={(spoilers) =>
           props.updateAttributes?.({
             spoilers,
-          });
-        }}
+          })
+        }
         onDeleteRequest={() => props.deleteNode?.()}
       />
+      <ImageComponent
+        src={attributes.src}
+        alt={attributes.alt}
+        spoilers={attributes.spoilers}
+      />
     </NodeViewWrapper>
+  );
+};
+
+const ImageOptionsMenu = (props: {
+  spoilers: boolean;
+  onToggleSpoilers: (spoilers: boolean) => void;
+  onDeleteRequest: () => void;
+}) => {
+  return (
+    <BlockSettingsMenu>
+      <ToggleButton
+        value={!!props.spoilers}
+        title="toggle spoilers"
+        onValueChange={props.onToggleSpoilers}
+      >
+        {props.spoilers ? <EyeAlt /> : <EyeOff />}
+      </ToggleButton>
+      <Button title="delete image" onClick={props.onDeleteRequest}>
+        <Trash />
+      </Button>
+    </BlockSettingsMenu>
   );
 };
 
@@ -141,7 +152,8 @@ export const ImagePlugin = Node.create<ImageOptions>({
   renderHTML({ node }) {
     const domRoot = document.createElement("div");
     domRoot.innerHTML = renderToStaticMarkup(
-      <WrappedImage node={node} editable={false} />
+      // @ts-expect-error
+      <ImageComponent {...node.attrs} />
     );
     const element = domRoot.firstElementChild;
     if (!element) {
@@ -151,7 +163,10 @@ export const ImagePlugin = Node.create<ImageOptions>({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(WrappedImage);
+    // TODO: file bugs to ask for ability to pass props to the components here?
+    return ReactNodeViewRenderer(
+      this.editor.isEditable ? EditableImageComponent : WrappedImageComponent
+    );
   },
 
   parseHTML() {
