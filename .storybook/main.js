@@ -1,3 +1,5 @@
+const linaria = require("@linaria/rollup").default;
+
 module.exports = {
   stories: [
     "../stories/**/*.stories.mdx",
@@ -15,5 +17,14 @@ module.exports = {
   },
   features: {
     storyStoreV7: true,
+  },
+  async viteFinal(config, { configType }) {
+    config.plugins = [
+      ...config.plugins,
+      linaria({
+        sourceMap: configType !== "production",
+      }),
+    ];
+    return config;
   },
 };

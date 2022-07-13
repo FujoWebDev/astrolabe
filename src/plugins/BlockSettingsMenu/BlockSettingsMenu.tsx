@@ -1,4 +1,5 @@
 import React from "react";
+import { css } from "@linaria/core";
 
 interface ToggleButtonProps {
   title: string;
@@ -55,9 +56,14 @@ export const ToggleButton = (props: ToggleButtonProps) => {
   );
 };
 
+const menuStyle = css`
+  display: flex;
+  background-color: red;
+`;
+
 export const BlockSettingsMenu = (props: BlockSettingsMenuProps) => {
   return (
-    <ul role="menubar" className="plugin-options">
+    <ul role="menubar" className={menuStyle}>
       {React.Children.map(props.children, (child) => (
         <li role="menuitem" key={child.props.title}>
           {child}

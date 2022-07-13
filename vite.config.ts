@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import linaria from "@linaria/rollup";
 import react from "@vitejs/plugin-react";
 const path = require("path");
 
@@ -19,5 +20,10 @@ export default defineConfig({
       },
     },
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    linaria({
+      sourceMap: process.env.NODE_ENV !== "production",
+    }),
+  ],
 });

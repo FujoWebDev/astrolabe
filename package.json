@@ -25,6 +25,10 @@
   "devDependencies": {
     "@babel/core": "^7.18.6",
     "@codemirror/lang-html": "^6.1.0",
+    "@linaria/rollup": "^3.0.0-beta.22",
+    "@linaria/core": "^3.0.0-beta.22",
+    "@linaria/react": "^3.0.0-beta.22",
+    "@linaria/shaker": "^3.0.0-beta.22",
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-essentials": "^6.5.9",
     "@storybook/addon-interactions": "^6.5.9",
