@@ -46,5 +46,6 @@ Editable.args = {
 
 export const ViewOnly = Template.bind({});
 ViewOnly.args = {
+  ...Editable.args,
   editable: false,
 };

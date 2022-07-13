@@ -33,6 +33,7 @@ export const Editor = (props: EditorProps) => {
   const editor = useEditor({
     extensions: EXTENSIONS,
     content: props.initialContent,
+    editable: props.editable,
     // TODO: this will likely need to be kept in sync with the props
     // through other means
     onUpdate: ({ editor }) => {
