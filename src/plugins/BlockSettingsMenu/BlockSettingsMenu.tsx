@@ -41,7 +41,7 @@ export const ToggleButton = (props: ToggleButtonProps) => {
   return (
     <label>
       <input
-        checked={props.value}
+        value={!!props.value ? "checked" : ""}
         type="checkbox"
         title={props.title}
         onChangeCapture={(e) => props.onValueChange(e.currentTarget.checked, e)}
