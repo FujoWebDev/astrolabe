@@ -41,6 +41,7 @@ export const Editable = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Editable.args = {
   editable: true,
+  initialContent: `<picture data-type="image"><img src="https://placekitten.com/200/300" /></picture>`,
 };
 
 export const ViewOnly = Template.bind({});
