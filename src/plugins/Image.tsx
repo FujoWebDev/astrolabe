@@ -10,8 +10,9 @@ import {
   NodeViewWrapper,
   ReactNodeViewRenderer,
 } from "@tiptap/react";
-import { PluginKey, TextSelection, Transaction } from "prosemirror-state";
 
+import { PluginKey } from "prosemirror-state";
+import { goToTrailingPragraph } from "./utils";
 import { renderToStaticMarkup } from "react-dom/server";
 
 export const ImagePluginKey = new PluginKey("ImagePlugin");
@@ -32,30 +33,6 @@ declare module "@tiptap/core" {
     };
   }
 }
-
-/**
- * Return selection corresponding to the node following the inserted image.
- * If the image is not followed by another node, add a text node after it then
- * set the selection to it.
- *
- * Lifted from https://github.com/ueberdosis/tiptap/blob/main/packages/extension-horizontal-rule/src/horizontal-rule.ts#L51
- */
-// TODO: this might need to be automatically added in edit mode if we're preloading
-// existing content and the last element is an image.
-const maybeAddNewTrailingParagraph = (tr: Transaction) => {
-  const { $to } = tr.selection;
-  const posAfter = $to.end();
-
-  if ($to.nodeAfter) {
-    return TextSelection.create(tr.doc, $to.pos);
-  } else {
-    const node = $to.parent.type.contentMatch.defaultType?.create();
-    if (node) {
-      tr.insert(posAfter, node);
-      return TextSelection.create(tr.doc, posAfter + 1);
-    }
-  }
-};
 
 const ImageComponent = (props: ImageOptions) => {
   return (
@@ -190,22 +167,7 @@ export const ImagePlugin = Node.create<ImageOptions>({
                 ...props,
               },
             })
-            .command(({ tr, dispatch, editor }) => {
-              if (dispatch) {
-                const selection = maybeAddNewTrailingParagraph(tr);
-                // Request animation frame is necessary or the focus won't actually happen.
-                // see: https://github.com/ueberdosis/tiptap/issues/1520
-                requestAnimationFrame(() => {
-                  if (!editor.isDestroyed && !editor.isFocused && selection) {
-                    editor.view.focus();
-                    editor.commands.setTextSelection(selection);
-                    editor.commands.scrollIntoView();
-                  }
-                });
-              }
-
-              return true;
-            })
+            .command(goToTrailingPragraph)
             .run();
         },
     };
