@@ -1,6 +1,8 @@
+import { CommandProps, NodeViewProps } from "@tiptap/core";
 import { TextSelection, Transaction } from "prosemirror-state";
 
-import { CommandProps } from "@tiptap/core";
+import { NodeViewWrapper } from "@tiptap/react";
+import { renderToStaticMarkup } from "react-dom/server";
 
 /**
  * Return selection corresponding to the node following the inserted image.
@@ -45,4 +47,33 @@ export const goToTrailingPragraph = ({
   }
 
   return true;
+};
+
+export const withViewWrapper = <PluginOptions extends {}>(
+  pluginName: string,
+  Component: (props: PluginOptions) => JSX.Element
+) => {
+  return (
+    props: Partial<NodeViewProps> & Required<Pick<NodeViewProps, "node">>
+  ) => {
+    const attributes = props.node.attrs as PluginOptions;
+    return (
+      <NodeViewWrapper data-type={pluginName}>
+        <Component {...attributes} />
+      </NodeViewWrapper>
+    );
+  };
+};
+
+export const loadToDom = <PluginOptions extends {}>(
+  Component: (props: PluginOptions) => JSX.Element,
+  props: PluginOptions
+) => {
+  const domRoot = document.createElement("div");
+  domRoot.innerHTML = renderToStaticMarkup(<Component {...props} />);
+  const element = domRoot.firstElementChild;
+  if (!element) {
+    throw `No element returned when loading ${Component.name} to the dom.`;
+  }
+  return element;
 };
