@@ -48,5 +48,5 @@ export const Editable = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Editable.args = {
   editable: true,
-  initialContent: `<div data-type="tweet" data-src="https://twitter.com/horse_ebooks/status/218439593240956928"></div>`,
+  initialContent: `<article data-type="tweet" data-src="https://twitter.com/horse_ebooks/status/218439593240956928" />`,
 };

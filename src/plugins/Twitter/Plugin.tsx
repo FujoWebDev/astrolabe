@@ -59,7 +59,7 @@ export const TweetPlugin = Node.create<TweetOptions>({
   parseHTML() {
     return [
       {
-        tag: `div[data-type=${this.name}]`,
+        tag: `article[data-type=${this.name}]`,
       },
     ];
   },

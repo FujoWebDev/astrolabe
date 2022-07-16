@@ -87,7 +87,7 @@ const TweetOptionsMenu = (props: {
 
 export const TweetLoadingPlaceholder = (props: TweetOptions) => {
   return (
-    <div
+    <article
       data-type={PLUGIN_NAME}
       data-spoilers={props.spoilers}
       data-loading={true}
