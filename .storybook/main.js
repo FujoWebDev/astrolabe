@@ -18,6 +18,7 @@ module.exports = {
   features: {
     storyStoreV7: true,
   },
+  staticDirs: ["../stories/utilities/mocks/"],
   async viteFinal(config, { configType }) {
     config.plugins = [
       ...config.plugins,
