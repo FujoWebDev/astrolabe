@@ -42,6 +42,8 @@ export const FloatingMenuOptions = ({ editor }: { editor: Editor }) => {
             height: 0,
           }}
           onChange={handleFileLoadRequest(async (fileLoadPromise) => {
+            // TODO: we probably want to move this down to the plugin itself and use react-query for
+            // the loading
             const loadedPromise = await fileLoadPromise;
             // TODO: figure out ArrayBuffer type
             editor.commands.setImage({
@@ -61,7 +63,7 @@ export const FloatingMenuOptions = ({ editor }: { editor: Editor }) => {
           title="Add tweet"
           onClick={() =>
             editor.commands.addTweet({
-              src: "ajsdkald",
+              src: "https://twitter.com/horse_ebooks/status/218439593240956928",
             })
           }
         >
