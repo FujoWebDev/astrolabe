@@ -7,18 +7,29 @@ export const handlers = [
     "https://twitter.com/horse_ebooks/status/218439593240956928",
     (req, res, ctx) => {
       return res(
-        ctx.delay(1000),
+        ctx.delay(),
         ctx.status(200),
         ctx.json({
-          content: {
-            text: "eirika is too precious #FireEmblem https://t.co/RAx51Gf1lv",
-            created_at: "2022-07-14T20:04:38.000Z",
-          },
-          author: {
-            username: "Mari48240422",
-            profile_image_url:
-              "https://pbs.twimg.com/profile_images/1449659342756610049/rE2-GNUT_normal.jpg",
-            name: "🌿SeaSunSmasher | open comms",
+          // Playground link:
+          // https://oauth-playground.glitch.me/?id=findTweetsById&params=%28%27FH218439593240956928%27%7EJ7CB*cGated_at%2CA%27%7EexpansionHC.media_keyKAB.mIions.Ename*-%2C-.A%27%7Emedia7pGviewD%2Calt_text%2Ctype%2Curl%2CwFth%2CvariantKheight%27%7EE7profileD%27%29*%2Cin_Gply_to_E_F%2C-GfeGnced_Js.F7.fieldHAauthor_FB%2CIitiesCattachmIsD_image_urlEuserFidGreHs%21%27IentJtweetKs%2C%01KJIHGFEDCBA7-*_
+          data: [
+            {
+              id: "218439593240956928",
+              created_at: "2012-06-28T20:23:52.000Z",
+              author_id: "174958347",
+              text: "Everything happens so much",
+            },
+          ],
+          includes: {
+            users: [
+              {
+                profile_image_url:
+                  "https://pbs.twimg.com/profile_images/1096005346/1_normal.jpg",
+                username: "Horse_ebooks",
+                name: "Horse ebooks",
+                id: "174958347",
+              },
+            ],
           },
         })
       );
