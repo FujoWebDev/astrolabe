@@ -7,6 +7,8 @@ import { EyeAlt, EyeOff, Trash } from "iconoir-react";
 import { ImageOptions, PLUGIN_NAME } from "./Plugin";
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 
+import { css } from "@linaria/core";
+
 const ImageOptionsMenu = (props: {
   spoilers: boolean;
   onToggleSpoilers: (spoilers: boolean) => void;
@@ -28,9 +30,28 @@ const ImageOptionsMenu = (props: {
   );
 };
 
+const imageComponentClass = css`
+  picture img {
+    margin: 0 auto;
+  }
+  picture[data-spoilers="true"] {
+    position: relative;
+  }
+  picture[data-spoilers="true"]::after {
+    content: "\A \A Spoilers alert!!";
+    background-color: rgba(255, 0, 0, 0.3);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    white-space: pre;
+  }
+`;
+
 export const ImageComponent = (props: ImageOptions) => {
   return (
     <picture
+      className={imageComponentClass}
       data-type={PLUGIN_NAME}
       data-spoilers={props.spoilers}
       style={{ display: "block", maxWidth: "100%" }}
