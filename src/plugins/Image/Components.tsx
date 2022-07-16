@@ -34,18 +34,6 @@ const imageComponentClass = css`
   picture img {
     margin: 0 auto;
   }
-  picture[data-spoilers="true"] {
-    position: relative;
-  }
-  picture[data-spoilers="true"]::after {
-    content: "\A \A Spoilers alert!!";
-    background-color: rgba(255, 0, 0, 0.3);
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    white-space: pre;
-  }
 `;
 
 export const ImageComponent = (props: ImageOptions) => {

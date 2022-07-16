@@ -1,3 +1,16 @@
 .ProseMirror p {
   padding: 5px;
 }
+
+[data-spoilers="true"] {
+  position: relative;
+}
+[data-spoilers="true"]::after {
+  content: "\A \A Spoilers alert!!";
+  background-color: rgba(255, 0, 0, 0.3);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  white-space: pre;
+}

@@ -86,7 +86,14 @@ const TweetOptionsMenu = (props: {
 };
 
 export const TweetLoadingPlaceholder = (props: TweetOptions) => {
-  return <div data-type={PLUGIN_NAME}>Loading tweet</div>;
+  return (
+    <div
+      data-type={PLUGIN_NAME}
+      data-spoilers={props.spoilers}
+      data-loading={true}
+      data-src={props.src}
+    />
+  );
 };
 
 const Author = styled.div`
@@ -109,9 +116,9 @@ const Author = styled.div`
   }
 `;
 
-export const TweetComponent = (props: TweetData) => {
+export const TweetComponent = (props: TweetData & TweetOptions) => {
   return (
-    <article>
+    <article data-spoilers={props.spoilers}>
       <Author className="author">
         <img
           className="avatar"
@@ -153,7 +160,7 @@ export const EditableTweetComponent = (
           spoilers={attributes.spoilers}
         />
       ) : (
-        <TweetComponent {...data} />
+        <TweetComponent {...attributes} {...data} />
       )}
     </NodeViewWrapper>
   );
