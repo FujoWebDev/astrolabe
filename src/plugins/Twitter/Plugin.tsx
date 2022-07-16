@@ -36,10 +36,7 @@ export const TweetPlugin = Node.create<TweetOptions>({
     return {
       src: {
         default: "",
-        parseHTML: (element) =>
-          element
-            .querySelector(`div[data-type=${PLUGIN_NAME}]`)
-            ?.getAttribute("data-src"),
+        parseHTML: (element) => element.getAttribute("data-src"),
       },
       spoilers: {
         default: false,

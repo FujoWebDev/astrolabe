@@ -1,5 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { EXTENSIONS, Editor } from "../../src/Editor";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import React from "react";
 import { TweetComponent } from "../../src/plugins/Twitter/Components";
@@ -36,11 +37,16 @@ export default {
   ],
 } as ComponentMeta<typeof Editor>;
 
-const Template: ComponentStory<typeof Editor> = (args) => <Editor {...args} />;
+const queryClient = new QueryClient();
+const Template: ComponentStory<typeof Editor> = (args) => (
+  <QueryClientProvider client={queryClient}>
+    <Editor {...args} />
+  </QueryClientProvider>
+);
 
 export const Editable = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Editable.args = {
   editable: true,
-  initialContent: `<div data-type="tweet"></div>`,
+  initialContent: `<div data-type="tweet" data-src="https://twitter.com/horse_ebooks/status/218439593240956928"></div>`,
 };
