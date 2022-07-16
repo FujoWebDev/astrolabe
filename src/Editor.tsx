@@ -13,6 +13,7 @@ import HardBreak from "@tiptap/extension-hard-break";
 import { ImagePlugin } from "./plugins/Image";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
+import { TweetPlugin } from "./plugins/Twitter";
 
 export interface EditorProps {
   editable: boolean;
@@ -27,6 +28,7 @@ export const EXTENSIONS = [
   // TODO: figure out how to set this up so it can be used on mobile
   HardBreak,
   ImagePlugin,
+  TweetPlugin,
 ];
 
 export const Editor = (props: EditorProps) => {
