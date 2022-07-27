@@ -38,33 +38,41 @@ export default {
 } as ComponentMeta<typeof Editor>;
 
 const queryClient = new QueryClient();
-const Template: ComponentStory<typeof Editor> = (args) => (
+const Template: ComponentStory<
+  (props: Parameters<typeof Editor>[0] & { embedUrl?: string }) => JSX.Element
+> = (args) => (
   <QueryClientProvider client={queryClient}>
-    <Editor {...args} />
+    <Editor
+      {...args}
+      initialContent={
+        args.embedUrl
+          ? `<article data-type="oembed" data-src="${args.embedUrl}" />`
+          : args.initialContent
+      }
+    />
   </QueryClientProvider>
 );
 
-export const Editable = Template.bind({});
+export const Empty = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Editable.args = {
+Empty.args = {
   editable: true,
-  initialContent: `<article data-type="oembed" src="" />`,
 };
 
 export const Bandcamp = Template.bind({});
 Bandcamp.args = {
   editable: true,
-  initialContent: `<article data-type="oembed" data-src="https://thetwilightsad.bandcamp.com/album/oran-mor-2020" />`,
+  embedUrl: `https://thetwilightsad.bandcamp.com/album/oran-mor-2020`,
 };
 
 export const Pixiv = Template.bind({});
 Pixiv.args = {
   editable: true,
-  initialContent: `<article data-type="oembed" data-src="https://www.pixiv.net/en/artworks/83682624" />`,
+  embedUrl: `https://www.pixiv.net/en/artworks/83682624`,
 };
 
 export const Tumblr = Template.bind({});
 Tumblr.args = {
   editable: true,
-  initialContent: `<article data-type="oembed" data-src="https://bobaboard.tumblr.com/post/647298900927053824/this-april-1st-bobaboard-is-proud-to-bring-its" />`,
+  embedUrl: `https://bobaboard.tumblr.com/post/647298900927053824/this-april-1st-bobaboard-is-proud-to-bring-its`,
 };
