@@ -1,5 +1,6 @@
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { OEmbedOptions, PLUGIN_NAME } from "./Plugin";
+import { listenForResize, maybeAttachScriptTagtoDom } from "./utils";
 
 import React from "react";
 import { styled } from "@linaria/react";
@@ -7,30 +8,26 @@ import { useQuery } from "react-query";
 
 type OEmbedResult = Record<string, unknown> & { html: string };
 
+// Note: this tag cannot be an iframe because there's no generic way
+// to resize an iframe to fit its content.
 const Article = styled.article`
   all: unset;
   width: 100%;
 `;
 
 export const OEmbed = (props: OEmbedResult) => {
-  // TODO: whitelist origins for which this is allowed, as it's a very dangerous operation.
-  const maybeAddScript = React.useCallback(() => {
-    // Some embeds only work if we allow the associated script tag to be loaded after
-    // their content is appended to the DOM, so we extract the tag and manually run it.
-    // We cannot do this with the article ref itself because dangerouslySetInnerHTML
-    // removes script tags (as does setting innerHTML).
-    const fragment = document
-      .createRange()
-      .createContextualFragment(props.html);
-    const scriptTag = fragment?.querySelector("script");
-    if (scriptTag) {
-      document.body.appendChild(scriptTag);
-    }
-  }, [props.html]);
+  const maybeAddScript = React.useCallback(
+    async (node: HTMLElement | null) => {
+      maybeAttachScriptTagtoDom(props.html);
+      if (node) {
+        await listenForResize(node);
+      }
+    },
+    [props.html]
+  );
 
   if ("html" in props) {
-    // Note: this cannot be done elegantly with an iframe because there's no way
-    // to resize an iframe to fit its content.
+    console.log(props.html);
     return (
       <Article
         dangerouslySetInnerHTML={{ __html: props.html }}
