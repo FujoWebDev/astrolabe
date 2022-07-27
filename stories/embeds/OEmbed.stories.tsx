@@ -56,3 +56,15 @@ Bandcamp.args = {
   editable: true,
   initialContent: `<article data-type="oembed" data-src="https://thetwilightsad.bandcamp.com/album/oran-mor-2020" />`,
 };
+
+export const Pixiv = Template.bind({});
+Pixiv.args = {
+  editable: true,
+  initialContent: `<article data-type="oembed" data-src="https://www.pixiv.net/en/artworks/83682624" />`,
+};
+
+export const Tumblr = Template.bind({});
+Tumblr.args = {
+  editable: true,
+  initialContent: `<article data-type="oembed" data-src="https://bobaboard.tumblr.com/post/647298900927053824/this-april-1st-bobaboard-is-proud-to-bring-its" />`,
+};
