@@ -11,6 +11,7 @@ import Document from "@tiptap/extension-document";
 import { FloatingMenuOptions } from "./FloatingMenu";
 import HardBreak from "@tiptap/extension-hard-break";
 import { ImagePlugin } from "./plugins/Image";
+import { OEmbedPlugin } from "./plugins/OEmbed";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import { TweetPlugin } from "./plugins/Twitter";
@@ -29,6 +30,7 @@ export const EXTENSIONS = [
   HardBreak,
   ImagePlugin,
   TweetPlugin,
+  OEmbedPlugin,
 ];
 
 export const Editor = (props: EditorProps) => {
@@ -39,6 +41,12 @@ export const Editor = (props: EditorProps) => {
     // TODO: this will likely need to be kept in sync with the props
     // through other means
     onUpdate: ({ editor }) => {
+      if (!editor) {
+        return;
+      }
+      props.onContentChange(editor.getJSON());
+    },
+    onCreate({ editor }) {
       if (!editor) {
         return;
       }
