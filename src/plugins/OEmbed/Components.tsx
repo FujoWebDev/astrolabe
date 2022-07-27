@@ -15,10 +15,20 @@ const Article = styled.article`
   width: 100%;
 `;
 
+const preprocessHtml = (html: string) => {
+  // We extract the embed url from the tumblr post, and simply shove it into our own iframe.
+  // This saves us from having to use the super heavy-weight tumblr embed library code.
+  if (html.includes(`class="tumblr-post"`)) {
+    const iframeSrc = html.match(/data\-href="([^"]+)"/)?.[1];
+    return `<iframe src="${iframeSrc}" style="all:unset;width: 100%;display: block;" />`;
+  }
+  return html;
+};
+
 export const OEmbed = (props: OEmbedResult) => {
-  const maybeAddScript = React.useCallback(
+  const onAttachNode = React.useCallback(
     async (node: HTMLElement | null) => {
-      maybeAttachScriptTagtoDom(props.html);
+      //   maybeAttachScriptTagtoDom(props.html);
       if (node) {
         await listenForResize(node);
       }
@@ -27,11 +37,11 @@ export const OEmbed = (props: OEmbedResult) => {
   );
 
   if ("html" in props) {
-    console.log(props.html);
+    const processedHtml = preprocessHtml(props.html);
     return (
       <Article
-        dangerouslySetInnerHTML={{ __html: props.html }}
-        ref={maybeAddScript}
+        dangerouslySetInnerHTML={{ __html: processedHtml }}
+        ref={onAttachNode}
       />
     );
   }

@@ -66,6 +66,24 @@ const attachMutationObserver = (rootNode: HTMLElement, onLoad: () => void) => {
   return observer;
 };
 
+const listenForSize = () => {
+  return new Promise((resolve) => {
+    const listener = (event: MessageEvent) => {
+      console.log(event);
+      switch (event.origin) {
+        case "https://embed.tumblr.com":
+          if (event.data.height) {
+            window.removeEventListener("message", listener);
+          }
+          return resolve(event.data.height);
+        default:
+          return;
+      }
+    };
+    window.addEventListener("message", listener);
+  });
+};
+
 // With iframes (and some other embed types that swap regular HTML for iframes), it usually
 // takes a while before the embed content is loaded. We listen to changes to the embed with
 // an observer to determine when the content loading has finished.
@@ -76,11 +94,15 @@ export const listenForResize = async (rootNode: HTMLElement): Promise<void> => {
       observer.disconnect();
       resolve();
     });
+    // TODO: this could be done globally at initialization and we could figure out a way
+    // to pass the event down here.
     const iframe = rootNode.querySelector("iframe");
     if (iframe) {
-      iframe.onload = () => {
-        console.log("loaded");
+      iframe.onload = async () => {
         observer.disconnect();
+        // check and do this only for tumblr
+        const newHeight = await listenForSize();
+        iframe.style.height = newHeight + "px";
       };
     }
   });
