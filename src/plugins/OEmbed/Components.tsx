@@ -29,11 +29,16 @@ const preprocessHtml = (html: string) => {
   // This saves us from having to use the super heavy-weight tumblr embed library code.
   if (html.includes(`class="tumblr-post"`)) {
     const iframeSrc = html.match(/data\-href="([^"]+)"/)?.[1];
-    return `<iframe src="${iframeSrc}" style="all:unset;width: 100%;display: block;" />`;
+    return `<iframe src="${iframeSrc}" loading="lazy" style="all:unset;width: 100%;display: block;" />`;
   }
   if (html.includes(`class="tiktok-embed"`)) {
     const videoId = html.match(/data\-video\-id="([^"]+)"/)?.[1];
-    return `<iframe src="https://www.tiktok.com/embed/v2/${videoId}" style="all:unset;width: 100%;height:739px;display: block;" />`;
+    return `<iframe src="https://www.tiktok.com/embed/v2/${videoId}" loading="lazy" style="all:unset;width: 100%;height:739px;display: block;" />`;
+  }
+
+  // For performance reasons, we mark all iframes as "lazy loading".
+  if (html.includes(`<iframe `)) {
+    return html.replace(`<iframe `, `<iframe loading="lazy"`);
   }
   // For reddit:
   //
@@ -65,6 +70,8 @@ export const OEmbed = (
     async (node: HTMLElement | null) => {
       //   maybeAttachScriptTagtoDom(props.html);
       if (node) {
+        // NOTE: Lazy loading prevents us from loading the iframe while off screen
+        // or hidden.
         await listenForResize(node);
         props.onSizeSettled({
           widthPx: node.getBoundingClientRect().width,
