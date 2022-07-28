@@ -76,3 +76,39 @@ Tumblr.args = {
   editable: true,
   embedUrl: `https://bobaboard.tumblr.com/post/647298900927053824/this-april-1st-bobaboard-is-proud-to-bring-its`,
 };
+
+export const TikTok = Template.bind({});
+TikTok.args = {
+  editable: true,
+  embedUrl: `https://www.tiktok.com/@scout2015/video/6718335390845095173`,
+};
+
+export const Instagram = Template.bind({});
+Instagram.args = {
+  editable: true,
+  embedUrl: `https://www.instagram.com/p/89CUyVoVY9/`,
+};
+
+export const Reddit = Template.bind({});
+Reddit.args = {
+  editable: true,
+  embedUrl: `https://www.reddit.com/r/nextfuckinglevel/comments/ibikdr/50_year_old_firefighter_deadlifts_600_lbs_of/`,
+};
+
+export const YouTube = Template.bind({});
+YouTube.args = {
+  editable: true,
+  embedUrl: `https://www.youtube.com/watch?v=k1BneeJTDcU`,
+};
+
+export const Vimeo = Template.bind({});
+Vimeo.args = {
+  editable: true,
+  embedUrl: `https://vimeo.com/584232458`,
+};
+
+export const Image = Template.bind({});
+Image.args = {
+  editable: true,
+  embedUrl: `https://tanoshimi.xyz/2016/11/29/yes-sadpanda-is-one-of-my-sources/`,
+};

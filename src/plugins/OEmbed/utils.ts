@@ -99,6 +99,7 @@ export const listenForResize = async (rootNode: HTMLElement): Promise<void> => {
     const iframe = rootNode.querySelector("iframe");
     if (iframe) {
       iframe.onload = async () => {
+        console.log("onload!");
         observer.disconnect();
         // check and do this only for tumblr
         const newHeight = await listenForSize();
