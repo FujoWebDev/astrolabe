@@ -101,9 +101,10 @@ export const listenForResize = async (rootNode: HTMLElement): Promise<void> => {
       iframe.onload = async () => {
         console.log("onload!");
         observer.disconnect();
-        // check and do this only for tumblr
-        const newHeight = await listenForSize();
-        iframe.style.height = newHeight + "px";
+        if (rootNode.dataset.source?.endsWith("tumblr.com")) {
+          const newHeight = await listenForSize();
+          iframe.style.height = newHeight + "px";
+        }
         resolve();
       };
     }
