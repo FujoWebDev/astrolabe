@@ -5,7 +5,7 @@ import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 
-export interface OEmbedOptions {
+export interface OEmbedData {
   src: string;
   width?: number;
   height?: number;
@@ -19,14 +19,23 @@ export const PLUGIN_NAME = "oembed";
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     [PLUGIN_NAME]: {
-      addOEmbed: (options: OEmbedOptions) => ReturnType;
+      addOEmbed: (options: OEmbedData) => ReturnType;
     };
   }
 }
 
-export const OEmbedPlugin = Node.create<OEmbedOptions>({
+export const OEmbedPlugin = Node.create<{
+  getRequestEndpoint: (url: string) => string;
+}>({
   name: PLUGIN_NAME,
   group: "block",
+
+  addOptions() {
+    return {
+      getRequestEndpoint: (url: string) =>
+        `http://localhost:8062/iframely?url=${url}`,
+    };
+  },
 
   addAttributes() {
     return {
@@ -49,7 +58,7 @@ export const OEmbedPlugin = Node.create<OEmbedOptions>({
   },
 
   renderHTML({ node }) {
-    return loadToDom(OEmbedPlaceholder, node.attrs as OEmbedOptions);
+    return loadToDom(OEmbedPlaceholder, node.attrs as OEmbedData);
   },
 
   addNodeView() {
@@ -71,7 +80,7 @@ export const OEmbedPlugin = Node.create<OEmbedOptions>({
   addCommands() {
     return {
       addOEmbed:
-        (props: OEmbedOptions) =>
+        (props: OEmbedData) =>
         ({ chain }) => {
           return chain()
             .insertContent({

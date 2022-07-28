@@ -1,5 +1,5 @@
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
-import { OEmbedOptions, PLUGIN_NAME } from "./Plugin";
+import { OEmbedData, PLUGIN_NAME } from "./Plugin";
 import {
   getWebsiteNameFromUrl,
   listenForResize,
@@ -54,7 +54,7 @@ const preprocessHtml = (html: string) => {
 export const OEmbed = (
   props: OEmbedResult & {
     loaded: boolean;
-    attributes: OEmbedOptions;
+    attributes: OEmbedData;
     onSizeSettled: (sizes: {
       widthPx: number | null;
       heightPx: number | null;
@@ -93,7 +93,7 @@ export const OEmbed = (
   return <>Unimplemented</>;
 };
 
-export const OEmbedPlaceholder = (props: OEmbedOptions) => {
+export const OEmbedPlaceholder = (props: OEmbedData) => {
   return (
     <article
       data-src={props.src}
@@ -105,16 +105,16 @@ export const OEmbedPlaceholder = (props: OEmbedOptions) => {
 };
 
 export const OEmbedLoader = (
-  props: Partial<NodeViewProps> & Required<Pick<NodeViewProps, "node">>
+  props: Partial<NodeViewProps> &
+    Required<Pick<NodeViewProps, "node" | "extension">>
 ) => {
   const [loaded, setLoaded] = React.useState(false);
-  const attributes = props.node.attrs as OEmbedOptions;
+  const attributes = props.node.attrs as OEmbedData;
   const { isLoading, data } = useQuery<OEmbedResult>(
     ["oembed", { src: attributes.src }],
     async () => {
-      // TODO: remove hardcoded url
       return await (
-        await fetch(`http://localhost:8062/iframely?url=${attributes.src}`)
+        await fetch(props.extension.options.getRequestEndpoint(attributes.src))
       ).json();
     }
   );
