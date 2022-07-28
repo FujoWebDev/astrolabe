@@ -22,6 +22,23 @@ const preprocessHtml = (html: string) => {
     const iframeSrc = html.match(/data\-href="([^"]+)"/)?.[1];
     return `<iframe src="${iframeSrc}" style="all:unset;width: 100%;display: block;" />`;
   }
+  if (html.includes(`class="tiktok-embed"`)) {
+    const videoId = html.match(/data\-video\-id="([^"]+)"/)?.[1];
+    return `<iframe src="https://www.tiktok.com/embed/v2/${videoId}" style="all:unset;width: 100%;height:739px;display: block;" />`;
+  }
+  // For reddit:
+  //
+  {
+    /* <iframe
+  id="reddit-embed"
+  src="https://www.redditmedia.com/r/ProgrammerHumor/comments/avj910/developers/?ref_source=embed&amp;ref=share&amp;embed=true&amp;theme=dark"
+  sandbox="allow-scripts allow-same-origin allow-popups"
+  style="border: none;"
+  height="527"
+  width="640"
+  scrolling="no"
+></iframe>; */
+  }
   return html;
 };
 
