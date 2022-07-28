@@ -1,12 +1,21 @@
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { OEmbedOptions, PLUGIN_NAME } from "./Plugin";
-import { listenForResize, maybeAttachScriptTagtoDom } from "./utils";
+import {
+  getWebsiteNameFromUrl,
+  listenForResize,
+  maybeAttachScriptTagtoDom,
+} from "./utils";
 
 import React from "react";
 import { styled } from "@linaria/react";
 import { useQuery } from "react-query";
 
-type OEmbedResult = Record<string, unknown> & { html: string };
+type OEmbedResult = Record<string, unknown> & {
+  html: string;
+  meta: {
+    canonical: string;
+  };
+};
 
 // Note: this tag cannot be an iframe because there's no generic way
 // to resize an iframe to fit its content.
@@ -42,12 +51,25 @@ const preprocessHtml = (html: string) => {
   return html;
 };
 
-export const OEmbed = (props: OEmbedResult) => {
+export const OEmbed = (
+  props: OEmbedResult & {
+    loaded: boolean;
+    attributes: OEmbedOptions;
+    onSizeSettled: (sizes: {
+      widthPx: number | null;
+      heightPx: number | null;
+    }) => void;
+  }
+) => {
   const onAttachNode = React.useCallback(
     async (node: HTMLElement | null) => {
       //   maybeAttachScriptTagtoDom(props.html);
       if (node) {
         await listenForResize(node);
+        props.onSizeSettled({
+          widthPx: node.getBoundingClientRect().width,
+          heightPx: node.getBoundingClientRect().height,
+        });
       }
     },
     [props.html]
@@ -57,6 +79,12 @@ export const OEmbed = (props: OEmbedResult) => {
     const processedHtml = preprocessHtml(props.html);
     return (
       <Article
+        data-src={props.attributes.src}
+        data-spoilers={props.attributes.spoilers}
+        data-width={props.attributes.width}
+        data-height={props.attributes.height}
+        data-source={getWebsiteNameFromUrl(props.meta.canonical)}
+        data-loaded={props.loaded}
         dangerouslySetInnerHTML={{ __html: processedHtml }}
         ref={onAttachNode}
       />
@@ -66,12 +94,20 @@ export const OEmbed = (props: OEmbedResult) => {
 };
 
 export const OEmbedPlaceholder = (props: OEmbedOptions) => {
-  return <article data-src={props.src} data-spoilers={props.spoilers} />;
+  return (
+    <article
+      data-src={props.src}
+      data-spoilers={props.spoilers}
+      data-width={props.width}
+      data-height={props.height}
+    />
+  );
 };
 
 export const OEmbedLoader = (
   props: Partial<NodeViewProps> & Required<Pick<NodeViewProps, "node">>
 ) => {
+  const [loaded, setLoaded] = React.useState(false);
   const attributes = props.node.attrs as OEmbedOptions;
   const { isLoading, data } = useQuery<OEmbedResult>(
     ["oembed", { src: attributes.src }],
@@ -92,7 +128,18 @@ export const OEmbedLoader = (
 
   return (
     <NodeViewWrapper data-type={PLUGIN_NAME}>
-      <OEmbed {...data} />
+      <OEmbed
+        {...data}
+        attributes={attributes}
+        loaded={loaded}
+        onSizeSettled={(sizes) => {
+          props.updateAttributes?.({
+            width: sizes.widthPx,
+            height: sizes.heightPx,
+          });
+          setLoaded(true);
+        }}
+      />
     </NodeViewWrapper>
   );
 };

@@ -104,7 +104,13 @@ export const listenForResize = async (rootNode: HTMLElement): Promise<void> => {
         // check and do this only for tumblr
         const newHeight = await listenForSize();
         iframe.style.height = newHeight + "px";
+        resolve();
       };
     }
   });
+};
+
+export const getWebsiteNameFromUrl = (url: string) => {
+  const urlObject = new URL(url);
+  return urlObject.hostname;
 };

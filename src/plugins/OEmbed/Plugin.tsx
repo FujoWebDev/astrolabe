@@ -37,6 +37,14 @@ export const OEmbedPlugin = Node.create<OEmbedOptions>({
       spoilers: {
         default: false,
       },
+      width: {
+        default: undefined,
+        parseHTML: (element) => element.getAttribute("data-width"),
+      },
+      height: {
+        default: undefined,
+        parseHTML: (element) => element.getAttribute("data-height"),
+      },
     };
   },
 
