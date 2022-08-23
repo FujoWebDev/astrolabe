@@ -17,13 +17,6 @@ type OEmbedResult = Record<string, unknown> & {
   };
 };
 
-// Note: this tag cannot be an iframe because there's no generic way
-// to resize an iframe to fit its content.
-const Article = styled.article`
-  all: unset;
-  width: 100%;
-`;
-
 const preprocessHtml = (html: string) => {
   // We extract the embed url from the tumblr post, and simply shove it into our own iframe.
   // This saves us from having to use the super heavy-weight tumblr embed library code.
@@ -55,6 +48,18 @@ const preprocessHtml = (html: string) => {
   }
   return html;
 };
+
+// Note: this tag cannot be an iframe because there's no generic way
+// to resize an iframe to fit its content.
+const Article = styled.article`
+  all: unset;
+  width: 100%;
+
+  // TODO: add some kind of loading animation here.
+  &[data-loaded="false"] iframe {
+    background-color: blue;
+  }
+`;
 
 export const OEmbed = (
   props: OEmbedResult & {
