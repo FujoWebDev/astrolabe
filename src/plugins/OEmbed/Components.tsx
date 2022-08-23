@@ -1,10 +1,6 @@
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { OEmbedData, PLUGIN_NAME } from "./Plugin";
-import {
-  getWebsiteNameFromUrl,
-  listenForResize,
-  maybeAttachScriptTagtoDom,
-} from "./utils";
+import { getWebsiteNameFromUrl, listenForResize } from "./utils";
 
 import React from "react";
 import { styled } from "@linaria/react";
@@ -73,10 +69,9 @@ export const OEmbed = (
 ) => {
   const onAttachNode = React.useCallback(
     async (node: HTMLElement | null) => {
-      //   maybeAttachScriptTagtoDom(props.html);
       if (node) {
-        // NOTE: Lazy loading prevents us from loading the iframe while off screen
-        // or hidden.
+        // NOTE:native lazy loading prevents us from loading the iframe while off screen
+        // or hidden, so (unfortunately) we cannot use it.
         await listenForResize(node);
         props.onSizeSettled({
           widthPx: node.getBoundingClientRect().width,
