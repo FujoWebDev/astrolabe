@@ -66,6 +66,8 @@ const attachMutationObserver = (rootNode: HTMLElement, onLoad: () => void) => {
   return observer;
 };
 
+// TODO: this could be done globally at initialization and we could figure out a way
+// to pass the event down here.
 const listenForSize = () => {
   return new Promise((resolve) => {
     const listener = (event: MessageEvent) => {
@@ -89,13 +91,15 @@ const listenForSize = () => {
 // an observer to determine when the content loading has finished.
 export const listenForResize = async (rootNode: HTMLElement): Promise<void> => {
   return new Promise((resolve) => {
+    // TODO: doublecheck whether mutation observer is actually necessary or whether the
+    // iframe onload check takes care of all of these.
+    // TODO: in case it isn't, check whether a single mutation observer for the whole editor
+    // would suffice.
     const observer = attachMutationObserver(rootNode, () => {
       console.log("resize observed!");
       observer.disconnect();
       resolve();
     });
-    // TODO: this could be done globally at initialization and we could figure out a way
-    // to pass the event down here.
     const iframe = rootNode.querySelector("iframe");
     if (iframe) {
       iframe.onload = async () => {
