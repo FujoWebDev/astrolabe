@@ -10,6 +10,7 @@ import { PLUGIN_NAME, TweetOptions } from "./Plugin";
 
 import { OEmbed } from "../OEmbed/Components";
 import React from "react";
+import { getHtmlForTweetId } from "../OEmbed/html-utils";
 import { getTweetId } from "./utils";
 
 declare global {
@@ -98,12 +99,7 @@ export const TweetIframeComponent = (
   const tweetId = getTweetId({ url: props.src });
   return (
     <OEmbed
-      html={`
-        <iframe
-          data-tweet-id="${tweetId}"
-          src="https://platform.twitter.com/embed/Tweet.html?dnt=false&frame=false&hideCard=false&hideThread=false&id=${tweetId}&lang=en&theme=dark&width=550px"
-          scrolling="no"
-        />`}
+      html={getHtmlForTweetId(tweetId)}
       meta={{ canonical: props.src }}
       attributes={props}
       loaded={true}
