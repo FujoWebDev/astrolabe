@@ -1,4 +1,6 @@
 // TODO: whitelist origins for which this is allowed, as it's a very dangerous operation.
+// TODO: this is unused right now. Remove it if it's still unused after all the embeds
+// we want to support are supported.
 export const maybeAttachScriptTagtoDom = (html: string) => {
   // Some embeds only work if we allow the associated script tag to be loaded after
   // their content is appended to the DOM, so we extract the tag and manually run it.
@@ -80,6 +82,56 @@ const listenForSize = () => {
           return resolve(event.data.height);
         default:
           return;
+      }
+    };
+    window.addEventListener("message", listener);
+  });
+};
+
+interface TwitterEventData {
+  method: "twttr.private.resize" | "twttr.private.rendered";
+  params: [
+    {
+      data: {
+        tweet_id: string;
+      };
+      height?: number;
+      width?: number;
+    }
+  ];
+}
+
+export const listenForTweetResize = ({
+  id,
+}: {
+  id: string;
+}): Promise<{
+  width: number;
+  height: number;
+}> => {
+  return new Promise((resolve) => {
+    const listener = (event: MessageEvent) => {
+      if (
+        event.origin !== "https://platform.twitter.com" ||
+        !event.data["twttr.embed"]
+      ) {
+        return;
+      }
+
+      const twitterEventData: TwitterEventData | null =
+        event.data["twttr.embed"];
+
+      if (twitterEventData?.params[0].data.tweet_id !== id) {
+        return;
+      }
+
+      if (twitterEventData?.method == "twttr.private.resize") {
+        // TODO: this will leak if tweet is unloaded before resize is triggered
+        window.removeEventListener("message", listener);
+        resolve({
+          width: twitterEventData.params[0].width!,
+          height: twitterEventData.params[0].height!,
+        });
       }
     };
     window.addEventListener("message", listener);

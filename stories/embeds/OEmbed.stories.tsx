@@ -77,6 +77,12 @@ Tumblr.args = {
   embedUrl: `https://bobaboard.tumblr.com/post/647298900927053824/this-april-1st-bobaboard-is-proud-to-bring-its`,
 };
 
+export const Twitter = Template.bind({});
+Twitter.args = {
+  editable: true,
+  embedUrl: `https://twitter.com/Horse_ebooks/status/218439593240956928`,
+};
+
 export const TikTok = Template.bind({});
 TikTok.args = {
   editable: true,

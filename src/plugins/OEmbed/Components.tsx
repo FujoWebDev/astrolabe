@@ -1,9 +1,13 @@
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { OEmbedData, PLUGIN_NAME } from "./Plugin";
-import { getWebsiteNameFromUrl, listenForResize } from "./utils";
+import { getHtmlForTweetId, getTweetId, preprocessHtml } from "./html-utils";
+import {
+  getWebsiteNameFromUrl,
+  listenForResize,
+  listenForTweetResize,
+} from "./utils";
 
 import React from "react";
-import { preprocessHtml } from "./html-utils";
 import { styled } from "@linaria/react";
 import { useQuery } from "react-query";
 
@@ -38,15 +42,28 @@ export const OEmbed = (
 ) => {
   const onAttachNode = React.useCallback(
     async (node: HTMLElement | null) => {
-      if (node) {
-        // NOTE:native lazy loading prevents us from loading the iframe while off screen
+      if (!node) {
+        return;
+      }
+      if (node.dataset.source == "twitter.com") {
+        const { width, height } = await listenForTweetResize({
+          id: getTweetId({ url: node.dataset.src! }),
+        });
+        const tweetFrame = node.querySelector("iframe");
+        if (!tweetFrame) {
+          throw new Error("Couldn't find iframe in tweet render.");
+        }
+        tweetFrame.style.width = width + "px";
+        tweetFrame.style.height = height + "px";
+      } else {
+        // NOTE: native lazy loading prevents us from loading the iframe while off screen
         // or hidden, so (unfortunately) we cannot use it.
         await listenForResize(node);
-        props.onSizeSettled({
-          widthPx: node.getBoundingClientRect().width,
-          heightPx: node.getBoundingClientRect().height,
-        });
       }
+      props.onSizeSettled({
+        widthPx: node.getBoundingClientRect().width,
+        heightPx: node.getBoundingClientRect().height,
+      });
     },
     [props.html]
   );
@@ -89,11 +106,20 @@ export const OEmbedLoader = (
   const { isLoading, data } = useQuery<OEmbedResult>(
     ["oembed", { src: attributes.src }],
     async () => {
+      if (getWebsiteNameFromUrl(attributes.src) === "twitter.com") {
+        return {
+          html: getHtmlForTweetId(getTweetId({ url: attributes.src })),
+          meta: {
+            canonical: attributes.src,
+          },
+        };
+      }
       return await (
         await fetch(props.extension.options.getRequestEndpoint(attributes.src))
       ).json();
     }
   );
+
   if (isLoading || !data) {
     return (
       <NodeViewWrapper data-type={PLUGIN_NAME}>

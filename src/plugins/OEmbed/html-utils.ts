@@ -35,6 +35,7 @@ export const getHtmlForTweetId = (tweetId: string) => {
       data-tweet-id="${tweetId}"
       src="https://platform.twitter.com/embed/Tweet.html?dnt=false&frame=false&hideCard=false&hideThread=false&id=${tweetId}&lang=en&theme=dark&width=550px"
       scrolling="no"
+      style="width:100%;display:block;"
     />`;
 };
 
