@@ -1,8 +1,4 @@
-import {
-  EditableTweetComponent,
-  TweetComponent,
-  TweetLoadingPlaceholder,
-} from "./Components";
+import { EditableTweetComponent, TweetPlaceholder } from "./Components";
 import { goToTrailingPragraph, loadToDom, withViewWrapper } from "../utils";
 
 import { Node } from "@tiptap/core";
@@ -14,6 +10,7 @@ export interface TweetOptions {
   width?: number;
   height?: number;
   spoilers?: boolean;
+  native?: boolean;
 }
 
 export const TweetPluginKey = new PluginKey("TweetPlugin");
@@ -41,18 +38,22 @@ export const TweetPlugin = Node.create<TweetOptions>({
       spoilers: {
         default: false,
       },
+      native: {
+        default: true,
+      },
     };
   },
 
   renderHTML({ node }) {
-    return loadToDom(TweetLoadingPlaceholder, node.attrs as TweetOptions);
+    return loadToDom(TweetPlaceholder, node.attrs as TweetOptions);
   },
 
   addNodeView() {
     return ReactNodeViewRenderer(
       this.editor.isEditable
         ? EditableTweetComponent
-        : withViewWrapper(PLUGIN_NAME, TweetComponent)
+        : // TODO: swap this with uneditable component
+          withViewWrapper(PLUGIN_NAME, EditableTweetComponent)
     );
   },
 
