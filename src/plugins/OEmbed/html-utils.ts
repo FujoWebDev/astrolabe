@@ -37,3 +37,9 @@ export const getHtmlForTweetId = (tweetId: string) => {
       scrolling="no"
     />`;
 };
+
+// TODO: find a more appropriate place for this
+export const getTweetId = ({ url }: { url: string }) => {
+  const urlObject = new URL(url);
+  return urlObject.pathname.substr(urlObject.pathname.lastIndexOf("/") + 1);
+};

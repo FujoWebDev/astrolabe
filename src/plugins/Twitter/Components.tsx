@@ -7,11 +7,10 @@ import { EyeAlt, EyeOff, FrameTool, Trash, Www } from "iconoir-react";
 import { NativeTweetComponent, TweetData } from "./NativeTweetComponent";
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { PLUGIN_NAME, TweetOptions } from "./Plugin";
+import { getHtmlForTweetId, getTweetId } from "../OEmbed/html-utils";
 
 import { OEmbed } from "../OEmbed/Components";
 import React from "react";
-import { getHtmlForTweetId } from "../OEmbed/html-utils";
-import { getTweetId } from "./utils";
 
 declare global {
   interface Window {
