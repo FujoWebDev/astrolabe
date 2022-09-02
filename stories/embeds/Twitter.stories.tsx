@@ -2,14 +2,14 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { EXTENSIONS, Editor } from "../../src/Editor";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+import { EditableTweetComponent } from "../../src/plugins/Twitter/Components";
 import React from "react";
-import { TweetComponent } from "../../src/plugins/Twitter/Components";
 import { getContentChangeHandler } from "../utilities/OutputInspectorAddon/src/OutputInspector";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "Embeds/Twitter",
-  component: TweetComponent,
+  component: EditableTweetComponent,
   decorators: [
     (Story, ctx) => {
       const onContentChangeHandler = React.useCallback(

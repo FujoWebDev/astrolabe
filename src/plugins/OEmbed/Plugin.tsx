@@ -1,33 +1,41 @@
-import { EditableTweetComponent, TweetPlaceholder } from "./Components";
+import { OEmbedLoader, OEmbedPlaceholder } from "./Components";
 import { goToTrailingPragraph, loadToDom, withViewWrapper } from "../utils";
 
 import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 
-export interface TweetOptions {
+export interface OEmbedData {
   src: string;
   width?: number;
   height?: number;
   spoilers?: boolean;
-  native?: boolean;
 }
 
-export const TweetPluginKey = new PluginKey("TweetPlugin");
+export const OEmbedPluginKey = new PluginKey("OEmbedPluginKey");
 
-export const PLUGIN_NAME = "tweet";
+export const PLUGIN_NAME = "oembed";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     [PLUGIN_NAME]: {
-      addTweet: (options: TweetOptions) => ReturnType;
+      addOEmbed: (options: OEmbedData) => ReturnType;
     };
   }
 }
 
-export const TweetPlugin = Node.create<TweetOptions>({
+export const OEmbedPlugin = Node.create<{
+  getRequestEndpoint: (url: string) => string;
+}>({
   name: PLUGIN_NAME,
   group: "block",
+
+  addOptions() {
+    return {
+      getRequestEndpoint: (url: string) =>
+        `http://localhost:8062/iframely?url=${url}`,
+    };
+  },
 
   addAttributes() {
     return {
@@ -38,22 +46,26 @@ export const TweetPlugin = Node.create<TweetOptions>({
       spoilers: {
         default: false,
       },
-      native: {
-        default: true,
+      width: {
+        default: undefined,
+        parseHTML: (element) => element.getAttribute("data-width"),
+      },
+      height: {
+        default: undefined,
+        parseHTML: (element) => element.getAttribute("data-height"),
       },
     };
   },
 
   renderHTML({ node }) {
-    return loadToDom(TweetPlaceholder, node.attrs as TweetOptions);
+    return loadToDom(OEmbedPlaceholder, node.attrs as OEmbedData);
   },
 
   addNodeView() {
     return ReactNodeViewRenderer(
       this.editor.isEditable
-        ? EditableTweetComponent
-        : // TODO: swap this with uneditable component
-          withViewWrapper(PLUGIN_NAME, EditableTweetComponent)
+        ? OEmbedLoader
+        : withViewWrapper(PLUGIN_NAME, OEmbedLoader)
     );
   },
 
@@ -67,8 +79,8 @@ export const TweetPlugin = Node.create<TweetOptions>({
 
   addCommands() {
     return {
-      addTweet:
-        (props: TweetOptions) =>
+      addOEmbed:
+        (props: OEmbedData) =>
         ({ chain }) => {
           return chain()
             .insertContent({

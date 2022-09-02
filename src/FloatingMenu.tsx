@@ -1,4 +1,4 @@
-import { AddMediaImage, Twitter } from "iconoir-react";
+import { AddMediaImage, Twitter, Www } from "iconoir-react";
 
 import type { Editor } from "@tiptap/react";
 import React from "react";
@@ -68,6 +68,21 @@ export const FloatingMenuOptions = ({ editor }: { editor: Editor }) => {
           }
         >
           <Twitter />
+        </button>
+      </li>
+      <li role="menuitem">
+        <button
+          title="Add embed"
+          onClick={() =>
+            editor.commands.addOEmbed({
+              // TODO: other OEmbeds to check:
+              // https://tanoshimi.xyz/2016/11/29/yes-sadpanda-is-one-of-my-sources/
+              // https://thetwilightsad.bandcamp.com/album/oran-mor-2020
+              src: "https://docs.bobaboard.com/",
+            })
+          }
+        >
+          <Www />
         </button>
       </li>
     </ul>
