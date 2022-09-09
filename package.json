@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:output-inspector": "rm -rf stories/utilities/OutputInspectorAddon/dist/ &&tsc && vite build --config stories/utilities/OutputInspectorAddon/vite.config.ts --mode development",
+    "build:output-inspector": "rm -rf OutputInspectorAddon/dist/ && tsc && vite build --config OutputInspectorAddon/vite.config.ts --mode development",
     "preview": "vite preview",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -47,9 +47,20 @@
     "msw": "^0.44.1",
     "prettier": "^2.7.1",
     "react-json-view": "^1.21.3",
+    "@bobaboard/tiptap-oembed": "*",
+    "@bobaboard/tiptap-image": "*",
+    "@bobaboard/tiptap-native-twitter": "*",
+    "@bobaboard/tiptap-storybook-inspector": "*",
+    "turbo": "^1.4.6",
     "typescript": "^4.6.3",
     "vite": "^2.9.9"
   },
+  "workspaces": [
+    "src/plugins/*",
+    "src/editor",
+    "stories/",
+    "OutputInspectorAddon/"
+  ],
   "msw": {
     "workerDirectory": "stories/utilities/mocks"
   }

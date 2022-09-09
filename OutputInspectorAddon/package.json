@@ -1,5 +1,5 @@
 {
-  "name": "tiptap-storybook-inspector",
+  "name": "@bobaboard/tiptap-storybook-inspector",
   "private": true,
   "main": "src/register.tsx",
   "version": "0.0.0",
