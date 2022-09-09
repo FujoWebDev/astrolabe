@@ -1,16 +1,8 @@
-import { JSONContent, generateHTML } from "@tiptap/core";
 import { addons, types } from "@storybook/addons";
 
 import { AddonPanel } from "@storybook/components";
-import CodeMirror from "@uiw/react-codemirror";
 import { OutputInspector } from "./OutputInspector";
-// import { EXTENSIONS } from "../src/editor";
-import ReactJsonView from "react-json-view";
-import { dracula } from "@uiw/codemirror-theme-dracula";
-import { html } from "@codemirror/lang-html";
-import htmlParsers from "prettier/parser-html";
-import prettier from "prettier/standalone";
-import { useGlobals } from "@storybook/api";
+import React from "react";
 
 addons.register("output-inspector", () => {
   addons.add("output-inspector/panel", {
