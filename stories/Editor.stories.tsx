@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { EXTENSIONS, Editor } from "../src/Editor";
+import { EXTENSIONS, Editor } from "../src/editor";
 
 import React from "react";
 import { getContentChangeHandler } from "./utilities/OutputInspectorAddon/src/OutputInspector";

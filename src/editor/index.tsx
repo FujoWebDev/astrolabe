@@ -10,11 +10,11 @@ import {
 import Document from "@tiptap/extension-document";
 import { FloatingMenuOptions } from "./FloatingMenu";
 import HardBreak from "@tiptap/extension-hard-break";
-import { ImagePlugin } from "./plugins/Image";
-import { OEmbedPlugin } from "./plugins/OEmbed";
+import { ImagePlugin } from "../plugins/Image";
+import { OEmbedPlugin } from "../plugins/OEmbed";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
-import { TweetPlugin } from "./plugins/Twitter";
+import { TweetPlugin } from "../plugins/Twitter";
 
 export interface EditorProps {
   editable: boolean;
