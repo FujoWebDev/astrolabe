@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 import { EditableTweetComponent } from "../../src/plugins/Twitter/Components";
 import React from "react";
-import { getContentChangeHandler } from "../utilities/OutputInspectorAddon/src/OutputInspector";
+import { getContentChangeHandler } from "../../OutputInspectorAddon/src/OutputInspector";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
