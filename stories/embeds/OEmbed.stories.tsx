@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { EXTENSIONS, Editor } from "../../src/Editor";
+import { EXTENSIONS, Editor } from "../../src/editor";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import { OEmbed } from "../../src/plugins/OEmbed/Components";

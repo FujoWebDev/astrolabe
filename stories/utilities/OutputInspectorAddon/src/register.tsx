@@ -4,7 +4,7 @@ import { addons, types } from "@storybook/addons";
 import { AddonPanel } from "@storybook/components";
 import CodeMirror from "@uiw/react-codemirror";
 import { OutputInspector } from "./OutputInspector";
-// import { EXTENSIONS } from "../src/Editor";
+// import { EXTENSIONS } from "../src/editor";
 import ReactJsonView from "react-json-view";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import { html } from "@codemirror/lang-html";
