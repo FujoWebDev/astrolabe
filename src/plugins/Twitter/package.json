@@ -1,5 +1,5 @@
 {
-  "name": "@bobaboard/tiptap-oembed",
+  "name": "@bobaboard/tiptap-native-twitter",
   "private": true,
   "version": "0.0.0",
   "scripts": {
