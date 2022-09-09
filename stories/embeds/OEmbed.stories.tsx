@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 import { OEmbed } from "../../src/plugins/OEmbed/Components";
 import React from "react";
-import { getContentChangeHandler } from "../utilities/OutputInspectorAddon/src/OutputInspector";
+import { getContentChangeHandler } from "../../OutputInspectorAddon/src/OutputInspector";
 
 export default {
   title: "Embeds/OEmbeds",

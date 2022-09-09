@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { EXTENSIONS, Editor } from "../src/editor";
 
 import React from "react";
-import { getContentChangeHandler } from "./utilities/OutputInspectorAddon/src/OutputInspector";
+import { getContentChangeHandler } from "../OutputInspectorAddon/src/OutputInspector";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {

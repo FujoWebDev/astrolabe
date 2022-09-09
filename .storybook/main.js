@@ -9,7 +9,7 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
-    "../stories/utilities/OutputInspectorAddon/dist/register.js",
+    "../OutputInspectorAddon/dist/register.js",
   ],
   framework: "@storybook/react",
   core: {
