@@ -2,10 +2,22 @@
   "name": "@bobaboard/tiptap-storybook-inspector",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "build": "tsc && vite build"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./manager": {
+      "require": "./dist/manager.js",
+      "import": "./dist/manager.js",
+      "types": "./dist/manager.d.ts"
+    },
+    "./package.json": "./package.json"
   },
   "dependencies": {
     "@codemirror/lang-html": "^6.1.0",
@@ -33,14 +45,5 @@
     "@storybook/addon-links": "^7.0.0-alpha.31",
     "@storybook/builder-vite": "^7.0.0-alpha.31",
     "@storybook/react-vite": "^7.0.0-alpha.31"
-  },
-  "workspaces": [
-    "src/plugins/*",
-    "src/editor",
-    "stories/",
-    "OutputInspectorAddon/"
-  ],
-  "msw": {
-    "workerDirectory": "stories/utilities/mocks"
   }
 }

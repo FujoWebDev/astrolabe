@@ -8,7 +8,7 @@ export default {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
-    "@bobaboard/tiptap-storybook-inspector/dist/preset.js",
+    "@bobaboard/tiptap-storybook-inspector/manager",
   ],
   framework: "@storybook/react-vite",
   core: {
