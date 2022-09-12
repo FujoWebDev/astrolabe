@@ -7,6 +7,7 @@ import { EyeAlt, EyeOff, Trash } from "iconoir-react";
 import { ImageOptions, PLUGIN_NAME } from "./Plugin";
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 
+import React from "react";
 import { css } from "@linaria/core";
 
 const ImageOptionsMenu = (props: {

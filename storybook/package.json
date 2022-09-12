@@ -1,0 +1,56 @@
+{
+  "name": "storybook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "storybook": "sb dev -p 6006",
+    "storybook:force-update": "sb dev -p 6006 --no-manager-cache",
+    "build-storybook": "sb build"
+  },
+  "dependencies": {
+    "@bobaboard/tiptap-image": "*",
+    "@bobaboard/tiptap-native-twitter": "*",
+    "@bobaboard/tiptap-oembed": "*",
+    "@bobaboard/tiptap-storybook-inspector": "*",
+    "@tiptap/core": "^2.0.0-beta.194",
+    "@tiptap/extension-document": "^2.0.0-beta.194",
+    "@tiptap/extension-floating-menu": "^2.0.0-beta.194",
+    "@tiptap/extension-hard-break": "^2.0.0-beta.194",
+    "@tiptap/extension-paragraph": "^2.0.0-beta.194",
+    "@tiptap/extension-text": "^2.0.0-beta.194",
+    "@tiptap/react": "^2.0.0-beta.194",
+    "iconoir-react": "^5.1.4",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-query": "^3.39.2",
+    "storybook": "7.0.0-alpha.31"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.6",
+    "@linaria/core": "^3.0.0-beta.22",
+    "@linaria/react": "^3.0.0-beta.22",
+    "@linaria/rollup": "^3.0.0-beta.22",
+    "@linaria/shaker": "^3.0.0-beta.22",
+    "@storybook/addon-actions": "^7.0.0-alpha.31",
+    "@storybook/addon-essentials": "^7.0.0-alpha.31",
+    "@storybook/addon-interactions": "^7.0.0-alpha.31",
+    "@storybook/addon-links": "^7.0.0-alpha.31",
+    "@storybook/builder-vite": "^7.0.0-alpha.31",
+    "@storybook/react": "^7.0.0-alpha.31",
+    "@storybook/react-vite": "^7.0.0-alpha.31",
+    "@storybook/testing-library": "^0.0.14-next.0",
+    "@types/prettier": "^2.6.3",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^2.1.0",
+    "babel-loader": "^8.2.5",
+    "msw": "^0.44.1",
+    "prettier": "^2.7.1",
+    "typescript": "^4.6.3",
+    "vite": "^3.1.0"
+  },
+  "msw": {
+    "workerDirectory": "stories/utilities/mocks"
+  }
+}
