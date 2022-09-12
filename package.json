@@ -1,6 +1,5 @@
 {
   "name": "boba-editor-next",
-  "private": true,
   "version": "0.0.0",
   "scripts": {
     "build": "turbo run build",

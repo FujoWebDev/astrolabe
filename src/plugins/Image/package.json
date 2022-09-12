@@ -1,6 +1,5 @@
 {
   "name": "@bobaboard/tiptap-image",
-  "private": true,
   "version": "0.0.0",
   "scripts": {
     "build": "tsc && vite build"
