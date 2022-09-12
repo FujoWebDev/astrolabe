@@ -1,10 +1,10 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { EXTENSIONS, Editor } from "../../src/editor";
+import { ComponentMeta, ComponentStoryFn } from "@storybook/react";
+import { EXTENSIONS, Editor } from "../../../src/editor";
 import { QueryClient, QueryClientProvider } from "react-query";
 
-import { OEmbed } from "../../src/plugins/OEmbed/Components";
+import { OEmbed } from "../../../src/plugins/OEmbed/Components";
 import React from "react";
-import { getContentChangeHandler } from "../../OutputInspectorAddon/src/OutputInspector";
+import { getContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
 export default {
   title: "Embeds/OEmbeds",
@@ -38,7 +38,7 @@ export default {
 } as ComponentMeta<typeof Editor>;
 
 const queryClient = new QueryClient();
-const Template: ComponentStory<
+const Template: ComponentStoryFn<
   (props: Parameters<typeof Editor>[0] & { embedUrl?: string }) => JSX.Element
 > = (args) => (
   <QueryClientProvider client={queryClient}>

@@ -2,6 +2,7 @@ import { CommandProps, NodeViewProps } from "@tiptap/core";
 import { TextSelection, Transaction } from "prosemirror-state";
 
 import { NodeViewWrapper } from "@tiptap/react";
+import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 /**

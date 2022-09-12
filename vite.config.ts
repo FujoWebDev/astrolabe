@@ -10,15 +10,15 @@ export default defineConfig({
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "BobaEditor",
     },
-    rollupOptions: {
-      external: ["react", "react-dom"],
-      output: {
-        globals: {
-          react: "React",
-          "react-dom": "ReactDOM",
-        },
-      },
-    },
+    // rollupOptions: {
+    //   external: ["react", "react-dom"],
+    //   output: {
+    //     globals: {
+    //       react: "React",
+    //       "react-dom": "ReactDOM",
+    //     },
+    //   },
+    // },
   },
   plugins: [
     react(),
