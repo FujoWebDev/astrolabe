@@ -5,10 +5,11 @@ import { OutputInspector } from "./OutputInspector";
 import React from "react";
 
 addons.register("output-inspector", () => {
-  addons.add("output-inspector/panel", {
+  addons.add("output-inspector", {
     title: "Output Inspector",
     //👇 Sets the type of UI element in Storybook
     type: types.PANEL,
+    match: ({ viewMode }) => viewMode === "story",
     render: ({ active, key }) => {
       return (
         <AddonPanel key={key} active={!!active}>
