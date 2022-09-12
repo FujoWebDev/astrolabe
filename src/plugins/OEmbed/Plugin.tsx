@@ -33,7 +33,7 @@ export const OEmbedPlugin = Node.create<{
   addOptions() {
     return {
       getRequestEndpoint: (url: string) =>
-        `http://localhost:8062/iframely?url=${url}`,
+        `https://boba-embeds.fly.dev/iframely?url=${url}`,
     };
   },
 
