@@ -1,0 +1,49 @@
+{
+  "name": "@bobaboard/tiptap-storybook-inspector",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "tsc && vite build"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./manager": {
+      "require": "./dist/manager.js",
+      "import": "./dist/manager.js",
+      "types": "./dist/manager.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@codemirror/lang-html": "^6.1.0",
+    "@tiptap/core": "^2.0.0-beta.194",
+    "@uiw/codemirror-theme-dracula": "^4.11.0",
+    "@uiw/react-codemirror": "^4.11.0",
+    "prettier": "^2.7.1",
+    "react-json-view": "^1.21.3",
+    "use-debounce": "^8.0.4"
+  },
+  "devDependencies": {
+    "@storybook/builder-vite": "^0.2.2",
+    "@types/prettier": "^2.6.3",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^2.1.0",
+    "typescript": "^4.6.3",
+    "vite": "^3.1.0",
+    "vite-plugin-dts": "^1.5.0"
+  },
+  "peerDependencies": {
+    "@storybook/addon-actions": "^7.0.0-alpha.31",
+    "@storybook/addon-essentials": "^7.0.0-alpha.31",
+    "@storybook/addon-interactions": "^7.0.0-alpha.31",
+    "@storybook/addon-links": "^7.0.0-alpha.31",
+    "@storybook/builder-vite": "^7.0.0-alpha.31",
+    "@storybook/react-vite": "^7.0.0-alpha.31"
+  }
+}
