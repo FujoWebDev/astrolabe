@@ -44,7 +44,7 @@ export const OutputInspector = () => {
         />
       </div>
       <div>
-        <ReactJsonView src={content.json} />
+        <ReactJsonView src={content.json} theme="chalk" />
       </div>
     </div>
   );
