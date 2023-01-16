@@ -2,18 +2,15 @@ import { ComponentMeta, ComponentStoryFn } from "@storybook/react";
 import { EXTENSIONS, Editor } from "../../src/editor";
 
 import React from "react";
-import { getContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
+import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "Editor",
   component: Editor,
   decorators: [
+    withContentChangeHandler(EXTENSIONS),
     (Story, ctx) => {
-      const onContentChangeHandler = React.useCallback(
-        getContentChangeHandler(EXTENSIONS),
-        []
-      );
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div
@@ -25,7 +22,6 @@ export default {
             <Story
               args={{
                 ...ctx.args,
-                onContentChange: onContentChangeHandler,
               }}
             />
           </div>

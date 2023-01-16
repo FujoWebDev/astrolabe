@@ -4,18 +4,14 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 import { OEmbed } from "../../../src/plugins/OEmbed/Components";
 import React from "react";
-import { getContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
+import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
 export default {
   title: "Embeds/OEmbeds",
   component: OEmbed,
   decorators: [
+    withContentChangeHandler(EXTENSIONS),
     (Story, ctx) => {
-      const onContentChangeHandler = React.useCallback(
-        getContentChangeHandler(EXTENSIONS),
-        []
-      );
-
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div
@@ -24,12 +20,7 @@ export default {
               backgroundColor: "antiquewhite",
             }}
           >
-            <Story
-              args={{
-                ...ctx.args,
-                onContentChange: onContentChangeHandler,
-              }}
-            />
+            <Story {...ctx} />
           </div>
         </div>
       );

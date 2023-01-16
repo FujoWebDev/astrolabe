@@ -4,18 +4,15 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 import { EditableTweetComponent } from "../../../src/plugins/Twitter/Components";
 import React from "react";
-import { getContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
+import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "Embeds/Twitter",
   component: EditableTweetComponent,
   decorators: [
+    withContentChangeHandler(EXTENSIONS),
     (Story, ctx) => {
-      const onContentChangeHandler = React.useCallback(
-        getContentChangeHandler(EXTENSIONS),
-        []
-      );
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div
@@ -24,12 +21,7 @@ export default {
               backgroundColor: "antiquewhite",
             }}
           >
-            <Story
-              args={{
-                ...ctx.args,
-                onContentChange: onContentChangeHandler,
-              }}
-            />
+            <Story {...ctx} />
           </div>
         </div>
       );

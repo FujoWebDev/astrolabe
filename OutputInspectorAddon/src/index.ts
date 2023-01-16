@@ -1,9 +1,10 @@
 import { Extensions, JSONContent, generateHTML } from "@tiptap/core";
 
+import { DecoratorFunction } from "@storybook/types";
 import React from "react";
-import { addons } from "@storybook/addons";
 import htmlParsers from "prettier/parser-html";
 import prettier from "prettier/standalone";
+import { useChannel } from "@storybook/addons";
 
 const sanitizeJson = (json: JSONContent) => {
   return {
@@ -44,11 +45,29 @@ const formatHtml = (json: JSONContent, extensions: Extensions) => {
 };
 
 export const CHANNEL_NAME = "CONTENT_UPDATED_CHANNEL";
-export const getContentChangeHandler =
-  (extensions: Extensions) => (json: JSONContent) => {
-    const sanitizedJson = sanitizeJson(json);
-    addons.getChannel().emit(CHANNEL_NAME, {
-      json: sanitizedJson,
-      html: formatHtml(sanitizedJson, extensions),
-    });
+// export const withContentChangeHandler =
+//   (extensions: Extensions) => (json: JSONContent) => {
+//     const sanitizedJson = sanitizeJson(json);
+//     console.log("in", addons.getChannel());
+//     addons.getChannel().emit(CHANNEL_NAME, {
+//       json: sanitizedJson,
+//       html: formatHtml(sanitizedJson, extensions),
+//     });
+//   };
+
+export const withContentChangeHandler = (
+  extensions: Extensions
+): DecoratorFunction => {
+  return (storyFn, context) => {
+    const emit = useChannel({});
+    context.args.onContentChange = (json: JSONContent) => {
+      const sanitizedJson = sanitizeJson(json);
+      emit(CHANNEL_NAME, {
+        json: sanitizedJson,
+        html: formatHtml(sanitizedJson, extensions),
+      });
+    };
+
+    return storyFn(context);
   };
+};
