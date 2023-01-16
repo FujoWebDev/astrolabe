@@ -12,6 +12,7 @@
     "build-storybook": {
       "dependsOn": ["^build"],
       "outputs": ["storybook/storybook-static"]
-    }
+    },
+    "clean": {}
   }
 }

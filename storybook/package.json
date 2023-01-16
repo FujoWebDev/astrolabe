@@ -5,7 +5,8 @@
   "scripts": {
     "storybook": "sb dev -p 6006 --no-manager-cache",
     "storybook:force-update": "sb dev -p 6006 --no-manager-cache",
-    "build-storybook": "sb build"
+    "build-storybook": "sb build",
+    "clean": "rm -rf node_modules"
   },
   "dependencies": {
     "@bobaboard/tiptap-image": "*",
