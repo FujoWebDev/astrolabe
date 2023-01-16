@@ -9,7 +9,9 @@ addons.register("output-inspector", () => {
     title: "Output Inspector",
     //👇 Sets the type of UI element in Storybook
     type: types.PANEL,
-    match: ({ viewMode }) => viewMode === "story",
+    match: ({ viewMode }) => {
+      return viewMode === "story";
+    },
     render: ({ active, key }) => {
       return (
         <AddonPanel key={key} active={!!active}>
