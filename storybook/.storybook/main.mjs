@@ -8,12 +8,8 @@ export default {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
-    "@bobaboard/tiptap-storybook-inspector/manager",
   ],
   framework: "@storybook/react-vite",
-  core: {
-    builder: "@storybook/builder-vite",
-  },
   features: {
     storyStoreV7: true,
   },
@@ -29,5 +25,3 @@ export default {
     return config;
   },
 };
-
-export const framework = "@storybook/react-vite";
