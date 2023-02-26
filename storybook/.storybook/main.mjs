@@ -14,6 +14,9 @@ export default {
   features: {
     storyStoreV7: true,
   },
+  docs: {
+    autodocs: "tag",
+  },
   staticDirs: ["../stories/utilities/mocks/"],
 
   async viteFinal(config, { configType }) {
