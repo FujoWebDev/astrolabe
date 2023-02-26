@@ -23,6 +23,13 @@ export default {
         sourceMap: configType !== "production",
       }),
     ];
+    config.server = {
+      ...config.server,
+      hmr: {
+        host: "localhost",
+        protocol: "ws",
+      },
+    };
     return config;
   },
 };
