@@ -1,15 +1,15 @@
-import { ComponentMeta, ComponentStoryFn } from "@storybook/react";
-import { EXTENSIONS, Editor } from "../../../src/editor";
+import { EXTENSIONS, Editor, EditorProps } from "../../../src/editor";
+import { Meta, StoryObj } from "@storybook/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import { EditableTweetComponent } from "../../../src/plugins/Twitter/Components";
 import React from "react";
 import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta = {
   title: "Embeds/Twitter",
   component: EditableTweetComponent,
+  tags: ["autodocs"],
   decorators: [
     withContentChangeHandler(EXTENSIONS),
     (Story, ctx) => {
@@ -27,18 +27,22 @@ export default {
       );
     },
   ],
-} as ComponentMeta<typeof Editor>;
+} as Meta<typeof EditableTweetComponent>;
+
+export default meta;
+
+type Story = StoryObj<EditorProps & { embedUrl?: string }>;
 
 const queryClient = new QueryClient();
-const Template: ComponentStoryFn<typeof Editor> = (args) => (
-  <QueryClientProvider client={queryClient}>
-    <Editor {...args} />
-  </QueryClientProvider>
-);
 
-export const Editable = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Editable.args = {
-  editable: true,
-  initialContent: `<article data-type="tweet" data-src="https://twitter.com/horse_ebooks/status/218439593240956928" />`,
+export const Editable: Story = {
+  args: {
+    editable: true,
+    initialContent: `<article data-type="tweet" data-src="https://twitter.com/horse_ebooks/status/218439593240956928" />`,
+  },
+  render: (args) => (
+    <QueryClientProvider client={queryClient}>
+      <Editor {...args} />
+    </QueryClientProvider>
+  ),
 };

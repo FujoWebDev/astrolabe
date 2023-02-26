@@ -1,14 +1,15 @@
-import { ComponentMeta, ComponentStoryFn } from "@storybook/react";
-import { EXTENSIONS, Editor } from "../../../src/editor";
+import { EXTENSIONS, Editor, EditorProps } from "../../../src/editor";
+import { Meta, StoryObj } from "@storybook/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import { OEmbed } from "../../../src/plugins/OEmbed/Components";
 import React from "react";
 import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
-export default {
+const meta = {
   title: "Embeds/OEmbeds",
   component: OEmbed,
+  tags: ["autodocs"],
   decorators: [
     withContentChangeHandler(EXTENSIONS),
     (Story, ctx) => {
@@ -26,86 +27,108 @@ export default {
       );
     },
   ],
-} as ComponentMeta<typeof Editor>;
+} as Meta<typeof OEmbed>;
+
+export default meta;
+
+type Story = StoryObj<EditorProps & { embedUrl?: string }>;
 
 const queryClient = new QueryClient();
-const Template: ComponentStoryFn<
-  (props: Parameters<typeof Editor>[0] & { embedUrl?: string }) => JSX.Element
-> = (args) => (
-  <QueryClientProvider client={queryClient}>
-    <Editor
-      {...args}
-      initialContent={
-        args.embedUrl
-          ? `<article data-type="oembed" data-src="${args.embedUrl}" />`
-          : args.initialContent
-      }
-    />
-  </QueryClientProvider>
-);
 
-export const Empty = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Empty.args = {
-  editable: true,
+export const Empty: Story = {
+  args: {
+    editable: true,
+  },
+  render: (args) => (
+    <QueryClientProvider client={queryClient}>
+      <Editor
+        {...args}
+        initialContent={
+          args.embedUrl
+            ? `<article data-type="oembed" data-src="${args.embedUrl}" />`
+            : args.initialContent
+        }
+      />
+    </QueryClientProvider>
+  ),
 };
 
-export const Bandcamp = Template.bind({});
-Bandcamp.args = {
-  editable: true,
-  embedUrl: `https://thetwilightsad.bandcamp.com/album/oran-mor-2020`,
+export const Bandcamp: Story = {
+  ...Empty,
+  args: {
+    editable: true,
+    embedUrl: `https://thetwilightsad.bandcamp.com/album/oran-mor-2020`,
+  },
 };
 
-export const Pixiv = Template.bind({});
-Pixiv.args = {
-  editable: true,
-  embedUrl: `https://www.pixiv.net/en/artworks/83682624`,
+export const Pixiv: Story = {
+  ...Empty,
+  args: {
+    editable: true,
+    embedUrl: `https://www.pixiv.net/en/artworks/83682624`,
+  },
 };
 
-export const Tumblr = Template.bind({});
-Tumblr.args = {
-  editable: true,
-  embedUrl: `https://bobaboard.tumblr.com/post/647298900927053824/this-april-1st-bobaboard-is-proud-to-bring-its`,
+export const Tumblr: Story = {
+  ...Empty,
+  args: {
+    editable: true,
+    embedUrl: `https://bobaboard.tumblr.com/post/647298900927053824/this-april-1st-bobaboard-is-proud-to-bring-its`,
+  },
 };
 
-export const Twitter = Template.bind({});
-Twitter.args = {
-  editable: true,
-  embedUrl: `https://twitter.com/Horse_ebooks/status/218439593240956928`,
+export const Twitter: Story = {
+  ...Empty,
+  args: {
+    editable: true,
+    embedUrl: `https://twitter.com/Horse_ebooks/status/218439593240956928`,
+  },
 };
 
-export const TikTok = Template.bind({});
-TikTok.args = {
-  editable: true,
-  embedUrl: `https://www.tiktok.com/@scout2015/video/6718335390845095173`,
+export const TikTok: Story = {
+  ...Empty,
+  args: {
+    editable: true,
+    embedUrl: `https://www.tiktok.com/@scout2015/video/6718335390845095173`,
+  },
 };
 
-export const Instagram = Template.bind({});
-Instagram.args = {
-  editable: true,
-  embedUrl: `https://www.instagram.com/p/89CUyVoVY9/`,
+export const Instagram: Story = {
+  ...Empty,
+  args: {
+    editable: true,
+    embedUrl: `https://www.instagram.com/p/89CUyVoVY9/`,
+  },
 };
 
-export const Reddit = Template.bind({});
-Reddit.args = {
-  editable: true,
-  embedUrl: `https://www.reddit.com/r/nextfuckinglevel/comments/ibikdr/50_year_old_firefighter_deadlifts_600_lbs_of/`,
+export const Reddit: Story = {
+  ...Empty,
+  args: {
+    editable: true,
+    embedUrl: `https://www.reddit.com/r/nextfuckinglevel/comments/ibikdr/50_year_old_firefighter_deadlifts_600_lbs_of/`,
+  },
 };
 
-export const YouTube = Template.bind({});
-YouTube.args = {
-  editable: true,
-  embedUrl: `https://www.youtube.com/watch?v=k1BneeJTDcU`,
+export const YouTube: Story = {
+  ...Empty,
+  args: {
+    editable: true,
+    embedUrl: `https://www.youtube.com/watch?v=k1BneeJTDcU`,
+  },
 };
 
-export const Vimeo = Template.bind({});
-Vimeo.args = {
-  editable: true,
-  embedUrl: `https://vimeo.com/584232458`,
+export const Vimeo: Story = {
+  ...Empty,
+  args: {
+    editable: true,
+    embedUrl: `https://vimeo.com/584232458`,
+  },
 };
 
-export const Image = Template.bind({});
-Image.args = {
-  editable: true,
-  embedUrl: `https://tanoshimi.xyz/2016/11/29/yes-sadpanda-is-one-of-my-sources/`,
+export const Image: Story = {
+  ...Empty,
+  args: {
+    editable: true,
+    embedUrl: `https://tanoshimi.xyz/2016/11/29/yes-sadpanda-is-one-of-my-sources/`,
+  },
 };
