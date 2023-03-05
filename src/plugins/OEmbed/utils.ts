@@ -76,10 +76,11 @@ const listenForSize = () => {
       console.log(event);
       switch (event.origin) {
         case "https://embed.tumblr.com":
-          if (event.data.height) {
+          const messageData = JSON.parse(event.data);
+          if (messageData.args) {
             window.removeEventListener("message", listener);
           }
-          return resolve(event.data.height);
+          return resolve(messageData.args[0]);
         default:
           return;
       }
