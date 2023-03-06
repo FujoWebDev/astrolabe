@@ -128,6 +128,8 @@ export const OEmbedLoader = (
     );
   }
 
+  console.log("Data from embed server", data);
+
   return (
     <NodeViewWrapper data-type={PLUGIN_NAME}>
       <OEmbed
