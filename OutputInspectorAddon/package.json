@@ -29,6 +29,7 @@
     "@codemirror/lang-html": "^6.1.0",
     "@storybook/addons": "next",
     "@tiptap/core": "^2.0.0-beta.194",
+    "@tiptap/pm": "^2.0.0-beta.220",
     "@uiw/codemirror-theme-dracula": "^4.11.0",
     "@uiw/react-codemirror": "^4.11.0",
     "prettier": "^2.7.1",

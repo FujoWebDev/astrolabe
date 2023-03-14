@@ -1,4 +1,4 @@
-import { EXTENSIONS, Editor, EditorProps } from "../../../src/editor";
+import { DEFAULT_EXTENSIONS, Editor, EditorProps } from "../../../src/editor";
 import { Meta, StoryObj } from "@storybook/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -11,7 +11,7 @@ const meta = {
   component: EditableTweetComponent,
   tags: ["autodocs"],
   decorators: [
-    withContentChangeHandler(EXTENSIONS),
+    withContentChangeHandler([...DEFAULT_EXTENSIONS]),
     (Story, ctx) => {
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>

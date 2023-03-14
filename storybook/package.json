@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "storybook": "sb dev -p 6006 --no-manager-cache",
-    "storybook:force-update": "sb dev -p 6006 --no-manager-cache",
+    "storybook": "sb dev -p 6006",
+    "storybook:force-update": "sb dev -p 6006",
     "build-storybook": "sb build",
     "clean": "rm -rf node_modules"
   },
@@ -22,6 +22,7 @@
     "@storybook/react": "^7.0.0-beta.28",
     "@storybook/react-vite": "^7.0.0-beta.28",
     "@storybook/testing-library": "^0.0.13",
+    "@tiptap/extension-italic": "^2.0.0-beta.220",
     "iconoir-react": "^5.1.4",
     "msw": "^0.49.2",
     "react": "^18.0.0",
