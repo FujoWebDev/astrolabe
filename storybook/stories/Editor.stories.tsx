@@ -1,6 +1,8 @@
-import { EXTENSIONS, Editor } from "../../src/editor";
+import { DEFAULT_EXTENSIONS, Editor } from "../../src/editor";
 import { Meta, StoryObj } from "@storybook/react";
 
+import Italic from "@tiptap/extension-italic";
+import { MenuButtonProps } from "../../src/editor/BubbleMenu";
 import React from "react";
 import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
@@ -12,7 +14,7 @@ const meta = {
   component: Editor,
   tags: ["autodocs"],
   decorators: [
-    withContentChangeHandler(EXTENSIONS),
+    withContentChangeHandler([...DEFAULT_EXTENSIONS, Italic]),
     (Story, ctx) => {
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -50,5 +52,30 @@ export const ViewOnly: Story = {
   args: {
     ...Editable.args,
     editable: false,
+  },
+};
+
+export const Italics: Story = {
+  args: {
+    ...Editable.args,
+    initialContent: `<p>but what if I'm <strong>really</strong>, <em>really</em>, <strong><em>really</em></strong> excited!!!</p>`,
+    addedExtensions: [Italic],
+    customButtons: [
+      {
+        extensionName: "italic",
+        menuButton: ({ editor }: MenuButtonProps) => {
+          return (
+            <button
+              title="italic"
+              aria-label="italic"
+              aria-pressed={editor.isActive("italic")}
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+            >
+              <em>I</em>
+            </button>
+          );
+        },
+      },
+    ],
   },
 };

@@ -2,6 +2,10 @@
   padding: 5px;
 }
 
+[role="menuitem"] [aria-pressed="true"] {
+  background-color: blueviolet;
+}
+
 [data-spoilers="true"] {
   position: relative;
 }
