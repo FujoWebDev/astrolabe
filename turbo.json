@@ -10,8 +10,9 @@
       "outputs": []
     },
     "build-storybook": {
+      "inputs": ["storybook/**/*.tsx", "storybook/**/*.ts"],
       "dependsOn": ["^build"],
-      "outputs": ["storybook/storybook-static"]
+      "outputs": ["storybook/storybook-static/**"]
     },
     "clean": {}
   }

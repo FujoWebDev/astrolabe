@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import linaria from "@linaria/rollup";
+import linaria from "@linaria/vite";
 import react from "@vitejs/plugin-react";
 const path = require("path");
 
@@ -10,8 +10,9 @@ export default defineConfig({
       entry: path.resolve(__dirname, "index.ts"),
       name: "TipTapOEmbed",
     },
+    minify: false,
     rollupOptions: {
-      external: ["react", "react-dom"],
+      external: ["react", "react-dom", "react-query"],
       output: {
         globals: {
           react: "React",

@@ -1,4 +1,3 @@
-import linaria from "@linaria/rollup";
 export default {
   stories: [
     "../stories/**/*.stories.mdx",
@@ -20,12 +19,7 @@ export default {
   staticDirs: ["../stories/utilities/mocks/"],
 
   async viteFinal(config, { configType }) {
-    config.plugins = [
-      ...config.plugins,
-      linaria.default({
-        sourceMap: configType !== "production",
-      }),
-    ];
+    config.plugins = [...config.plugins];
     config.server = {
       ...config.server,
       hmr: {

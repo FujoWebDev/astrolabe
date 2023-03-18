@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import linaria from "@linaria/rollup";
+import linaria from "@linaria/vite";
 import react from "@vitejs/plugin-react";
 const path = require("path");
 
