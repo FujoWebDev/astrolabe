@@ -2,13 +2,11 @@ import { DEFAULT_EXTENSIONS, Editor, EditorProps } from "../../../src/editor";
 import { Meta, StoryObj } from "@storybook/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
-import { OEmbed } from "../../../src/plugins/OEmbed/Components";
 import React from "react";
 import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
 const meta = {
   title: "Embeds/OEmbeds",
-  component: OEmbed,
   tags: ["autodocs"],
   decorators: [
     withContentChangeHandler([...DEFAULT_EXTENSIONS]),
@@ -27,7 +25,7 @@ const meta = {
       );
     },
   ],
-} as Meta<typeof OEmbed>;
+} as Meta;
 
 export default meta;
 

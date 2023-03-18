@@ -19,7 +19,6 @@ import { OEmbedPlugin } from "@bobaboard/tiptap-oembed";
 import Paragraph from "@tiptap/extension-paragraph";
 import React from "react";
 import Text from "@tiptap/extension-text";
-import { TweetPlugin } from "@bobaboard/tiptap-native-twitter";
 
 export interface EditorProps {
   editable: boolean;
@@ -37,7 +36,6 @@ export const DEFAULT_EXTENSIONS = [
   HardBreak,
   Bold,
   ImagePlugin,
-  TweetPlugin,
   OEmbedPlugin,
 ];
 

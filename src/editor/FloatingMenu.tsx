@@ -1,4 +1,4 @@
-import { AddMediaImage, Twitter, Www } from "iconoir-react";
+import { AddMediaImage, Www } from "iconoir-react";
 
 import type { Editor } from "@tiptap/react";
 import React from "react";
@@ -57,18 +57,6 @@ export const FloatingMenuOptions = ({ editor }: { editor: Editor }) => {
         <label htmlFor="add-image">
           <AddMediaImage />
         </label>
-      </li>
-      <li role="menuitem">
-        <button
-          title="Add tweet"
-          onClick={() =>
-            editor.commands.addTweet({
-              src: "https://twitter.com/horse_ebooks/status/218439593240956928",
-            })
-          }
-        >
-          <Twitter />
-        </button>
       </li>
       <li role="menuitem">
         <button
