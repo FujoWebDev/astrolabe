@@ -1,10 +1,16 @@
 {
   "name": "@bobaboard/tiptap-image",
-  "main": "./dist/tiptap-image.mjs",
-  "version": "0.0.0",
+  "type": "module",
+  "version": "0.0.1",
+  "exports": {
+    ".": {
+      "import": "./dist/tiptap-image.js",
+      "require": "./dist/tiptap-image.cjs"
+    }
+  },
   "scripts": {
     "build": "tsc && vite build",
-    "clean": "rm -rf node_modules"
+    "clean": "rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
     "@linaria/babel-preset": "^4.4.3",
@@ -12,6 +18,7 @@
     "@linaria/react": "^4.3.6"
   },
   "devDependencies": {
-    "@linaria/vite": "^4.2.9"
+    "@linaria/vite": "^4.2.9",
+    "typescript": "^5.0.2"
   }
 }
