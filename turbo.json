@@ -3,7 +3,7 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["src/dist/**", "src/plugins/**/dist/**"]
     },
     "storybook": {
       "dependsOn": ["^build"],
@@ -14,6 +14,8 @@
       "dependsOn": ["^build"],
       "outputs": ["storybook/storybook-static/**"]
     },
-    "clean": {}
+    "clean": {
+      "cache": false
+    }
   }
 }

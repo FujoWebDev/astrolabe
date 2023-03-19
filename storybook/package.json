@@ -6,7 +6,7 @@
     "storybook": "sb dev -p 6006",
     "storybook:force-update": "sb dev -p 6006",
     "build-storybook": "sb build",
-    "clean": "rm -rf node_modules"
+    "clean": "rm -rf node_modules && rm -rf storybook-static"
   },
   "dependencies": {
     "@bobaboard/boba-editor-next": "*",
