@@ -44,6 +44,7 @@ export const Editable: Story = {
   // More on args: https://storybook.js.org/docs/7.0/react/api/csf#args-story-inputs
   args: {
     editable: true,
+    addedExtensions: [Italic],
     initialContent: `<picture data-type="image"><img src="https://placekitten.com/200/300" /></picture>`,
   },
 };
@@ -60,7 +61,7 @@ export const Italics: Story = {
     ...Editable.args,
     initialContent: `<p>but what if I'm <strong>really</strong>, <em>really</em>, <strong><em>really</em></strong> excited!!!</p>`,
     addedExtensions: [Italic],
-    customButtons: [
+    customBubbleMenuButtons: [
       {
         extensionName: "italic",
         menuButton: ({ editor }: MenuButtonProps) => {
@@ -71,7 +72,7 @@ export const Italics: Story = {
               aria-pressed={editor.isActive("italic")}
               onClick={() => editor.chain().focus().toggleItalic().run()}
             >
-              <em>I</em>
+              <em>Italic</em>
             </button>
           );
         },

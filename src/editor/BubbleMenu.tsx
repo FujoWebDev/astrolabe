@@ -1,9 +1,9 @@
 import { Mark, Node } from "@tiptap/core";
-import React, { JSXElementConstructor } from "react";
 
 import type { Editor } from "@tiptap/react";
+import React from "react";
 
-export interface BubbleMenuOptionsProps {
+export interface MenuOptionsProps {
   editor: Editor;
   extensions: (Node<any, any> | Mark<any, any>)[];
   customButtons?: MenuOption[];
@@ -11,7 +11,7 @@ export interface BubbleMenuOptionsProps {
 
 export interface MenuOption {
   extensionName: string;
-  menuButton: JSXElementConstructor<MenuButtonProps>;
+  menuButton: React.FC<MenuButtonProps>;
 }
 
 export interface MenuButtonProps {
@@ -31,17 +31,30 @@ export const BoldButton = ({ editor }: MenuButtonProps) => {
   );
 };
 
-const bubbleMenuButtons = new Map<
-  string,
-  JSXElementConstructor<MenuButtonProps>
->();
+export const ItalicButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="italic"
+      aria-label="italic"
+      aria-pressed={editor.isActive("italic")}
+      //@ts-ignore ts gives an error for commands that have not been imported somewhere in the editor package,
+      // but the command works fine with in Storybook with the extension being imported there and passed as a prop to the editor.
+      onClick={() => editor.chain().focus().toggleItalic().run()}
+    >
+      <em>I</em>
+    </button>
+  );
+};
+
+const bubbleMenuButtons = new Map<string, React.FC<MenuButtonProps>>();
 bubbleMenuButtons.set("bold", BoldButton);
+bubbleMenuButtons.set("italic", ItalicButton);
 
 export const BubbleMenuOptions = ({
   editor,
   extensions,
   customButtons,
-}: BubbleMenuOptionsProps) => {
+}: MenuOptionsProps) => {
   const buttonMap = new Map(bubbleMenuButtons);
   if (customButtons?.length) {
     customButtons.forEach((customButton) => {
