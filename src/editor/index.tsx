@@ -8,24 +8,27 @@ import {
   useEditor,
 } from "@tiptap/react";
 import { BubbleMenuOptions, MenuOption } from "./BubbleMenu";
-import { Mark, Node } from "@tiptap/core";
+import { Mark, Node, isTextSelection } from "@tiptap/core";
 
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
 import { FloatingMenuOptions } from "./FloatingMenu";
 import HardBreak from "@tiptap/extension-hard-break";
 import { ImagePlugin } from "@bobaboard/tiptap-image";
+// import Italic from "@tiptap/extension-italic";
 import { OEmbedPlugin } from "@bobaboard/tiptap-oembed";
 import Paragraph from "@tiptap/extension-paragraph";
 import React from "react";
 import Text from "@tiptap/extension-text";
 
+// TODO: Allow passing extension configs as props
 export interface EditorProps {
   editable: boolean;
   initialContent: string;
   onContentChange: (newContent: JSONContent) => void;
   addedExtensions?: (Node<any, any> | Mark<any, any>)[];
-  customButtons?: MenuOption[];
+  customBubbleMenuButtons?: MenuOption[];
+  customFloatingMenuButtons?: MenuOption[];
 }
 
 export const DEFAULT_EXTENSIONS = [
@@ -69,15 +72,51 @@ export const Editor = (props: EditorProps) => {
       <EditorContent editor={editor} />
       {editor && (
         <FloatingMenu editor={editor}>
-          <FloatingMenuOptions editor={editor} />
+          <FloatingMenuOptions
+            editor={editor}
+            extensions={currentExtensions}
+            customButtons={props.customFloatingMenuButtons}
+          />
         </FloatingMenu>
       )}
       {editor && (
-        <BubbleMenu editor={editor}>
+        <BubbleMenu
+          editor={editor}
+          shouldShow={({ editor, state, view, to, from }) => {
+            // We need to add logic to disable the bubble menu from appearing
+            // when nodes that do not contain formattable text (e.g. images) are selected.
+            // But we also need to reimplement the default behavior because setting shouldShow totally overrides it.
+            // This code is adapted from https://github.com/ueberdosis/tiptap/blob/84ac1dc9c747f66aa64a64bf45a4ef85863b3a58/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L46
+            const { doc, selection } = state;
+            const { empty } = selection;
+
+            // Sometime check for `empty` is not enough.
+            // Doubleclick an empty paragraph returns a node size of 2.
+            // So we check also for an empty text size.
+            const isEmptyTextBlock =
+              !doc.textBetween(from, to).length && isTextSelection(selection);
+
+            const hasEditorFocus = view.hasFocus();
+
+            // Only show the bubble menu for elements with formattable text
+            const isText = isTextSelection(selection);
+
+            if (
+              !hasEditorFocus ||
+              empty ||
+              isEmptyTextBlock ||
+              !editor.isEditable ||
+              !isText
+            ) {
+              return false;
+            }
+            return true;
+          }}
+        >
           <BubbleMenuOptions
             editor={editor}
             extensions={currentExtensions}
-            customButtons={props.customButtons}
+            customButtons={props.customBubbleMenuButtons}
           />
         </BubbleMenu>
       )}
