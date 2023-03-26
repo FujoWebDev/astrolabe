@@ -15,6 +15,7 @@ import Document from "@tiptap/extension-document";
 import { FloatingMenuOptions } from "./FloatingMenu";
 import HardBreak from "@tiptap/extension-hard-break";
 import { ImagePlugin } from "@bobaboard/tiptap-image";
+import Link from "@tiptap/extension-link";
 // import Italic from "@tiptap/extension-italic";
 import { OEmbedPlugin } from "@bobaboard/tiptap-oembed";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -31,21 +32,33 @@ export interface EditorProps {
   customFloatingMenuButtons?: MenuOption[];
 }
 
-export const DEFAULT_EXTENSIONS = [
+export const DEFAULT_EXTENSIONS: (Node<any, any> | Mark<any, any>)[] = [
   Document,
   Paragraph,
   Text,
   // TODO: figure out how to set this up so it can be used on mobile
   HardBreak,
   Bold,
+  Link.configure({
+    openOnClick: false,
+  }),
   ImagePlugin,
   OEmbedPlugin,
+  Link.configure({
+    openOnClick: true,
+  }),
 ];
 
 export const Editor = (props: EditorProps) => {
   const currentExtensions = props.addedExtensions
     ? [...DEFAULT_EXTENSIONS, ...props.addedExtensions]
     : DEFAULT_EXTENSIONS;
+  // if (currentExtensions.includes(Link)) {
+  //   const linkIndex = currentExtensions.lastIndexOf(Link);
+  //   currentExtensions[linkIndex] = Link.configure({
+  //     openOnClick: !props.editable,
+  //   })
+  // }
   const editor = useEditor({
     extensions: currentExtensions,
     content: props.initialContent,

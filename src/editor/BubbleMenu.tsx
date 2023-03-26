@@ -1,3 +1,13 @@
+// icons not available: strikethrough, headings, clear formatting
+import {
+  Code,
+  EyeOff,
+  Link,
+  List,
+  NumberedListLeft,
+  Quote,
+  Underline,
+} from "iconoir-react";
 import { Mark, Node } from "@tiptap/core";
 
 import type { Editor } from "@tiptap/react";
@@ -42,6 +52,65 @@ export const ItalicButton = ({ editor }: MenuButtonProps) => {
       onClick={() => editor.chain().focus().toggleItalic().run()}
     >
       <em>I</em>
+    </button>
+  );
+};
+
+// TODO: make sure only one button but include with any code extension
+export const CodeButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="Code"
+      aria-label="code"
+      aria-pressed={editor.isActive("code") || editor.isActive("codeBLock")}
+      onClick={() => {
+        if (editor.isActive("codeBLock")) {
+          //@ts-ignore
+          editor.chain().focus().toggleCodeBlock().run();
+          return;
+        }
+        //@ts-ignore
+        editor.chain().focus().toggleCode().run();
+      }}
+    >
+      <Code />
+    </button>
+  );
+};
+
+export const LinkButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title={editor.isActive("link") ? "Edit link" : "Add link"}
+      aria-label={editor.isActive("link") ? "Edit link" : "Add link"}
+      aria-pressed={editor.isActive("link")}
+      onClick={() => {
+        const prevUrl = editor.getAttributes("link").href;
+        const url = window.prompt("Gimme a URL to link", prevUrl);
+        // cancelled
+        if (url === null) {
+          editor.commands.focus();
+          return;
+        }
+
+        // empty
+        if (url === "") {
+          editor.chain().focus().extendMarkRange("link").unsetLink().run();
+          return;
+        }
+
+        editor
+          .chain()
+          .focus()
+          .extendMarkRange("link")
+          .setLink({ href: url })
+          .run();
+      }}
+    >
+      <Link />
+      {editor.isActive("link") && (
+        <span> : {editor.getAttributes("link").href}</span>
+      )}
     </button>
   );
 };

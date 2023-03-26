@@ -1,4 +1,4 @@
-import { AddMediaImage, Www } from "iconoir-react";
+import { AddMediaImage, Code, GifFormat, Www } from "iconoir-react";
 import { MenuButtonProps, MenuOption, MenuOptionsProps } from "./BubbleMenu";
 
 import React from "react";
@@ -84,6 +84,37 @@ export const OEmbedButton = ({ editor }: MenuButtonProps) => {
     </button>
   );
 };
+
+// TODO: make work with either type of code block
+export const CodeButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="Add code block"
+      aria-label="Add code block"
+      onClick={() => {
+        //@ts-ignore
+        editor.chain().focus().setCodeBlock().run();
+      }}
+    >
+      <Code />
+    </button>
+  );
+};
+
+// Implement actual logic once we have GIF selecting figured out
+// export const GifButton = ({ editor }: MenuButtonProps) => {
+//   return (
+//     <button
+//       title="Add GIF"
+//       aria-label="Add GIF"
+//       onClick={() => {
+
+//       }}
+//     >
+//       <GifFormat />
+//     </button>
+//   );
+// };
 
 const floatingMenuButtons = new Map<string, React.FC<MenuButtonProps>>();
 floatingMenuButtons.set("image", ImageButton);
