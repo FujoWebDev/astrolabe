@@ -1,4 +1,3 @@
-// testing ssh again 4
 // icons not available: strikethrough, headings, clear formatting
 import {
   Code,
@@ -32,8 +31,8 @@ export interface MenuButtonProps {
 export const BoldButton = ({ editor }: MenuButtonProps) => {
   return (
     <button
-      title="bold"
-      aria-label="bold"
+      title="Bold"
+      aria-label="Bold"
       aria-pressed={editor.isActive("bold")}
       onClick={() => editor.chain().focus().toggleBold().run()}
     >
@@ -45,8 +44,8 @@ export const BoldButton = ({ editor }: MenuButtonProps) => {
 export const ItalicButton = ({ editor }: MenuButtonProps) => {
   return (
     <button
-      title="italic"
-      aria-label="italic"
+      title="Italic"
+      aria-label="Italic"
       aria-pressed={editor.isActive("italic")}
       //@ts-ignore ts gives an error for commands that have not been imported somewhere in the editor package,
       // but the command works fine with in Storybook with the extension being imported there and passed as a prop to the editor.
@@ -56,6 +55,127 @@ export const ItalicButton = ({ editor }: MenuButtonProps) => {
     </button>
   );
 };
+
+export const UnderlineButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="Underline"
+      aria-label="Underline"
+      aria-pressed={editor.isActive("underline")}
+      //@ts-ignore
+      onClick={() => editor.chain().focus().toggleUnderline().run()}
+    >
+      <Underline />
+    </button>
+  );
+};
+
+export const StrikeButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="Strikethrough"
+      aria-label="strikethrough"
+      aria-pressed={editor.isActive("strike")}
+      //@ts-ignore
+      onClick={() => editor.chain().focus().toggleStrike().run()}
+    >
+      <s>S</s>
+    </button>
+  );
+};
+
+export const BlockquoteButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="Block Quote"
+      aria-label="block quote"
+      aria-pressed={editor.isActive("blockquote")}
+      //@ts-ignore
+      onClick={() => editor.chain().focus().toggleBlockquote().run()}
+    >
+      <Quote />
+    </button>
+  );
+};
+
+// TODO: Maybe add controls for list item sinking/lifting/splitting functionality to list buttons?
+export const BulletListButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="Bullet List"
+      aria-label="bullet list"
+      aria-pressed={editor.isActive("bulletList")}
+      //@ts-ignore
+      onClick={() => editor.chain().focus().toggleBulletList().run()}
+    >
+      <List />
+    </button>
+  );
+};
+
+// TODO: Maybe add controls for list item sinking/lifting/splitting functionality to list buttons?
+export const OrderedListButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="Numbered List"
+      aria-label="numbered list"
+      aria-pressed={editor.isActive("orderedList")}
+      //@ts-ignore
+      onClick={() => editor.chain().focus().toggleOrderedList().run()}
+    >
+      <NumberedListLeft />
+    </button>
+  );
+};
+
+// TODO: Needs better UI
+export const HeadingButtons = ({ editor }: MenuButtonProps) => {
+  return (
+    <>
+      <button
+        title="Heading 1"
+        aria-label="heading 1"
+        aria-pressed={editor.isActive("heading", { level: 1 })}
+        //@ts-ignore
+        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+      >
+        <span>H1</span>
+      </button>
+      <button
+        title="Heading 2"
+        aria-label="heading 2"
+        aria-pressed={editor.isActive("heading", { level: 2 })}
+        //@ts-ignore
+        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+      >
+        <span>H2</span>
+      </button>
+      <button
+        title="Heading 3"
+        aria-label="heading 3"
+        aria-pressed={editor.isActive("heading", { level: 3 })}
+        //@ts-ignore
+        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+      >
+        <span>H3</span>
+      </button>
+    </>
+  );
+};
+
+// TODO: Implement actual logic (and add button to map) once we have inline spoilers extension
+// export const SpoilersButton = ({ editor }: MenuButtonProps) => {
+//   return (
+//     <button
+//       title="text spoilers"
+//       aria-label="text spoilers"
+//       aria-pressed={editor.isActive("")}
+//       onClick={() => editor.chain().focus().toggle?????().run()}
+//     >
+//       <EyeOff />
+//     </button>
+//   );
+// };
 
 // TODO: make sure only one button but include with any code extension
 export const CodeButton = ({ editor }: MenuButtonProps) => {
@@ -116,9 +236,30 @@ export const LinkButton = ({ editor }: MenuButtonProps) => {
   );
 };
 
+// We don't add this one to the map since it's not for a specific extension
+export const ClearButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="Clear Formatting"
+      aria-label="clear formatting"
+      onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
+    >
+      <span>Clear Formatting</span>
+    </button>
+  );
+};
+
 const bubbleMenuButtons = new Map<string, React.FC<MenuButtonProps>>();
 bubbleMenuButtons.set("bold", BoldButton);
 bubbleMenuButtons.set("italic", ItalicButton);
+bubbleMenuButtons.set("underline", UnderlineButton);
+bubbleMenuButtons.set("strike", StrikeButton);
+bubbleMenuButtons.set("blockquote", BlockquoteButton);
+bubbleMenuButtons.set("bulletList", BulletListButton);
+bubbleMenuButtons.set("orderedList", OrderedListButton);
+bubbleMenuButtons.set("heading", HeadingButtons);
+bubbleMenuButtons.set("link", LinkButton);
+bubbleMenuButtons.set("code", CodeButton);
 
 export const BubbleMenuOptions = ({
   editor,
@@ -148,6 +289,7 @@ export const BubbleMenuOptions = ({
           <option.menuButton editor={editor} />
         </li>
       ))}
+      {options.length > 0 && <ClearButton editor={editor} />}
     </ul>
   );
 };

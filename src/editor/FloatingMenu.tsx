@@ -101,7 +101,7 @@ export const CodeButton = ({ editor }: MenuButtonProps) => {
   );
 };
 
-// Implement actual logic once we have GIF selecting figured out
+// TODO: Implement actual logic (and add button to map) once we have GIF selecting figured out
 // export const GifButton = ({ editor }: MenuButtonProps) => {
 //   return (
 //     <button
@@ -119,6 +119,7 @@ export const CodeButton = ({ editor }: MenuButtonProps) => {
 const floatingMenuButtons = new Map<string, React.FC<MenuButtonProps>>();
 floatingMenuButtons.set("image", ImageButton);
 floatingMenuButtons.set("oembed", OEmbedButton);
+floatingMenuButtons.set("codeBlock", CodeButton);
 
 export const FloatingMenuOptions = ({
   editor,
