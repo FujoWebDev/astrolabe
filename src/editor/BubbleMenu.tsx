@@ -48,7 +48,7 @@ export const ItalicButton = ({ editor }: MenuButtonProps) => {
       aria-label="Italic"
       aria-pressed={editor.isActive("italic")}
       //@ts-ignore ts gives an error for commands that have not been imported somewhere in the editor package,
-      // but the command works fine with in Storybook with the extension being imported there and passed as a prop to the editor.
+      // but the command works fine in Storybook with the extension being imported there and passed as a prop to the editor.
       onClick={() => editor.chain().focus().toggleItalic().run()}
     >
       <em>I</em>
@@ -213,9 +213,9 @@ export const LinkButton = ({ editor }: MenuButtonProps) => {
           editor.commands.focus();
           return;
         }
-
         // empty
         if (url === "") {
+          // @ts-ignore
           editor.chain().focus().extendMarkRange("link").unsetLink().run();
           return;
         }
@@ -224,6 +224,7 @@ export const LinkButton = ({ editor }: MenuButtonProps) => {
           .chain()
           .focus()
           .extendMarkRange("link")
+          // @ts-ignore
           .setLink({ href: url })
           .run();
       }}
