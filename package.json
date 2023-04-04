@@ -5,7 +5,7 @@
   "scripts": {
     "build": "turbo run build",
     "storybook": "turbo run storybook --no-cache",
-    "build-storybook": "turbo run build-storybook",
+    "build-storybook": "dotenv -- turbo run build-storybook",
     "clean": "turbo run clean"
   },
   "devDependencies": {
@@ -17,5 +17,8 @@
     "src/",
     "storybook",
     "OutputInspectorAddon"
-  ]
+  ],
+  "dependencies": {
+    "dotenv-cli": "^7.1.0"
+  }
 }
