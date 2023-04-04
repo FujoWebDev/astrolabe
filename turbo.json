@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": ["**/.env.*local", ".env", "tsconfig.json"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
@@ -12,6 +13,7 @@
     "build-storybook": {
       "inputs": ["storybook/**/*.tsx", "storybook/**/*.ts"],
       "dependsOn": ["^build"],
+      "env": ["NODE_OPTIONS"],
       "outputs": ["storybook/storybook-static/**"]
     },
     "clean": {
