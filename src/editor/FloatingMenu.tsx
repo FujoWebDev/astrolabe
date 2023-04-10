@@ -35,7 +35,7 @@ export const ImageButton = ({ editor }: MenuButtonProps) => {
       <input
         // TODO: figure out how to namespace this id in case there are multiple editors on the page
         id="add-image"
-        title="Add an image to the editor"
+        title="Add Image from File"
         style={{
           width: 0,
           height: 0,
@@ -54,7 +54,7 @@ export const ImageButton = ({ editor }: MenuButtonProps) => {
         accept="image/png, image/gif, image/jpeg, image/bmp, image/x-icon"
       />
       <label htmlFor="add-image">
-        <AddMediaImage aria-label="Add image from file" />
+        <AddMediaImage aria-label="add image from file" />
       </label>
     </>
   );
@@ -63,8 +63,8 @@ export const ImageButton = ({ editor }: MenuButtonProps) => {
 export const OEmbedButton = ({ editor }: MenuButtonProps) => {
   return (
     <button
-      title="Add embed"
-      aria-label="Add embed"
+      title="Add Embed"
+      aria-label="add embed"
       onClick={() => {
         const url = window.prompt("Gimme a URL to embed");
         if (url) {
@@ -85,28 +85,12 @@ export const OEmbedButton = ({ editor }: MenuButtonProps) => {
   );
 };
 
-// TODO: make work with either type of code block
-export const CodeButton = ({ editor }: MenuButtonProps) => {
-  return (
-    <button
-      title="Add code block"
-      aria-label="Add code block"
-      onClick={() => {
-        //@ts-ignore
-        editor.chain().focus().setCodeBlock().run();
-      }}
-    >
-      <Code />
-    </button>
-  );
-};
-
 // TODO: Implement actual logic (and add button to map) once we have GIF selecting figured out
 // export const GifButton = ({ editor }: MenuButtonProps) => {
 //   return (
 //     <button
 //       title="Add GIF"
-//       aria-label="Add GIF"
+//       aria-label="add GIF"
 //       onClick={() => {
 
 //       }}
@@ -119,7 +103,6 @@ export const CodeButton = ({ editor }: MenuButtonProps) => {
 const floatingMenuButtons = new Map<string, React.FC<MenuButtonProps>>();
 floatingMenuButtons.set("image", ImageButton);
 floatingMenuButtons.set("oembed", OEmbedButton);
-floatingMenuButtons.set("codeBlock", CodeButton);
 
 export const FloatingMenuOptions = ({
   editor,

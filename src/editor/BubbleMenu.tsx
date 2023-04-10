@@ -1,6 +1,7 @@
 // icons not available: strikethrough, headings, clear formatting
 import {
   Code,
+  CodeBracketsSquare,
   EyeOff,
   Link,
   List,
@@ -177,24 +178,34 @@ export const HeadingButtons = ({ editor }: MenuButtonProps) => {
 //   );
 // };
 
-// TODO: make sure only one button but include with any code extension
 export const CodeButton = ({ editor }: MenuButtonProps) => {
   return (
     <button
       title="Code"
       aria-label="code"
-      aria-pressed={editor.isActive("code") || editor.isActive("codeBLock")}
+      aria-pressed={editor.isActive("code")}
       onClick={() => {
-        if (editor.isActive("codeBLock")) {
-          //@ts-ignore
-          editor.chain().focus().toggleCodeBlock().run();
-          return;
-        }
         //@ts-ignore
         editor.chain().focus().toggleCode().run();
       }}
     >
       <Code />
+    </button>
+  );
+};
+
+export const CodeBlockButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="Code Block"
+      aria-label="code block"
+      aria-pressed={editor.isActive("codeBLock")}
+      onClick={() => {
+        //@ts-ignore
+        editor.chain().focus().toggleCodeBlock().run();
+      }}
+    >
+      <CodeBracketsSquare />
     </button>
   );
 };
@@ -215,17 +226,21 @@ export const LinkButton = ({ editor }: MenuButtonProps) => {
         }
         // empty
         if (url === "") {
+          // for some reason the extendMarkRange here doesn't seem to work, even though it does in the link updating below?
           // @ts-ignore
           editor.chain().focus().extendMarkRange("link").unsetLink().run();
           return;
         }
 
+        const preppedUrl = url.trim().startsWith("http")
+          ? url.trim()
+          : "https://" + url.trim();
         editor
           .chain()
           .focus()
           .extendMarkRange("link")
           // @ts-ignore
-          .setLink({ href: url })
+          .setLink({ href: preppedUrl })
           .run();
       }}
     >
@@ -255,12 +270,13 @@ bubbleMenuButtons.set("bold", BoldButton);
 bubbleMenuButtons.set("italic", ItalicButton);
 bubbleMenuButtons.set("underline", UnderlineButton);
 bubbleMenuButtons.set("strike", StrikeButton);
+bubbleMenuButtons.set("link", LinkButton);
+bubbleMenuButtons.set("code", CodeButton);
+bubbleMenuButtons.set("codeBlock", CodeBlockButton);
 bubbleMenuButtons.set("blockquote", BlockquoteButton);
 bubbleMenuButtons.set("bulletList", BulletListButton);
 bubbleMenuButtons.set("orderedList", OrderedListButton);
 bubbleMenuButtons.set("heading", HeadingButtons);
-bubbleMenuButtons.set("link", LinkButton);
-bubbleMenuButtons.set("code", CodeButton);
 
 export const BubbleMenuOptions = ({
   editor,

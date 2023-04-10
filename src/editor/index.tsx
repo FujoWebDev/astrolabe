@@ -22,7 +22,7 @@ import Paragraph from "@tiptap/extension-paragraph";
 import React from "react";
 import Text from "@tiptap/extension-text";
 
-// TODO: Allow passing extension configs as props
+// TODO: Allow passing extension configs as props, passing them as part of the addedExtentions array breaks things (at least in storybook)
 export interface EditorProps {
   editable: boolean;
   initialContent: string;
@@ -44,21 +44,12 @@ export const DEFAULT_EXTENSIONS: (Node<any, any> | Mark<any, any>)[] = [
   }),
   ImagePlugin,
   OEmbedPlugin,
-  Link.configure({
-    openOnClick: true,
-  }),
 ];
 
 export const Editor = (props: EditorProps) => {
   const currentExtensions = props.addedExtensions
     ? [...DEFAULT_EXTENSIONS, ...props.addedExtensions]
     : DEFAULT_EXTENSIONS;
-  // if (currentExtensions.includes(Link)) {
-  //   const linkIndex = currentExtensions.lastIndexOf(Link);
-  //   currentExtensions[linkIndex] = Link.configure({
-  //     openOnClick: !props.editable,
-  //   })
-  // }
   const editor = useEditor({
     extensions: currentExtensions,
     content: props.initialContent,

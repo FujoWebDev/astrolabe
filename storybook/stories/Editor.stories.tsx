@@ -1,9 +1,18 @@
 import { DEFAULT_EXTENSIONS, Editor } from "../../src/editor";
 import { Meta, StoryObj } from "@storybook/react";
 
+import Blockquote from "@tiptap/extension-blockquote";
+import BulletList from "@tiptap/extension-bullet-list";
+import Code from "@tiptap/extension-code";
+import CodeBlock from "@tiptap/extension-code-block";
+import Heading from "@tiptap/extension-heading";
 import Italic from "@tiptap/extension-italic";
+import ListItem from "@tiptap/extension-list-item";
 import { MenuButtonProps } from "../../src/editor/BubbleMenu";
+import OrderedList from "@tiptap/extension-ordered-list";
 import React from "react";
+import Strike from "@tiptap/extension-strike";
+import Underline from "@tiptap/extension-underline";
 import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
 // We use const meta = {...} as Meta<typeof Component> instead of const meta:Meta<typeof Component> = {...} as shown in the CSF3 docs
@@ -14,7 +23,19 @@ const meta = {
   component: Editor,
   tags: ["autodocs"],
   decorators: [
-    withContentChangeHandler([...DEFAULT_EXTENSIONS, Italic]),
+    withContentChangeHandler([
+      ...DEFAULT_EXTENSIONS,
+      Italic,
+      ListItem,
+      Blockquote,
+      BulletList,
+      Code,
+      CodeBlock,
+      Heading,
+      OrderedList,
+      Strike,
+      Underline,
+    ]),
     (Story, ctx) => {
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -78,5 +99,38 @@ export const Italics: Story = {
         },
       },
     ],
+  },
+};
+
+export const Link: Story = {
+  args: {
+    ...Editable.args,
+    initialContent: `<p>and if I want to <a href="https://bobaboard.com/">link</a> to a thing</p>`,
+  },
+};
+
+export const ViewOnlyLink: Story = {
+  args: {
+    ...Link.args,
+    editable: false,
+  },
+};
+
+export const AllExtensions: Story = {
+  args: {
+    ...Editable.args,
+    addedExtensions: [
+      Italic,
+      Strike,
+      ListItem,
+      Underline,
+      Blockquote,
+      BulletList,
+      OrderedList,
+      Code,
+      CodeBlock,
+      Heading,
+    ],
+    initialContent: `<p>but what if I'm <strong>really</strong>, <em>really</em>, <strong><em>really</em></strong> <u>excited</u>!!! (or <s>not</s>)</p><p>and if I want to <a href="https://bobaboard.com/">link</a> to a thing</p><blockquote>or quote a thing</blockquote><h1>or Add a Heading</h1><pre><code>or a code block</code></pre><p>or just a little bit of <code>code</code></p><ol><li>or</li><li>an</li><li>ordered</li><li>list</li></ol><ul><li>or</li><li>an</li><li>unordered</li><li>list</li></ul>`,
   },
 };
