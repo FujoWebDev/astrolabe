@@ -129,37 +129,38 @@ export const OrderedListButton = ({ editor }: MenuButtonProps) => {
   );
 };
 
-// TODO: Needs better UI
+// TODO: probably needs better UI, heading should probably be a select of something instead of a bunch of buttons
+const HeadingButton = ({
+  level,
+  editor,
+}: {
+  level: number;
+  editor: Editor;
+}) => {
+  return (
+    <button
+      title={`Heading ${level}`}
+      aria-label={`heading ${level}`}
+      aria-pressed={editor.isActive("heading", { level: level })}
+      onClick={() =>
+        //@ts-ignore
+        editor.chain().focus().toggleHeading({ level: level }).run()
+      }
+      //@ts-ignore
+      hidden={!editor.can().toggleHeading({ level: level })}
+    >
+      <span>{`H${level}`}</span>
+    </button>
+  );
+};
+
 export const HeadingButtons = ({ editor }: MenuButtonProps) => {
+  const headingLevels = [1, 2, 3, 4, 5, 6];
   return (
     <>
-      <button
-        title="Heading 1"
-        aria-label="heading 1"
-        aria-pressed={editor.isActive("heading", { level: 1 })}
-        //@ts-ignore
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-      >
-        <span>H1</span>
-      </button>
-      <button
-        title="Heading 2"
-        aria-label="heading 2"
-        aria-pressed={editor.isActive("heading", { level: 2 })}
-        //@ts-ignore
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-      >
-        <span>H2</span>
-      </button>
-      <button
-        title="Heading 3"
-        aria-label="heading 3"
-        aria-pressed={editor.isActive("heading", { level: 3 })}
-        //@ts-ignore
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-      >
-        <span>H3</span>
-      </button>
+      {headingLevels.map((level) => (
+        <HeadingButton key={level} level={level} editor={editor} />
+      ))}
     </>
   );
 };
