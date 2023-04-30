@@ -116,6 +116,17 @@ export const ViewOnlyLink: Story = {
   },
 };
 
+export const LimitedHeadings: Story = {
+  args: {
+    ...Editable.args,
+    addedExtensions: [Heading],
+    extensionConfigs: [
+      { extensionName: Heading.name, config: { levels: [1, 2] } },
+    ],
+    initialContent: `<h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><p>Regular paragraph</p>`,
+  },
+};
+
 export const AllExtensions: Story = {
   args: {
     ...Editable.args,
