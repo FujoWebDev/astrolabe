@@ -22,12 +22,15 @@ import Paragraph from "@tiptap/extension-paragraph";
 import React from "react";
 import Text from "@tiptap/extension-text";
 
-// TODO: Allow passing extension configs as props, passing them as part of the addedExtentions array breaks things (at least in storybook)
 export interface EditorProps {
   editable: boolean;
   initialContent: string;
   onContentChange: (newContent: JSONContent) => void;
   addedExtensions?: (Node<any, any> | Mark<any, any>)[];
+  extensionConfigs?: {
+    extensionName: string;
+    config: Record<string, any>;
+  }[];
   customBubbleMenuButtons?: MenuOption[];
   customFloatingMenuButtons?: MenuOption[];
 }
@@ -50,8 +53,17 @@ export const Editor = (props: EditorProps) => {
   const currentExtensions = props.addedExtensions
     ? [...DEFAULT_EXTENSIONS, ...props.addedExtensions]
     : DEFAULT_EXTENSIONS;
+  const configuredExtensions =
+    props.extensionConfigs && props.extensionConfigs.length > 0
+      ? currentExtensions.map((extension) => {
+          const config = props.extensionConfigs?.find(
+            (config) => config.extensionName === extension.name
+          );
+          return config ? extension.configure(config.config) : extension;
+        })
+      : currentExtensions;
   const editor = useEditor({
-    extensions: currentExtensions,
+    extensions: configuredExtensions,
     content: props.initialContent,
     editable: props.editable,
     // TODO: this will likely need to be kept in sync with the props
@@ -78,7 +90,7 @@ export const Editor = (props: EditorProps) => {
         <FloatingMenu editor={editor}>
           <FloatingMenuOptions
             editor={editor}
-            extensions={currentExtensions}
+            extensions={configuredExtensions}
             customButtons={props.customFloatingMenuButtons}
           />
         </FloatingMenu>
@@ -119,7 +131,7 @@ export const Editor = (props: EditorProps) => {
         >
           <BubbleMenuOptions
             editor={editor}
-            extensions={currentExtensions}
+            extensions={configuredExtensions}
             customButtons={props.customBubbleMenuButtons}
           />
         </BubbleMenu>
