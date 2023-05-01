@@ -1,5 +1,5 @@
 import { CommandProps, NodeViewProps } from "@tiptap/core";
-import { TextSelection, Transaction } from "prosemirror-state";
+import { Selection, TextSelection, Transaction } from "prosemirror-state";
 
 import { NodeViewWrapper } from "@tiptap/react";
 import React from "react";
@@ -29,7 +29,7 @@ const maybeAddNewTrailingParagraph = (tr: Transaction) => {
   }
 };
 
-export const goToTrailingPragraph = ({
+export const goToTrailingParagraph = ({
   tr,
   dispatch,
   editor,

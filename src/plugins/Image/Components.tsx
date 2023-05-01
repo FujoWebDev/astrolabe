@@ -14,6 +14,8 @@ const ImageOptionsMenu = (props: {
   spoilers: boolean;
   onToggleSpoilers: (spoilers: boolean) => void;
   onDeleteRequest: () => void;
+  onInsertAbove: () => void;
+  onInsertBelow: () => void;
 }) => {
   return (
     <BlockSettingsMenu>
@@ -26,6 +28,12 @@ const ImageOptionsMenu = (props: {
       </ToggleButton>
       <Button title="delete image" onClick={props.onDeleteRequest}>
         <Trash />
+      </Button>
+      <Button title="insert paragraph above" onClick={props.onInsertAbove}>
+        Insert Paragraph Above
+      </Button>
+      <Button title="insert paragraph below" onClick={props.onInsertBelow}>
+        Insert Paragraph Below
       </Button>
     </BlockSettingsMenu>
   );
@@ -68,6 +76,32 @@ export const EditableImageComponent = (
           })
         }
         onDeleteRequest={() => props.deleteNode?.()}
+        onInsertAbove={() => {
+          if (props.getPos) {
+            props.editor
+              ?.chain()
+              .insertContentAt(
+                props.getPos() > 0 ? props.getPos() - 1 : 0,
+                "<p></p>",
+                {
+                  updateSelection: true,
+                }
+              )
+              .focus()
+              .run();
+          }
+        }}
+        onInsertBelow={() => {
+          if (props.getPos) {
+            props.editor
+              ?.chain()
+              .insertContentAt(props.getPos() + 1, "<p></p>", {
+                updateSelection: true,
+              })
+              .focus()
+              .run();
+          }
+        }}
       />
       <ImageComponent
         src={attributes.src}
