@@ -1,5 +1,9 @@
 import { EditableImageComponent, ImageComponent } from "./Components";
-import { goToTrailingPragraph, loadToDom, withViewWrapper } from "../utils";
+import {
+  goToTrailingParagraph,
+  loadToDom,
+  withViewWrapper,
+} from "../utils";
 
 import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
@@ -77,7 +81,7 @@ export const ImagePlugin = Node.create<ImageOptions>({
                 ...props,
               },
             })
-            .command(goToTrailingPragraph)
+            .command(goToTrailingParagraph)
             .run();
         },
     };

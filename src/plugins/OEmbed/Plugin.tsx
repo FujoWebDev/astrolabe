@@ -1,5 +1,5 @@
 import { OEmbedLoader, OEmbedPlaceholder } from "./Components";
-import { goToTrailingPragraph, loadToDom, withViewWrapper } from "../utils";
+import { goToTrailingParagraph, loadToDom, withViewWrapper } from "../utils";
 
 import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
@@ -90,7 +90,7 @@ export const OEmbedPlugin = Node.create<{
                 ...props,
               },
             })
-            .command(goToTrailingPragraph)
+            .command(goToTrailingParagraph)
             .run();
         },
     };
