@@ -1,7 +1,6 @@
 import { AddMediaImage, Code, GifFormat, Www } from "iconoir-react";
 import { MenuButtonProps, MenuOption, MenuOptionsProps } from "./BubbleMenu";
-
-import React from "react";
+import React, { useId } from "react";
 
 const handleFileLoadRequest = (
   callback: (loadPromise: Promise<string | ArrayBuffer>) => void
@@ -30,11 +29,11 @@ const handleFileLoadRequest = (
 };
 
 export const ImageButton = ({ editor }: MenuButtonProps) => {
+  const id = useId();
   return (
     <>
       <input
-        // TODO: figure out how to namespace this id in case there are multiple editors on the page
-        id="add-image"
+        id={id}
         title="Add Image from File"
         style={{
           width: 0,
@@ -53,7 +52,7 @@ export const ImageButton = ({ editor }: MenuButtonProps) => {
         type="file"
         accept="image/png, image/gif, image/jpeg, image/bmp, image/x-icon"
       />
-      <label htmlFor="add-image">
+      <label htmlFor={id}>
         <AddMediaImage aria-label="add image from file" />
       </label>
     </>
