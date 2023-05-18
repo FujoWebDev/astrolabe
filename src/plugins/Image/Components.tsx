@@ -1,9 +1,9 @@
+import { ArrowDown, ArrowUp, EyeAlt, EyeOff, Trash } from "iconoir-react";
 import {
   BlockSettingsMenu,
   Button,
   ToggleButton,
 } from "../BlockSettingsMenu/BlockSettingsMenu";
-import { EyeAlt, EyeOff, Trash } from "iconoir-react";
 import { ImageOptions, PLUGIN_NAME } from "./Plugin";
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 
@@ -30,10 +30,10 @@ const ImageOptionsMenu = (props: {
         <Trash />
       </Button>
       <Button title="insert paragraph above" onClick={props.onInsertAbove}>
-        Insert Paragraph Above
+        Insert Paragraph <ArrowUp />
       </Button>
       <Button title="insert paragraph below" onClick={props.onInsertBelow}>
-        Insert Paragraph Below
+        Insert Paragraph <ArrowDown />
       </Button>
     </BlockSettingsMenu>
   );
