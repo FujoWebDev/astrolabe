@@ -21,18 +21,18 @@ const ImageOptionsMenu = (props: {
     <BlockSettingsMenu>
       <ToggleButton
         value={!!props.spoilers}
-        title="toggle spoilers"
+        title="Toggle Spoilers"
         onValueChange={props.onToggleSpoilers}
       >
         {props.spoilers ? <EyeAlt /> : <EyeOff />}
       </ToggleButton>
-      <Button title="delete image" onClick={props.onDeleteRequest}>
+      <Button title="Delete Image" onClick={props.onDeleteRequest}>
         <Trash />
       </Button>
-      <Button title="insert paragraph above" onClick={props.onInsertAbove}>
+      <Button title="Insert Paragraph Above" onClick={props.onInsertAbove}>
         Insert Paragraph <ArrowUp />
       </Button>
-      <Button title="insert paragraph below" onClick={props.onInsertBelow}>
+      <Button title="Insert Paragraph Below" onClick={props.onInsertBelow}>
         Insert Paragraph <ArrowDown />
       </Button>
     </BlockSettingsMenu>
