@@ -4,7 +4,7 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["src/dist/**", "src/plugins/**/dist/**"]
+      "outputs": ["dist/**"]
     },
     "storybook": {
       "dependsOn": ["^build"],
