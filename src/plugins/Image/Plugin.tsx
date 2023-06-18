@@ -86,8 +86,4 @@ export const ImagePlugin = Node.create<ImageOptions>({
         },
     };
   },
-
-  // TODO: if we're in edit mode and the image is the last element of the editor, make
-  // sure that a paragraph stays at the end of it
-  // onTransaction() {}
 });
