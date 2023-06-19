@@ -23,6 +23,7 @@
   "dependencies": {
     "@bobaboard/tiptap-image": "*",
     "@bobaboard/tiptap-oembed": "*",
+    "@bobaboard/tiptap-inline-spoilers": "*",
     "@codemirror/lang-html": "^6.1.0",
     "@storybook/addon-actions": "^7.0.0-alpha.31",
     "@storybook/addon-essentials": "^7.0.0-alpha.31",
