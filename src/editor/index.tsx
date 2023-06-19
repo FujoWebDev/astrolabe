@@ -15,6 +15,7 @@ import Document from "@tiptap/extension-document";
 import { FloatingMenuOptions } from "./FloatingMenu";
 import HardBreak from "@tiptap/extension-hard-break";
 import { ImagePlugin } from "@bobaboard/tiptap-image";
+import { InlineSpoilersPlugin } from "@bobaboard/tiptap-inline-spoilers";
 import Link from "@tiptap/extension-link";
 // import Italic from "@tiptap/extension-italic";
 import { OEmbedPlugin } from "@bobaboard/tiptap-oembed";
@@ -47,6 +48,7 @@ export const DEFAULT_EXTENSIONS: (Node<any, any> | Mark<any, any>)[] = [
   }),
   ImagePlugin,
   OEmbedPlugin,
+  InlineSpoilersPlugin,
 ];
 
 export const Editor = (props: EditorProps) => {

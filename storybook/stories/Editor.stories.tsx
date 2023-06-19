@@ -116,6 +116,20 @@ export const ViewOnlyLink: Story = {
   },
 };
 
+export const InlineSpoilers: Story = {
+  args: {
+    ...Editable.args,
+    initialContent: `<p>or if I'm worried about revealing <span data-type="inlineSpoilers">SPOILERS!!!</span> for a thing</p>`,
+  },
+};
+
+export const ViewOnlyInlineSpoilers: Story = {
+  args: {
+    ...InlineSpoilers.args,
+    editable: false,
+  },
+};
+
 export const LimitedHeadings: Story = {
   args: {
     ...Editable.args,

@@ -166,18 +166,18 @@ export const HeadingButtons = ({ editor }: MenuButtonProps) => {
 };
 
 // TODO: Implement actual logic (and add button to map) once we have inline spoilers extension
-// export const SpoilersButton = ({ editor }: MenuButtonProps) => {
-//   return (
-//     <button
-//       title="text spoilers"
-//       aria-label="text spoilers"
-//       aria-pressed={editor.isActive("")}
-//       onClick={() => editor.chain().focus().toggle?????().run()}
-//     >
-//       <EyeOff />
-//     </button>
-//   );
-// };
+export const InlineSpoilersButton = ({ editor }: MenuButtonProps) => {
+  return (
+    <button
+      title="text spoilers"
+      aria-label="text spoilers"
+      aria-pressed={editor.isActive("inlineSpoilers")}
+      onClick={() => editor.chain().focus().toggleInlineSpoilers().run()}
+    >
+      <EyeOff />
+    </button>
+  );
+};
 
 export const CodeButton = ({ editor }: MenuButtonProps) => {
   return (
@@ -271,6 +271,7 @@ bubbleMenuButtons.set("bold", BoldButton);
 bubbleMenuButtons.set("italic", ItalicButton);
 bubbleMenuButtons.set("underline", UnderlineButton);
 bubbleMenuButtons.set("strike", StrikeButton);
+bubbleMenuButtons.set("inlineSpoilers", InlineSpoilersButton);
 bubbleMenuButtons.set("link", LinkButton);
 bubbleMenuButtons.set("code", CodeButton);
 bubbleMenuButtons.set("codeBlock", CodeBlockButton);

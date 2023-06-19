@@ -3,7 +3,7 @@
 }
 
 [role="menuitem"] [aria-pressed="true"] {
-  background-color: blueviolet;
+  background-color: var(--active-button-background-color, blueviolet);
 }
 
 [data-spoilers="true"] {
@@ -11,10 +11,32 @@
 }
 [data-spoilers="true"]::after {
   content: "\A \A Spoilers alert!!";
-  background-color: rgba(255, 0, 0, 0.3);
+  background-color: var(
+    --block-spoilers-background-color,
+    rgba(255, 0, 0, 0.3)
+  );
+  background-image: var(--block-spoilers-image-url);
   width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
   white-space: pre;
+}
+
+.inline-spoilers {
+  color: transparent;
+  background-color: var(--inline-spoilers-color, black);
+  border: 1px dashed var(--inline-spoilers-color, black);
+  padding: 1px;
+  user-select: text;
+}
+
+.ProseMirror[contenteditable="true"] .inline-spoilers,
+.inline-spoilers[data-visible="true"] {
+  color: inherit;
+  background-color: transparent;
+}
+
+.ProseMirror[contenteditable="false"] .inline-spoilers {
+  cursor: pointer;
 }
