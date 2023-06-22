@@ -22,7 +22,8 @@ export const EditableInlineSpoilersComponent = (
 };
 
 export const InlineSpoilerComponent = (
-  props: Partial<NodeViewProps> & Required<Pick<NodeViewProps, "node">>
+  props: Partial<NodeViewProps> &
+    Required<Pick<NodeViewProps, "node" | "updateAttributes">>
 ) => {
   const attributes = props.node.attrs;
   return (
@@ -32,13 +33,22 @@ export const InlineSpoilerComponent = (
         aria-label="text spoilers"
         className="inline-spoilers"
         data-visible={attributes.visible}
-        onClick={(e) => {
-          const currentVisibility =
-            e.currentTarget.getAttribute("data-visible");
-          e.currentTarget.setAttribute(
-            "data-visible",
-            currentVisibility === "false" ? "true" : "false"
+        // onClick={(e) => {
+        //   const currentVisibility =
+        //     e.currentTarget.getAttribute("data-visible");
+        //   e.currentTarget.setAttribute(
+        //     "data-visible",
+        //     currentVisibility === "false" ? "true" : "false"
+        //   );
+        // }}
+        onClick={() => {
+          console.log(
+            "updating inline spoiler attribute visible",
+            attributes.visible
           );
+          props.updateAttributes({
+            visible: attributes.visible == false ? true : false,
+          });
         }}
       >
         <NodeViewContent as="span" />
