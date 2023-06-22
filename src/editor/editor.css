@@ -23,20 +23,23 @@
   white-space: pre;
 }
 
-.inline-spoilers {
+[data-type="inlineSpoilers"] {
   color: transparent;
   background-color: var(--inline-spoilers-color, black);
   border: 1px dashed var(--inline-spoilers-color, black);
   padding: 1px;
-  user-select: text;
 }
 
-.ProseMirror[contenteditable="true"] .inline-spoilers,
-.inline-spoilers[data-visible="true"] {
+.ProseMirror[contenteditable="true"] [data-type="inlineSpoilers"] {
+  color: inherit;
+  background-color: var(--inline-spoilers-editable-bg-color, rgb(0 0 0 / 0.2));
+}
+
+[data-type="inlineSpoilers"][data-visible="true"] {
   color: inherit;
   background-color: transparent;
 }
 
-.ProseMirror[contenteditable="false"] .inline-spoilers {
+.ProseMirror[contenteditable="false"] [data-type="inlineSpoilers"] {
   cursor: pointer;
 }
