@@ -156,6 +156,6 @@ export const AllExtensions: Story = {
       CodeBlock,
       Heading,
     ],
-    initialContent: `<p>but what if I'm <strong>really</strong>, <em>really</em>, <strong><em>really</em></strong> <u>excited</u>!!! (or <s>not</s>)</p><p>and if I want to <a href="https://bobaboard.com/">link</a> to a thing</p><blockquote>or quote a thing</blockquote><h1>or Add a Heading</h1><pre><code>or a code block</code></pre><p>or just a little bit of <code>code</code></p><ol><li>or</li><li>an</li><li>ordered</li><li>list</li></ol><ul><li>or</li><li>an</li><li>unordered</li><li>list</li></ul>`,
+    initialContent: `<p>but what if I'm <strong>really</strong>, <em>really</em>, <strong><em>really</em></strong> <u>excited</u>!!! (or <s>not</s>)</p><p>and if I want to <a href="https://bobaboard.com/">link</a> to a thing</p><p>or if I'm worried about revealing <span data-type="inlineSpoilers">SPOILERS!!!</span> for a thing</p><blockquote>or quote a thing</blockquote><h1>or Add a Heading</h1><pre><code>or a code block</code></pre><p>or just a little bit of <code>code</code></p><ol><li>or</li><li>an</li><li>ordered</li><li>list</li></ol><ul><li>or</li><li>an</li><li>unordered</li><li>list</li></ul>`,
   },
 };

@@ -1,10 +1,8 @@
-import { CommandProps, Editor, NodeViewProps } from "@tiptap/core";
-import { Node, ResolvedPos } from "@tiptap/pm/model";
+import { CommandProps, NodeViewProps } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { Selection, TextSelection, Transaction } from "prosemirror-state";
+import { TextSelection, Transaction } from "prosemirror-state";
 
 import { NodeViewWrapper } from "@tiptap/react";
-import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 /**
@@ -82,76 +80,36 @@ export const loadToDom = <PluginOptions extends {}>(
 };
 
 export const toggleAttributeOnClick = ({
-  editor,
   name,
   attribute,
 }: {
-  editor: Editor;
   name: string;
   attribute: string;
 }) => {
   return new Plugin({
-    key: new PluginKey(`update${name}AttributesOnClick`),
+    key: new PluginKey(`update${name}AttributeOnClick`),
     props: {
       handleClickOn(view, _pos, _node, _nodePos, event) {
         if (view.editable) {
           return false;
         }
         const element = event.target as HTMLElement;
-        if (!element.hasAttribute(`data-${attribute}`)) {
-          console.log("target doesn't have data-attribute", attribute);
+        if (!element.hasAttribute(attribute)) {
+          console.log("target doesn't have html attribute", attribute);
           return false;
         }
-        const currentValue = element.getAttribute(`data-${attribute}`);
+        const currentValue = element.getAttribute(attribute);
         if (!currentValue) {
-          console.log("no currentValue");
+          console.log("element attribute has no currentValue");
           return false;
         }
         const newValue = currentValue === "false" ? "true" : "false";
         console.log(
           `toggling ${name} attribute ${attribute} from ${currentValue} to ${newValue}`
         );
-        element.setAttribute(`data-${attribute}`, newValue);
+        element.setAttribute(attribute, newValue);
         return true;
       },
     },
   });
 };
-
-// export const toggleAttributeOnClick = ({
-//   editor,
-//   name,
-//   attribute,
-// }: {
-//   editor: Editor;
-//   name: string;
-//   attribute: string;
-// }) => {
-//   return new Plugin({
-//     key: new PluginKey(`update${name}AttributesOnClick`),
-//     props: {
-//       handleClickOn(view, pos, node, nodePos, event) {
-//         if (view.editable) {
-//           return false;
-//         }
-//         const resolvedPos = Node.resolve(pos);
-//         console.log("node", node);
-//         console.log("marks", node.marks);
-//         const currentValue = node.attrs[attribute];
-//         if (typeof currentValue !== "boolean") {
-//           console.log("currentValue", currentValue);
-//           return false;
-//         }
-//         const newValue = !currentValue;
-//         console.log(
-//           `toggling ${name} attribute ${attribute} from ${currentValue} to ${newValue}`
-//         );
-//         editor.commands.updateAttributes(
-//           name,
-//           Object.fromEntries([[attribute, newValue]])
-//         );
-//         return true;
-//       },
-//     },
-//   });
-// };
