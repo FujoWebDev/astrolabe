@@ -52,9 +52,16 @@ export const DEFAULT_EXTENSIONS: (Node<any, any> | Mark<any, any>)[] = [
 ];
 
 export const Editor = (props: EditorProps) => {
+  const defaultExtensions = props.editable
+    ? DEFAULT_EXTENSIONS
+    : DEFAULT_EXTENSIONS.map((extension) => {
+        return extension.name === InlineSpoilersPlugin.name
+          ? InlineSpoilersPlugin.configure({ focusable: true })
+          : extension;
+      });
   const currentExtensions = props.addedExtensions
-    ? [...DEFAULT_EXTENSIONS, ...props.addedExtensions]
-    : DEFAULT_EXTENSIONS;
+    ? [...defaultExtensions, ...props.addedExtensions]
+    : defaultExtensions;
   const configuredExtensions =
     props.extensionConfigs && props.extensionConfigs.length > 0
       ? currentExtensions.map((extension) => {
