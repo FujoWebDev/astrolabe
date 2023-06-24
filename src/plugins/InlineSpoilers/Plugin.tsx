@@ -10,6 +10,7 @@ import { toggleAttributeOnClick } from "../utils";
 
 export interface InlineSpoilersOptions {
   visible?: boolean;
+  focusable?: boolean;
 }
 
 export const InlineSpoilersPluginKey = new PluginKey("InlineSpoilersPlugin");
@@ -27,6 +28,33 @@ declare module "@tiptap/core" {
 
 export const inputRegex = /(?:^|\s)((?:\|\|)((?:[^\|]+))(?:\|\|))$/;
 export const pasteRegex = /(?:^|\s)((?:\|\|)((?:[^\|]+))(?:\|\|))/g;
+
+const toggleSpoilersOnKeydown = (event: KeyboardEvent) => {
+  console.log("in keydown event");
+  if (
+    event.key !== "R" ||
+    event.ctrlKey ||
+    event.metaKey ||
+    !event.altKey ||
+    !event.shiftKey
+  ) {
+    console.log("no key match");
+    return;
+  }
+  if (document.activeElement?.getAttribute("data-type") !== PLUGIN_NAME) {
+    console.log("activeElement", document.activeElement);
+    return;
+  }
+  const spoilersElement = document.activeElement;
+  const currentValue = spoilersElement.getAttribute("data-visible");
+  if (!currentValue) {
+    console.log("element attribute has no currentValue");
+    return;
+  }
+  const newValue = currentValue === "false" ? "true" : "false";
+  console.log(`toggling data-visible from ${currentValue} to ${newValue}`);
+  spoilersElement.setAttribute("data-visible", newValue);
+};
 
 export const InlineSpoilersPlugin = Mark.create<InlineSpoilersOptions>({
   name: PLUGIN_NAME,
@@ -46,6 +74,15 @@ export const InlineSpoilersPlugin = Mark.create<InlineSpoilersOptions>({
     };
   },
 
+  addOptions() {
+    return {
+      // Editing functions break if you add tabindex=0,
+      // which we want in the view only state to allow revealing spoilers via keyboard navigation,
+      // but we can't directly assess this.editor in renderHTML so it needs to be set via configuration based on the editor props.
+      focusable: false,
+    };
+  },
+
   parseHTML() {
     return [
       {
@@ -60,6 +97,7 @@ export const InlineSpoilersPlugin = Mark.create<InlineSpoilersOptions>({
       mergeAttributes(HTMLAttributes, {
         "data-type": this.name,
         "aria-label": "text spoilers",
+        tabindex: this.options.focusable ? 0 : undefined,
       }),
       0,
     ];
@@ -107,6 +145,22 @@ export const InlineSpoilersPlugin = Mark.create<InlineSpoilersOptions>({
         type: this.type,
       }),
     ];
+  },
+
+  // I feel like there should be a better way to do this,
+  // but ProseMirror's handleKeyDown doesn't seem to work in a non-editable editor
+  onCreate() {
+    if (this.editor.isEditable) {
+      return;
+    }
+    document.addEventListener("keydown", toggleSpoilersOnKeydown);
+  },
+
+  onDestroy() {
+    if (this.editor.isEditable) {
+      return;
+    }
+    document.removeEventListener("keydown", toggleSpoilersOnKeydown);
   },
 
   addProseMirrorPlugins() {
