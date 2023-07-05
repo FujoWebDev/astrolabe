@@ -37,11 +37,17 @@ export const BlockWithMenuPlugin = Node.create<BlockWithMenuOptions>({
       },
       height: {
         default: 300,
-        parseHTML: (element) => element.getAttribute("data-height"),
+        parseHTML: (element) => {
+          const rawHeight = element.getAttribute("data-height");
+          return rawHeight ? parseFloat(rawHeight) : null;
+        },
       },
       width: {
         default: 300,
-        parseHTML: (element) => element.getAttribute("data-height"),
+        parseHTML: (element) => {
+          const rawWidth = element.getAttribute("data-width");
+          return rawWidth ? parseFloat(rawWidth) : null;
+        },
       },
     };
   },
@@ -87,4 +93,6 @@ export const BlockWithMenuPlugin = Node.create<BlockWithMenuOptions>({
         },
     };
   },
+
+  // TODO: make spoilers revealable
 });
