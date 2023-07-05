@@ -82,7 +82,7 @@ export const InlineSpoilersPlugin = Mark.create<InlineSpoilersOptions>({
     return {
       // Editing functions break if you add tabindex=0,
       // which we want in the view only state to allow revealing spoilers via keyboard navigation,
-      // but we can't directly assess this.editor in renderHTML so it needs to be set via configuration based on the editor props.
+      // but we can't directly access this.editor in renderHTML so it needs to be set via configuration based on the editor props.
       focusable: false,
     };
   },
