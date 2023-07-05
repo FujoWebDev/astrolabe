@@ -1,3 +1,5 @@
+import { ArrowDown, ArrowUp, EyeAlt, EyeOff, Trash } from "iconoir-react";
+
 import React from "react";
 import { css } from "@linaria/core";
 
@@ -27,6 +29,15 @@ export interface BlockSettingsMenuProps {
   children:
     | React.ReactElement<SettingTypes>
     | React.ReactElement<SettingTypes>[];
+}
+
+export interface BlockBaseMenuProps extends BlockSettingsMenuProps {
+  spoilers: boolean;
+  deleteTitle: string;
+  onToggleSpoilers: (spoilers: boolean) => void;
+  onDeleteRequest: () => void;
+  onInsertAbove: () => void;
+  onInsertBelow: () => void;
 }
 
 export const Button = (props: ButtonProps) => {
@@ -69,6 +80,37 @@ export const BlockSettingsMenu = (props: BlockSettingsMenuProps) => {
           {child}
         </li>
       ))}
+    </ul>
+  );
+};
+
+export const BlockBaseMenu = (props: BlockBaseMenuProps) => {
+  return (
+    <ul role="menubar" className={menuStyle}>
+      {React.Children.map(props.children, (child) => (
+        <li role="menuitem" key={child.props.title}>
+          {child}
+        </li>
+      ))}
+      <ToggleButton
+        value={!!props.spoilers}
+        title="Toggle Spoilers"
+        onValueChange={props.onToggleSpoilers}
+      >
+        {props.spoilers ? <EyeAlt /> : <EyeOff />}
+      </ToggleButton>
+      <Button
+        title={`Delete ${props.deleteTitle}`}
+        onClick={props.onDeleteRequest}
+      >
+        <Trash />
+      </Button>
+      <Button title="Insert Paragraph Above" onClick={props.onInsertAbove}>
+        Insert Paragraph <ArrowUp />
+      </Button>
+      <Button title="Insert Paragraph Below" onClick={props.onInsertBelow}>
+        Insert Paragraph <ArrowDown />
+      </Button>
     </ul>
   );
 };
