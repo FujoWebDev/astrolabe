@@ -1,9 +1,8 @@
-import { EditableBlockWithMenuComponent, BlockWithMenuComponent } from "./Components";
 import {
-  goToTrailingParagraph,
-  loadToDom,
-  withViewWrapper,
-} from "../utils";
+  BlockWithMenuComponent,
+  EditableBlockWithMenuComponent,
+} from "./Components";
+import { goToTrailingParagraph, loadToDom, withViewWrapper } from "../utils";
 
 import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
@@ -26,7 +25,7 @@ declare module "@tiptap/core" {
   }
 }
 
-export const ImagePlugin = Node.create<BlockWithMenuOptions>({
+export const BlockWithMenuPlugin = Node.create<BlockWithMenuOptions>({
   name: PLUGIN_NAME,
   group: "block",
 
@@ -34,12 +33,24 @@ export const ImagePlugin = Node.create<BlockWithMenuOptions>({
     return {
       spoilers: {
         default: false,
+        parseHTML: (element) => element.getAttribute("data-spoilers"),
+      },
+      height: {
+        default: 300,
+        parseHTML: (element) => element.getAttribute("data-height"),
+      },
+      width: {
+        default: 300,
+        parseHTML: (element) => element.getAttribute("data-height"),
       },
     };
   },
 
   renderHTML({ node }) {
-    return loadToDom(BlockWithMenuComponent, node.attrs as BlockWithMenuOptions);
+    return loadToDom(
+      BlockWithMenuComponent,
+      node.attrs as BlockWithMenuOptions
+    );
   },
 
   addNodeView() {

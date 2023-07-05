@@ -6,6 +6,15 @@
   background-color: var(--active-button-background-color, blueviolet);
 }
 
+[role="menubar"] {
+  display: flex;
+  list-style: none;
+}
+
+[data-type="blockWithMenu"] {
+  background-color: cornflowerblue;
+}
+
 [data-spoilers="true"] {
   position: relative;
 }
