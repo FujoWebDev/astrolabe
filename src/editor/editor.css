@@ -11,7 +11,7 @@
   list-style: none;
 }
 
-[data-type="blockWithMenu"] {
+.block-with-menu {
   background-color: cornflowerblue;
 }
 

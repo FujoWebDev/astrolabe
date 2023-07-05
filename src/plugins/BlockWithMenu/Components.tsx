@@ -98,6 +98,7 @@ export const BlockBaseMenu = (
 export const BlockWithMenuComponent = (props: BlockWithMenuOptions) => {
   return (
     <div
+      className="block-with-menu"
       data-type={PLUGIN_NAME}
       data-spoilers={props.spoilers}
       data-width={props.width}
