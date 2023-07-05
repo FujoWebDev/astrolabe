@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowUp, EyeAlt, EyeOff, Trash } from "iconoir-react";
 import {
   BlockSettingsMenu,
+  BlockSettingsMenuProps,
   Button,
   ToggleButton,
 } from "../BlockSettingsMenu/BlockSettingsMenu";
@@ -10,48 +11,98 @@ import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import React from "react";
 import { css } from "@linaria/core";
 
-const OptionsMenu = (props: {
-  spoilers: boolean;
-  onToggleSpoilers: (spoilers: boolean) => void;
-  onDeleteRequest: () => void;
-  onInsertAbove: () => void;
-  onInsertBelow: () => void;
-}) => {
+export interface BlockBaseMenuProps extends Partial<BlockSettingsMenuProps> {
+  deleteTitle: string;
+}
+
+export const BlockBaseMenu = (
+  props: BlockBaseMenuProps &
+    Partial<NodeViewProps> &
+    Required<Pick<NodeViewProps, "node">>
+) => {
+  const attributes = props.node.attrs as BlockWithMenuOptions;
+  const spoilers = !!attributes.spoilers;
   return (
-    <BlockSettingsMenu>
-      <ToggleButton
-        value={!!props.spoilers}
-        title="Toggle Spoilers"
-        onValueChange={props.onToggleSpoilers}
-      >
-        {props.spoilers ? <EyeAlt /> : <EyeOff />}
-      </ToggleButton>
-      <Button title="Delete Image" onClick={props.onDeleteRequest}>
-        <Trash />
-      </Button>
-      <Button title="Insert Paragraph Above" onClick={props.onInsertAbove}>
-        Insert Paragraph <ArrowUp />
-      </Button>
-      <Button title="Insert Paragraph Below" onClick={props.onInsertBelow}>
-        Insert Paragraph <ArrowDown />
-      </Button>
-    </BlockSettingsMenu>
+    <ul role="menubar" className="block-menu">
+      {!!props.children &&
+        React.Children.map(props.children, (child) => (
+          <li role="menuitem" key={child.props.title}>
+            {child}
+          </li>
+        ))}
+      <li role="menuitem">
+        <ToggleButton
+          value={spoilers}
+          title="Toggle Spoilers"
+          onValueChange={(spoilers) =>
+            props.updateAttributes?.({
+              spoilers,
+            })
+          }
+        >
+          {spoilers ? <EyeAlt /> : <EyeOff />}
+        </ToggleButton>
+      </li>
+      <li role="menuitem">
+        <Button
+          title={`Delete ${props.deleteTitle}`}
+          onClick={() => props.deleteNode?.()}
+        >
+          <Trash />
+        </Button>
+      </li>
+      <li role="menuitem">
+        <Button
+          title="Insert Paragraph Above"
+          onClick={() => {
+            if (props.getPos) {
+              props.editor
+                ?.chain()
+                .insertContentAt(
+                  props.getPos() > 0 ? props.getPos() - 1 : 0,
+                  "<p></p>",
+                  {
+                    updateSelection: true,
+                  }
+                )
+                .focus()
+                .run();
+            }
+          }}
+        >
+          Insert Paragraph <ArrowUp />
+        </Button>
+      </li>
+      <li role="menuitem">
+        <Button
+          title="Insert Paragraph Below"
+          onClick={() => {
+            if (props.getPos) {
+              props.editor
+                ?.chain()
+                .insertContentAt(props.getPos() + 1, "<p></p>", {
+                  updateSelection: true,
+                })
+                .focus()
+                .run();
+            }
+          }}
+        >
+          Insert Paragraph <ArrowDown />
+        </Button>
+      </li>
+    </ul>
   );
 };
-
-const blockComponentClass = css`
-  div {
-    margin: 0 auto;
-  }
-`;
 
 export const BlockWithMenuComponent = (props: BlockWithMenuOptions) => {
   return (
     <div
-      className={blockComponentClass}
       data-type={PLUGIN_NAME}
       data-spoilers={props.spoilers}
-      style={{ display: "block", maxWidth: "100%" }}
+      data-width={props.width}
+      data-height={props.height}
+      style={{ width: props.width, height: props.height, maxWidth: "100%" }}
     ></div>
   );
 };
@@ -62,42 +113,12 @@ export const EditableBlockWithMenuComponent = (
   const attributes = props.node.attrs as BlockWithMenuOptions;
   return (
     <NodeViewWrapper data-type={PLUGIN_NAME}>
-      <OptionsMenu
-        spoilers={!!attributes.spoilers}
-        onToggleSpoilers={(spoilers) =>
-          props.updateAttributes?.({
-            spoilers,
-          })
-        }
-        onDeleteRequest={() => props.deleteNode?.()}
-        onInsertAbove={() => {
-          if (props.getPos) {
-            props.editor
-              ?.chain()
-              .insertContentAt(
-                props.getPos() > 0 ? props.getPos() - 1 : 0,
-                "<p></p>",
-                {
-                  updateSelection: true,
-                }
-              )
-              .focus()
-              .run();
-          }
-        }}
-        onInsertBelow={() => {
-          if (props.getPos) {
-            props.editor
-              ?.chain()
-              .insertContentAt(props.getPos() + 1, "<p></p>", {
-                updateSelection: true,
-              })
-              .focus()
-              .run();
-          }
-        }}
+      <BlockBaseMenu {...props} deleteTitle="block" />
+      <BlockWithMenuComponent
+        spoilers={attributes.spoilers}
+        width={attributes.width}
+        height={attributes.height}
       />
-      <BlockWithMenuComponent spoilers={attributes.spoilers} />
     </NodeViewWrapper>
   );
 };
