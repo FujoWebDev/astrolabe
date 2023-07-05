@@ -13,6 +13,7 @@
     "@bobaboard/tiptap-image": "*",
     "@bobaboard/tiptap-oembed": "*",
     "@bobaboard/tiptap-inline-spoilers": "*",
+    "@bobaboard/tiptap-block-with-menu": "*",
     "@bobaboard/tiptap-storybook-inspector": "*",
     "@storybook/addon-actions": "^7.0.0-beta.28",
     "@storybook/addon-essentials": "^7.0.0-beta.28",
