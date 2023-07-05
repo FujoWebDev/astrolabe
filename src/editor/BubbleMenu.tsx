@@ -307,7 +307,11 @@ export const BubbleMenuOptions = ({
           <option.menuButton editor={editor} />
         </li>
       ))}
-      {options.length > 0 && <ClearButton editor={editor} />}
+      {options.length > 0 && (
+        <li role="menuitem">
+          <ClearButton editor={editor} />
+        </li>
+      )}
     </ul>
   );
 };
