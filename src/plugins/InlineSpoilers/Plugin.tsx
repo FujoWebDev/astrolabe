@@ -26,6 +26,10 @@ declare module "@tiptap/core" {
   }
 }
 
+// These regex detect the use of || as pseudo-markdown shortcut for applying inline spoilers
+// i.e. ||text to be spoilered||, when typed in and pasted in respectively.
+// Adapted from the regex used for the strikethough extension here:
+// https://github.com/ueberdosis/tiptap/blob/781cdfa54ebd1ba4733f63bb9d5844a59703a7e8/packages/extension-strike/src/strike.ts#L31
 export const inputRegex = /(?:^|\s)((?:\|\|)((?:[^\|]+))(?:\|\|))$/;
 export const pasteRegex = /(?:^|\s)((?:\|\|)((?:[^\|]+))(?:\|\|))/g;
 
