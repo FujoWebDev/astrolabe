@@ -1,9 +1,5 @@
 import { EditableImageComponent, ImageComponent } from "./Components";
-import {
-  goToTrailingParagraph,
-  loadToDom,
-  withViewWrapper,
-} from "../utils";
+import { goToTrailingParagraph, loadToDom, withViewWrapperOld } from "../utils";
 
 import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
@@ -56,7 +52,7 @@ export const ImagePlugin = Node.create<ImageOptions>({
     return ReactNodeViewRenderer(
       this.editor.isEditable
         ? EditableImageComponent
-        : withViewWrapper(PLUGIN_NAME, ImageComponent)
+        : withViewWrapperOld(PLUGIN_NAME, ImageComponent)
     );
   },
 

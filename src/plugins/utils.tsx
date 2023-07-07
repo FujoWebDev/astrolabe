@@ -2,6 +2,7 @@ import { CommandProps, NodeViewProps } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { TextSelection, Transaction } from "prosemirror-state";
 
+import { Attrs } from "@tiptap/pm/model";
 import { NodeViewWrapper } from "@tiptap/react";
 import { renderToStaticMarkup } from "react-dom/server";
 
@@ -50,7 +51,8 @@ export const goToTrailingParagraph = ({
   return true;
 };
 
-export const withViewWrapper = <PluginOptions extends {}>(
+// Keeping until all plugins switched to new version, will then delete
+export const withViewWrapperOld = <PluginOptions extends {}>(
   pluginName: string,
   Component: (props: PluginOptions) => JSX.Element
 ) => {
@@ -66,9 +68,27 @@ export const withViewWrapper = <PluginOptions extends {}>(
   };
 };
 
-export const loadToDom = <PluginOptions extends {}>(
-  Component: (props: PluginOptions) => JSX.Element,
-  props: PluginOptions
+export const withViewWrapper = <ComponentProps extends {}, PluginOptions extends {}>(
+  pluginName: string,
+  Component: (props: ComponentProps & {attributes: PluginOptions}) => JSX.Element,
+  nonAttributeProps: ComponentProps
+) => {
+  return (
+    props: Partial<NodeViewProps> & Required<Pick<NodeViewProps, "node">>
+  ) => {
+    const attributes = props.node.attrs as PluginOptions;
+    const allProps = {...nonAttributeProps, attributes}
+    return (
+      <NodeViewWrapper data-type={pluginName}>
+        <Component {...allProps} />
+      </NodeViewWrapper>
+    );
+  };
+};
+
+export const loadToDom = <ComponentProps extends {}>(
+  Component: (props: ComponentProps) => JSX.Element,
+  props: ComponentProps
 ) => {
   const domRoot = document.createElement("div");
   domRoot.innerHTML = renderToStaticMarkup(<Component {...props} />);
@@ -152,4 +172,12 @@ export const toggleSpoilersOnKeydown = (event: KeyboardEvent) => {
     "after update, data-visible",
     spoilersElement?.getAttribute("data-visible")
   );
+};
+
+export const makeDataAttributes = (attributes: Attrs) => {
+  let dataAttributes: Record<string, any> = {};
+  for (const [key, value] of Object.entries(attributes)) {
+    dataAttributes[`data-${key}`] = value;
+  }
+  return dataAttributes;
 };

@@ -1,5 +1,5 @@
 import { OEmbedLoader, OEmbedPlaceholder } from "./Components";
-import { goToTrailingParagraph, loadToDom, withViewWrapper } from "../utils";
+import { goToTrailingParagraph, loadToDom, withViewWrapperOld } from "../utils";
 
 import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
@@ -65,7 +65,7 @@ export const OEmbedPlugin = Node.create<{
     return ReactNodeViewRenderer(
       this.editor.isEditable
         ? OEmbedLoader
-        : withViewWrapper(PLUGIN_NAME, OEmbedLoader)
+        : withViewWrapperOld(PLUGIN_NAME, OEmbedLoader)
     );
   },
 

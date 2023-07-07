@@ -7,8 +7,10 @@ import {
 import { BlockWithMenuOptions, PLUGIN_NAME } from "./Plugin";
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 
+import { Attrs } from "@tiptap/pm/model";
 import React from "react";
 import { css } from "@linaria/core";
+import { makeDataAttributes } from "../utils";
 
 export interface BlockBaseMenuProps extends Partial<BlockSettingsMenuProps> {
   deleteTitle: string;
@@ -90,20 +92,33 @@ export const BlockBaseMenu = (
   );
 };
 
-export const BlockWithMenuComponent = (
-  props: BlockWithMenuOptions & { editable?: boolean }
-) => {
+export interface BlockBaseProps {
+  pluginName: string;
+  attributes: Attrs;
+  children?: React.ReactNode;
+  enclosingTag?: React.ElementType;
+  editable?: boolean;
+  className?: string;
+}
+
+export const BlockBaseComponent = (props: BlockBaseProps) => {
+  const attributes = props.attributes;
+  const Tag = props.enclosingTag ?? "div";
+  const dataAttributes = makeDataAttributes(attributes);
   return (
-    <div
-      className="block-with-menu"
-      tabIndex={props.editable || !props.spoilers ? -1 : 0}
-      data-type={PLUGIN_NAME}
-      data-spoilers={props.spoilers}
-      data-visible={props.visible}
-      data-width={props.width}
-      data-height={props.height}
-      style={{ width: props.width, height: props.height, maxWidth: "100%" }}
-    ></div>
+    <Tag
+      className={props.className ?? "base-block"}
+      tabIndex={props.editable || !attributes.spoilers ? -1 : 0}
+      data-type={props.pluginName}
+      {...dataAttributes}
+      style={{
+        width: attributes.width,
+        height: attributes.height,
+        maxWidth: "100%",
+      }}
+    >
+      {props.children}
+    </Tag>
   );
 };
 
@@ -140,11 +155,7 @@ export const EditableBlockWithMenuComponent = (
           height
         </Button>
       </BlockBaseMenu>
-      <BlockWithMenuComponent
-        spoilers={attributes.spoilers}
-        width={attributes.width}
-        height={attributes.height}
-      />
+      <BlockBaseComponent pluginName={PLUGIN_NAME} attributes={attributes} />
     </NodeViewWrapper>
   );
 };
