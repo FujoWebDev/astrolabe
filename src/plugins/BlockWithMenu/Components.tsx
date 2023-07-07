@@ -14,7 +14,6 @@ export interface BlockBaseMenuProps extends Partial<BlockSettingsMenuProps> {
   deleteTitle: string;
 }
 
-// TODO: debug inserting paragraph above lower of two blocks in a row
 export const BlockBaseMenu = (
   props: BlockBaseMenuProps &
     Partial<NodeViewProps> &
@@ -58,13 +57,9 @@ export const BlockBaseMenu = (
             if (props.getPos) {
               props.editor
                 ?.chain()
-                .insertContentAt(
-                  props.getPos() > 0 ? props.getPos() - 1 : 0,
-                  "<p></p>",
-                  {
-                    updateSelection: true,
-                  }
-                )
+                .insertContentAt(props.getPos(), "<p></p>", {
+                  updateSelection: true,
+                })
                 .focus()
                 .run();
             }
