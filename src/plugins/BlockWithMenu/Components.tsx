@@ -1,6 +1,5 @@
 import { ArrowDown, ArrowUp, EyeAlt, EyeOff, Trash } from "iconoir-react";
 import {
-  BlockSettingsMenu,
   BlockSettingsMenuProps,
   Button,
   ToggleButton,
@@ -15,6 +14,7 @@ export interface BlockBaseMenuProps extends Partial<BlockSettingsMenuProps> {
   deleteTitle: string;
 }
 
+// TODO: debug inserting paragraph above lower of two blocks in a row
 export const BlockBaseMenu = (
   props: BlockBaseMenuProps &
     Partial<NodeViewProps> &
@@ -95,12 +95,16 @@ export const BlockBaseMenu = (
   );
 };
 
-export const BlockWithMenuComponent = (props: BlockWithMenuOptions) => {
+export const BlockWithMenuComponent = (
+  props: BlockWithMenuOptions & { editable?: boolean }
+) => {
   return (
     <div
       className="block-with-menu"
+      tabIndex={props.editable || !props.spoilers ? -1 : 0}
       data-type={PLUGIN_NAME}
       data-spoilers={props.spoilers}
+      data-visible={props.visible}
       data-width={props.width}
       data-height={props.height}
       style={{ width: props.width, height: props.height, maxWidth: "100%" }}
