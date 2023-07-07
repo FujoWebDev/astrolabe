@@ -46,14 +46,14 @@ export const BlockWithMenuPlugin = Node.create<BlockWithMenuOptions>({
         default: false,
       },
       height: {
-        default: 300,
+        default: undefined,
         parseHTML: (element) => {
           const rawHeight = element.getAttribute("data-height");
           return rawHeight ? parseFloat(rawHeight) : null;
         },
       },
       width: {
-        default: 300,
+        default: undefined,
         parseHTML: (element) => {
           const rawWidth = element.getAttribute("data-width");
           return rawWidth ? parseFloat(rawWidth) : null;

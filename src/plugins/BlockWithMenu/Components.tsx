@@ -113,12 +113,38 @@ export const BlockWithMenuComponent = (
 };
 
 export const EditableBlockWithMenuComponent = (
-  props: Partial<NodeViewProps> & Required<Pick<NodeViewProps, "node">>
+  props: Partial<NodeViewProps> &
+    Required<Pick<NodeViewProps, "node" | "editor">>
 ) => {
   const attributes = props.node.attrs as BlockWithMenuOptions;
   return (
     <NodeViewWrapper data-type={PLUGIN_NAME}>
-      <BlockBaseMenu {...props} deleteTitle="block" />
+      <BlockBaseMenu {...props} deleteTitle="block">
+        <Button
+          title="set width"
+          onClick={() => {
+            const width = window.prompt("set width:");
+            if (!width) {
+              return;
+            }
+            props.updateAttributes?.({ width: parseFloat(width) });
+          }}
+        >
+          width
+        </Button>
+        <Button
+          title="set height"
+          onClick={() => {
+            const height = window.prompt("set height:");
+            if (!height) {
+              return;
+            }
+            props.updateAttributes?.({ height: parseFloat(height) });
+          }}
+        >
+          height
+        </Button>
+      </BlockBaseMenu>
       <BlockWithMenuComponent
         spoilers={attributes.spoilers}
         width={attributes.width}

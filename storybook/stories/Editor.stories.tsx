@@ -117,13 +117,7 @@ export const BlockWithMenu: Story = {
             <button
               title="add block"
               aria-label="add block"
-              onClick={() =>
-                editor
-                  .chain()
-                  .focus()
-                  .setBlock({ height: 200, width: 100 })
-                  .run()
-              }
+              onClick={() => editor.chain().focus().setBlock({}).run()}
             >
               Block
             </button>
@@ -138,6 +132,7 @@ export const ViewOnlyBlocks: Story = {
   args: {
     ...BlockWithMenu.args,
     editable: false,
+    initialContent: `<div data-type="blockWithMenu" data-spoilers="true" data-height="300" data-width="300"></div><div data-type="blockWithMenu" data-height="100" data-width="800"></div><p>or if I'm worried about revealing <span data-type="inlineSpoilers">SPOILERS!!!</span> for a thing</p>`,
   },
 };
 
