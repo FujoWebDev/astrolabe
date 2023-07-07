@@ -103,6 +103,7 @@ export const InlineSpoilersPlugin = Mark.create<InlineSpoilersOptions>({
         "aria-label": "text spoilers",
         tabindex: this.options.focusable ? 0 : undefined,
       }),
+      // This 0 is used to mark where the content is to be inserted (https://tiptap.dev/guide/custom-extensions#render-html)
       0,
     ];
   },
