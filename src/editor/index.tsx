@@ -10,6 +10,7 @@ import {
 import { BubbleMenuOptions, MenuOption } from "./BubbleMenu";
 import { Mark, Node, isTextSelection } from "@tiptap/core";
 
+import { BlockWithMenuPlugin } from "../plugins/BlockWithMenu";
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
 import { FloatingMenuOptions } from "./FloatingMenu";
@@ -22,6 +23,7 @@ import { OEmbedPlugin } from "@bobaboard/tiptap-oembed";
 import Paragraph from "@tiptap/extension-paragraph";
 import React from "react";
 import Text from "@tiptap/extension-text";
+import { toggleSpoilersOnKeydown } from "../plugins/utils";
 
 export interface EditorProps {
   editable: boolean;
@@ -90,6 +92,27 @@ export const Editor = (props: EditorProps) => {
         return;
       }
       props.onContentChange(editor.getJSON());
+      if (editor.isEditable) {
+        return;
+      }
+      // We need to add the event listener that handles the keyboard shortcut for revealing/rehiding spoilers here
+      // because if we do it in onCreate in the plugins themselves, it will add multiples of the same listener
+      // if the editor has more than one plugin with spoilers installed.
+      // Currently this uses the same shortcut as setting inline spoilers in an editable editor, Alt+Shift+R,
+      // but since it requires the spoilered element to be focused we could consider having it triggered simply on "enter"
+      if (
+        editor.extensionManager.extensions.some(
+          (extension) =>
+            extension.name === InlineSpoilersPlugin.name ||
+            extension.name === BlockWithMenuPlugin.name ||
+            extension.parent?.name === BlockWithMenuPlugin.name
+        )
+      ) {
+        document.addEventListener("keydown", toggleSpoilersOnKeydown);
+      }
+    },
+    onDestroy() {
+      document.removeEventListener("keydown", toggleSpoilersOnKeydown);
     },
   });
   return (
