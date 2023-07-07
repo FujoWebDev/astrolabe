@@ -1,5 +1,6 @@
 import {
-  BlockWithMenuComponent,
+  BlockBaseComponent,
+  BlockBaseProps,
   EditableBlockWithMenuComponent,
 } from "./Components";
 import {
@@ -8,6 +9,7 @@ import {
   toggleAttributeOnClick,
   toggleSpoilersOnKeydown,
   withViewWrapper,
+  withViewWrapperOld,
 } from "../utils";
 
 import { Node } from "@tiptap/core";
@@ -63,17 +65,20 @@ export const BlockWithMenuPlugin = Node.create<BlockWithMenuOptions>({
   },
 
   renderHTML({ node }) {
-    return loadToDom(
-      BlockWithMenuComponent,
-      node.attrs as BlockWithMenuOptions
-    );
+    return loadToDom(BlockBaseComponent, {
+      pluginName: PLUGIN_NAME,
+      attributes: node.attrs,
+    });
   },
 
   addNodeView() {
     return ReactNodeViewRenderer(
       this.editor.isEditable
         ? EditableBlockWithMenuComponent
-        : withViewWrapper(PLUGIN_NAME, BlockWithMenuComponent)
+        : withViewWrapper(PLUGIN_NAME, BlockBaseComponent, {
+            pluginName: PLUGIN_NAME,
+            editable: false,
+          })
     );
   },
 
