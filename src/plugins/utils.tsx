@@ -113,3 +113,43 @@ export const toggleAttributeOnClick = ({
     },
   });
 };
+
+export const toggleSpoilersOnKeydown = (event: KeyboardEvent) => {
+  console.log("in keydown event");
+  if (
+    event.key !== "R" ||
+    event.ctrlKey ||
+    event.metaKey ||
+    !event.altKey ||
+    !event.shiftKey
+  ) {
+    console.log("no key match");
+    return;
+  }
+  if (
+    document.activeElement?.getAttribute("data-type") !== "inlineSpoilers" &&
+    !document.activeElement?.getAttribute("data-spoilers")
+  ) {
+    console.log("data-type", document.activeElement?.getAttribute("data-type"));
+    console.log(
+      "data-spoilers",
+      document.activeElement?.getAttribute("data-spoilers")
+    );
+    console.log("activeElement", document.activeElement);
+    return;
+  }
+  const spoilersElement = document.activeElement;
+  const currentValue = spoilersElement?.getAttribute("data-visible");
+  if (!currentValue) {
+    console.log("data-visible has no currentValue");
+    return;
+  }
+  const newValue = currentValue === "false" ? "true" : "false";
+  console.log(`toggling data-visible from ${currentValue} to ${newValue}`);
+  console.log("spoilersElement", spoilersElement);
+  spoilersElement.setAttribute("data-visible", newValue);
+  console.log(
+    "after update, data-visible",
+    spoilersElement?.getAttribute("data-visible")
+  );
+};

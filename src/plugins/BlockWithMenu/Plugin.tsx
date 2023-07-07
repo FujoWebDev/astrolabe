@@ -2,7 +2,13 @@ import {
   BlockWithMenuComponent,
   EditableBlockWithMenuComponent,
 } from "./Components";
-import { goToTrailingParagraph, loadToDom, withViewWrapper } from "../utils";
+import {
+  goToTrailingParagraph,
+  loadToDom,
+  toggleAttributeOnClick,
+  toggleSpoilersOnKeydown,
+  withViewWrapper,
+} from "../utils";
 
 import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
@@ -14,6 +20,7 @@ export interface BlockWithMenuOptions {
   width?: number;
   height?: number;
   spoilers?: boolean;
+  visible?: boolean;
 }
 
 export const PLUGIN_NAME = "blockWithMenu";
@@ -34,6 +41,9 @@ export const BlockWithMenuPlugin = Node.create<BlockWithMenuOptions>({
       spoilers: {
         default: false,
         parseHTML: (element) => element.getAttribute("data-spoilers"),
+      },
+      visible: {
+        default: false,
       },
       height: {
         default: 300,
@@ -94,5 +104,12 @@ export const BlockWithMenuPlugin = Node.create<BlockWithMenuOptions>({
     };
   },
 
-  // TODO: make spoilers revealable
+  addProseMirrorPlugins() {
+    return [
+      toggleAttributeOnClick({
+        name: this.name,
+        attribute: "data-visible",
+      }),
+    ];
+  },
 });
