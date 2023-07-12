@@ -114,6 +114,7 @@ export const BlockBaseComponent = (props: BlockBaseProps) => {
       style={{
         width: attributes.width,
         height: attributes.height,
+        display: "block",
         maxWidth: "100%",
       }}
     >

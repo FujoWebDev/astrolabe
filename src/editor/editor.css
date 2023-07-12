@@ -2,6 +2,10 @@
   padding: 5px;
 }
 
+.ProseMirror {
+  isolation: isolate;
+}
+
 [role="menuitem"] [aria-pressed="true"] {
   background-color: var(--active-button-background-color, blueviolet);
 }
@@ -14,24 +18,28 @@
 .base-block {
   background-color: cornflowerblue;
 }
-
+/* TODO: figure out clicking image */
 [data-spoilers="true"] {
   position: relative;
+  display: block;
+  z-index: 9;
+  cursor: pointer;
 }
 
 [data-spoilers="true"]::after {
   content: "\A \A Spoilers alert!!";
   background-color: var(--block-spoilers-background-color, rgba(255, 0, 0));
-  background-image: var(--block-spoilers-image-url);
-  width: 100%;
-  height: 100%;
+  background-image: var(--block-spoilers-image-url, url(https://firebasestorage.googleapis.com/v0/b/bobaboard-fb.appspot.com/o/images%2Fadmin%2Fspoilers.png?alt=media&token=a343aee0-e90f-4379-8d41-1cac1f65f7ee));
+  background-size: cover;
+  background-position: center;
   position: absolute;
-  top: 0;
+  inset: 0;
   white-space: pre;
+  z-index: 99;
 }
 
 .ProseMirror[contenteditable="true"] [data-spoilers="true"]::after {
-  opacity: 0.3;
+  opacity: 0.1;
 }
 
 [data-spoilers="true"][data-visible="true"]::after {

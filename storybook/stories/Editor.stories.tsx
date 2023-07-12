@@ -68,7 +68,7 @@ export const Editable: Story = {
   args: {
     editable: true,
     addedExtensions: [Italic],
-    initialContent: `<picture data-type="image"><img src="https://placekitten.com/200/300" /></picture>`,
+    initialContent: `<picture data-type="image"><img src="https://placekitten.com/200/300" /></picture><picture data-type="image" data-spoilers="true"><img src="https://placekitten.com/200/300" alt="A kitten" /></picture>`,
   },
 };
 
