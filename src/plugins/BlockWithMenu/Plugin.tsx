@@ -1,15 +1,12 @@
 import {
   BlockBaseComponent,
-  BlockBaseProps,
   EditableBlockWithMenuComponent,
 } from "./Components";
 import {
   goToTrailingParagraph,
   loadToDom,
   toggleAttributeOnClick,
-  toggleSpoilersOnKeydown,
   withViewWrapper,
-  withViewWrapperOld,
 } from "../utils";
 
 import { Node } from "@tiptap/core";

@@ -1,5 +1,11 @@
+import { BlockWithMenuOptions, BlockWithMenuPlugin } from "../BlockWithMenu";
 import { EditableImageComponent, ImageComponent } from "./Components";
-import { goToTrailingParagraph, loadToDom, withViewWrapperOld } from "../utils";
+import {
+  goToTrailingParagraph,
+  loadToDom,
+  withViewWrapper,
+  withViewWrapperOld,
+} from "../utils";
 
 import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
@@ -7,12 +13,9 @@ import { ReactNodeViewRenderer } from "@tiptap/react";
 
 export const ImagePluginKey = new PluginKey("ImagePlugin");
 
-export interface ImageOptions {
+export interface ImageOptions extends BlockWithMenuOptions {
   src: string;
-  width?: number;
-  height?: number;
   alt?: string;
-  spoilers?: boolean;
 }
 
 export const PLUGIN_NAME = "image";
@@ -24,35 +27,40 @@ declare module "@tiptap/core" {
   }
 }
 
-export const ImagePlugin = Node.create<ImageOptions>({
+export const ImagePlugin = BlockWithMenuPlugin.extend<ImageOptions>({
   name: PLUGIN_NAME,
-  group: "block",
 
   addAttributes() {
     return {
+      ...this.parent?.(),
       src: {
         default: "",
         parseHTML: (element) =>
           element.querySelector("img")?.getAttribute("src"),
       },
-      spoilers: {
-        default: false,
-      },
       alt: {
         default: "no alt",
+        parseHTML: (element) =>
+          element.querySelector("img")?.getAttribute("alt"),
       },
     };
   },
 
   renderHTML({ node }) {
-    return loadToDom(ImageComponent, node.attrs as ImageOptions);
+    return loadToDom(ImageComponent, {
+      pluginName: PLUGIN_NAME,
+      attributes: node.attrs,
+    });
   },
 
   addNodeView() {
     return ReactNodeViewRenderer(
       this.editor.isEditable
         ? EditableImageComponent
-        : withViewWrapperOld(PLUGIN_NAME, ImageComponent)
+        : withViewWrapper(PLUGIN_NAME, ImageComponent, {
+            pluginName: PLUGIN_NAME,
+            editable: false,
+          })
     );
   },
 
