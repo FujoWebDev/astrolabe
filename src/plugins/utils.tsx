@@ -68,16 +68,21 @@ export const withViewWrapperOld = <PluginOptions extends {}>(
   };
 };
 
-export const withViewWrapper = <ComponentProps extends {}, PluginOptions extends {}>(
+export const withViewWrapper = <
+  ComponentProps extends {},
+  PluginOptions extends {}
+>(
   pluginName: string,
-  Component: (props: ComponentProps & {attributes: PluginOptions}) => JSX.Element,
+  Component: (
+    props: ComponentProps & { attributes: PluginOptions }
+  ) => JSX.Element,
   nonAttributeProps: ComponentProps
 ) => {
   return (
     props: Partial<NodeViewProps> & Required<Pick<NodeViewProps, "node">>
   ) => {
     const attributes = props.node.attrs as PluginOptions;
-    const allProps = {...nonAttributeProps, attributes}
+    const allProps = { ...nonAttributeProps, attributes };
     return (
       <NodeViewWrapper data-type={pluginName}>
         <Component {...allProps} />
@@ -99,6 +104,22 @@ export const loadToDom = <ComponentProps extends {}>(
   return element;
 };
 
+// Because of the way ProseMirror adds event listeners, we can't use event.currentTarget
+// to catch the event as it bubbles to parent, so we check the ancestors recursively
+// until we find the attribute, hit the outer wrapper of the editor, or there is no parent.
+const getElementOrAncestorWithAttribute = (
+  element: HTMLElement | null,
+  attribute: string
+): HTMLElement | null => {
+  if (!element || element.classList.contains("ProseMirror")) {
+    return null;
+  }
+  if (element.hasAttribute(attribute)) {
+    return element;
+  }
+  return getElementOrAncestorWithAttribute(element.parentElement, attribute);
+};
+
 export const toggleAttributeOnClick = ({
   name,
   attribute,
@@ -114,20 +135,27 @@ export const toggleAttributeOnClick = ({
           return false;
         }
         const element = event.target as HTMLElement;
-        if (!element.hasAttribute(attribute)) {
-          console.log("target doesn't have html attribute", attribute);
+        const elementOrParent = getElementOrAncestorWithAttribute(
+          element,
+          attribute
+        );
+        if (!elementOrParent) {
+          console.log(
+            "neither target nor parent has html attribute",
+            attribute
+          );
           return false;
         }
-        const currentValue = element.getAttribute(attribute);
+        const currentValue = elementOrParent.getAttribute(attribute);
         if (!currentValue) {
-          console.log("element attribute has no currentValue");
+          console.log("elementOrParent attribute has no currentValue");
           return false;
         }
         const newValue = currentValue === "false" ? "true" : "false";
         console.log(
           `toggling ${name} attribute ${attribute} from ${currentValue} to ${newValue}`
         );
-        element.setAttribute(attribute, newValue);
+        elementOrParent.setAttribute(attribute, newValue);
         return true;
       },
     },
