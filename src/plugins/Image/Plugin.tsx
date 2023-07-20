@@ -1,13 +1,7 @@
 import { BlockWithMenuOptions, BlockWithMenuPlugin } from "../BlockWithMenu";
 import { EditableImageComponent, ImageComponent } from "./Components";
-import {
-  goToTrailingParagraph,
-  loadToDom,
-  withViewWrapper,
-  withViewWrapperOld,
-} from "../utils";
+import { goToTrailingParagraph, loadToDom, withViewWrapper } from "../utils";
 
-import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 

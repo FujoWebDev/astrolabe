@@ -6,9 +6,7 @@ import {
 import { ImageOptions, PLUGIN_NAME } from "./Plugin";
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 
-import {
-  Button,
-} from "../BlockSettingsMenu/BlockSettingsMenu";
+import { Button } from "../BlockSettingsMenu/BlockSettingsMenu";
 import React from "react";
 import { css } from "@linaria/core";
 
@@ -18,7 +16,11 @@ const imageComponentClass = css`
   }
 `;
 
-export const ImageComponent = (props: BlockBaseProps) => {
+export const ImageComponent = (
+  props: BlockBaseProps & {
+    onLoad?: (event: React.SyntheticEvent<HTMLImageElement>) => void;
+  }
+) => {
   const attributes = props.attributes;
   return (
     <BlockBaseComponent
@@ -30,6 +32,7 @@ export const ImageComponent = (props: BlockBaseProps) => {
         src={attributes.src}
         alt={attributes.alt}
         style={{ display: "block", maxWidth: "100%" }}
+        onLoad={props.onLoad}
       />
     </BlockBaseComponent>
   );
@@ -58,6 +61,14 @@ export const EditableImageComponent = (
       <ImageComponent
         attributes={attributes}
         pluginName={PLUGIN_NAME}
+        onLoad={(event) => {
+          const image = event.target as HTMLElement;
+          if (image.tagName !== "IMG") {
+            return;
+          }
+          const rect = image.getBoundingClientRect();
+          props.updateAttributes?.({ width: rect.width, height: rect.height });
+        }}
       />
     </NodeViewWrapper>
   );
