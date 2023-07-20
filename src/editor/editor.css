@@ -18,16 +18,15 @@
 .base-block {
   background-color: cornflowerblue;
 }
-/* TODO: figure out clicking image */
+
 [data-spoilers="true"] {
   position: relative;
   display: block;
-  z-index: 9;
   cursor: pointer;
 }
 
 [data-spoilers="true"]::after {
-  content: "\A \A Spoilers alert!!";
+  content: "";
   background-color: var(--block-spoilers-background-color, rgba(255, 0, 0));
   background-image: var(--block-spoilers-image-url, url(https://firebasestorage.googleapis.com/v0/b/bobaboard-fb.appspot.com/o/images%2Fadmin%2Fspoilers.png?alt=media&token=a343aee0-e90f-4379-8d41-1cac1f65f7ee));
   background-size: cover;
