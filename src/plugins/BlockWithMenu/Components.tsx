@@ -16,6 +16,8 @@ export interface BlockBaseMenuProps extends Partial<BlockSettingsMenuProps> {
   deleteTitle: string;
 }
 
+// We only add buttons here that we want available in all child plugins that will extend BlockWithMenu
+// Additional buttons specific to a given plugin can be added as children.
 export const BlockBaseMenu = (
   props: BlockBaseMenuProps &
     Partial<NodeViewProps> &
@@ -131,6 +133,8 @@ export const EditableBlockWithMenuComponent = (
   return (
     <NodeViewWrapper data-type={PLUGIN_NAME}>
       <BlockBaseMenu {...props} deleteTitle="block">
+        {/* These buttons are intended for testing the BlockWithMenu plugin on it's own.
+        They will not appear in child plugins extended from this one.  */}
         <Button
           title="set width"
           onClick={() => {
