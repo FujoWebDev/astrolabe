@@ -13,7 +13,10 @@ import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 
-export const BlockWithMenuPluginKey = new PluginKey("BLockWithMenuPlugin");
+// This plugin is a base from which to extend other plugins with a shared set of features.
+// It is not intended to be used directly in the editor in an application.
+
+export const BlockWithMenuPluginKey = new PluginKey("BlockWithMenuPlugin");
 
 export interface BlockWithMenuOptions {
   width?: number;

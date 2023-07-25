@@ -3,6 +3,9 @@
 }
 
 .ProseMirror {
+  /* Creates a new stacking context. Will keep any negative z-indexed
+   child elements from slipping behind thing outside of the editor. 
+   Not actually needed yet, but a good failsafe. */
   isolation: isolate;
 }
 

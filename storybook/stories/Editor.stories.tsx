@@ -114,6 +114,8 @@ export const Italics: Story = {
 export const BlockWithMenu: Story = {
   args: {
     ...Editable.args,
+    // The first of the divs here intentionally leaves out data-width and data-height for testing purposes,
+    // and therefore will appear with no size on load, only the menu will show for the block.
     initialContent: `<div data-type="blockWithMenu" data-spoilers="true"></div><div data-type="blockWithMenu" data-height="100" data-width="800"></div>`,
     addedExtensions: [BlockWithMenuPlugin],
     customFloatingMenuButtons: [
