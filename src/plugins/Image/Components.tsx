@@ -2,7 +2,7 @@ import {
   BlockBaseComponent,
   BlockBaseMenu,
   BlockBaseProps,
-} from "../BlockWithMenu/Components";
+} from "@bobaboard/tiptap-block-with-menu";
 import { ImageOptions, PLUGIN_NAME } from "./Plugin";
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 

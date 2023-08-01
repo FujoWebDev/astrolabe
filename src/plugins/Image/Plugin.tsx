@@ -1,4 +1,7 @@
-import { BlockWithMenuOptions, BlockWithMenuPlugin } from "../BlockWithMenu";
+import {
+  BlockWithMenuOptions,
+  BlockWithMenuPlugin,
+} from "@bobaboard/tiptap-block-with-menu";
 import { EditableImageComponent, ImageComponent } from "./Components";
 import { goToTrailingParagraph, loadToDom, withViewWrapper } from "../utils";
 
