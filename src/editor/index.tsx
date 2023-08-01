@@ -10,7 +10,7 @@ import {
 import { BubbleMenuOptions, MenuOption } from "./BubbleMenu";
 import { Mark, Node, isTextSelection } from "@tiptap/core";
 
-import { BlockWithMenuPlugin } from "../plugins/BlockWithMenu";
+import { BlockWithMenuPlugin } from "@bobaboard/tiptap-block-with-menu";
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
 import { FloatingMenuOptions } from "./FloatingMenu";
