@@ -1,3 +1,7 @@
+import {
+  BlockWithMenuOptions,
+  BlockWithMenuPlugin,
+} from "@bobaboard/tiptap-block-with-menu";
 import { OEmbedLoader, OEmbedPlaceholder } from "./Components";
 import { goToTrailingParagraph, loadToDom, withViewWrapperOld } from "../utils";
 
@@ -5,11 +9,8 @@ import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 
-export interface OEmbedData {
+export interface OEmbedData extends BlockWithMenuOptions {
   src: string;
-  width?: number;
-  height?: number;
-  spoilers?: boolean;
 }
 
 export const OEmbedPluginKey = new PluginKey("OEmbedPluginKey");
@@ -24,7 +25,7 @@ declare module "@tiptap/core" {
   }
 }
 
-export const OEmbedPlugin = Node.create<{
+export const OEmbedPlugin = BlockWithMenuPlugin.extend<{
   getRequestEndpoint: (url: string) => string;
 }>({
   name: PLUGIN_NAME,
@@ -39,28 +40,20 @@ export const OEmbedPlugin = Node.create<{
 
   addAttributes() {
     return {
+      ...this.parent?.(),
       src: {
         default: "",
         parseHTML: (element) => element.getAttribute("data-src"),
       },
-      spoilers: {
-        default: false,
-      },
-      width: {
-        default: undefined,
-        parseHTML: (element) => element.getAttribute("data-width"),
-      },
-      height: {
-        default: undefined,
-        parseHTML: (element) => element.getAttribute("data-height"),
-      },
     };
   },
 
+  // TODO: update
   renderHTML({ node }) {
     return loadToDom(OEmbedPlaceholder, node.attrs as OEmbedData);
   },
 
+  // TODO: update
   addNodeView() {
     return ReactNodeViewRenderer(
       this.editor.isEditable
@@ -95,8 +88,4 @@ export const OEmbedPlugin = Node.create<{
         },
     };
   },
-
-  // TODO: if we're in edit mode and the image is the last element of the editor, make
-  // sure that a paragraph stays at the end of it
-  // onTransaction() {}
 });

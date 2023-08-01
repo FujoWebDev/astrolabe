@@ -1,3 +1,8 @@
+import {
+  BlockBaseComponent,
+  BlockBaseMenu,
+  BlockBaseProps,
+} from "@bobaboard/tiptap-block-with-menu";
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { OEmbedData, PLUGIN_NAME } from "./Plugin";
 import { getHtmlForTweetId, getTweetId, preprocessHtml } from "./html-utils";
