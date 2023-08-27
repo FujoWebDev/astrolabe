@@ -160,7 +160,11 @@ export const EditableBlockWithMenuComponent = (
           height
         </Button>
       </BlockBaseMenu>
-      <BlockBaseComponent pluginName={PLUGIN_NAME} attributes={attributes} />
+      <BlockBaseComponent
+        pluginName={PLUGIN_NAME}
+        attributes={attributes}
+        editable={props.editor.isEditable}
+      />
     </NodeViewWrapper>
   );
 };

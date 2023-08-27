@@ -61,6 +61,7 @@ export const EditableImageComponent = (
       <ImageComponent
         attributes={attributes}
         pluginName={PLUGIN_NAME}
+        editable={true}
         onLoad={(event) => {
           const image = event.target as HTMLElement;
           if (image.tagName !== "IMG") {
