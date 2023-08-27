@@ -51,23 +51,6 @@ export const goToTrailingParagraph = ({
   return true;
 };
 
-// Keeping until all plugins switched to new version, will then delete
-export const withViewWrapperOld = <PluginOptions extends {}>(
-  pluginName: string,
-  Component: (props: PluginOptions) => JSX.Element
-) => {
-  return (
-    props: Partial<NodeViewProps> & Required<Pick<NodeViewProps, "node">>
-  ) => {
-    const attributes = props.node.attrs as PluginOptions;
-    return (
-      <NodeViewWrapper data-type={pluginName}>
-        <Component {...attributes} />
-      </NodeViewWrapper>
-    );
-  };
-};
-
 export const withViewWrapper = <
   ComponentProps extends {},
   PluginOptions extends {}

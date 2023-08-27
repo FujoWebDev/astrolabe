@@ -3,9 +3,8 @@ import {
   BlockWithMenuPlugin,
 } from "@bobaboard/tiptap-block-with-menu";
 import { OEmbedLoader, OEmbedPlaceholder } from "./Components";
-import { goToTrailingParagraph, loadToDom, withViewWrapperOld } from "../utils";
+import { goToTrailingParagraph, loadToDom } from "../utils";
 
-import { Node } from "@tiptap/core";
 import { PluginKey } from "prosemirror-state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 
@@ -48,18 +47,17 @@ export const OEmbedPlugin = BlockWithMenuPlugin.extend<{
     };
   },
 
-  // TODO: update
   renderHTML({ node }) {
-    return loadToDom(OEmbedPlaceholder, node.attrs as OEmbedData);
+    return loadToDom(OEmbedPlaceholder, {
+      pluginName: PLUGIN_NAME,
+      attributes: node.attrs,
+    });
   },
 
-  // TODO: update
+  // We don't need withViewWrapper here because both editable and view-only editors use OEmbedLoader
+  // which already includes the NodeViewWrapper
   addNodeView() {
-    return ReactNodeViewRenderer(
-      this.editor.isEditable
-        ? OEmbedLoader
-        : withViewWrapperOld(PLUGIN_NAME, OEmbedLoader)
-    );
+    return ReactNodeViewRenderer(OEmbedLoader);
   },
 
   parseHTML() {
