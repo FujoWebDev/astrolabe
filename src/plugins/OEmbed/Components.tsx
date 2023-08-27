@@ -13,7 +13,7 @@ import {
 } from "./utils";
 
 import React from "react";
-import { styled } from "@linaria/react";
+import { css } from "@linaria/core";
 import { useQuery } from "react-query";
 
 type OEmbedResult = Record<string, unknown> & {
@@ -25,25 +25,27 @@ type OEmbedResult = Record<string, unknown> & {
 
 // Note: this tag cannot be an iframe because there's no generic way
 // to resize an iframe to fit its content.
-const Article = styled.article`
-  all: unset;
-  width: 100%;
+const wrapperClass = css`
+  div {
+    all: unset;
+    width: 100%;
 
-  // TODO: add some kind of loading animation here.
-  &[data-loaded="false"] iframe {
-    background-color: blue;
+    // TODO: add some kind of loading animation here.
+    &[data-loaded="false"] iframe {
+      background-color: blue;
+    }
   }
 `;
 
 export const OEmbed = (
-  props: OEmbedResult & {
-    loaded: boolean;
-    attributes: OEmbedData;
-    onSizeSettled: (sizes: {
-      widthPx: number | null;
-      heightPx: number | null;
-    }) => void;
-  }
+  props: BlockBaseProps &
+    OEmbedResult & {
+      loaded: boolean;
+      onSizeSettled: (sizes: {
+        widthPx: number | null;
+        heightPx: number | null;
+      }) => void;
+    }
 ) => {
   const onAttachNode = React.useCallback(
     async (node: HTMLElement | null) => {
@@ -76,38 +78,42 @@ export const OEmbed = (
   if ("html" in props) {
     const processedHtml = preprocessHtml(props.html);
     return (
-      <Article
-        data-src={props.attributes.src}
-        data-spoilers={props.attributes.spoilers}
-        data-width={props.attributes.width}
-        data-height={props.attributes.height}
-        data-source={getWebsiteNameFromUrl(props.meta.canonical)}
-        data-loaded={props.loaded}
-        dangerouslySetInnerHTML={{ __html: processedHtml }}
-        ref={onAttachNode}
-      />
+      <BlockBaseComponent {...props} className="embed" enclosingTag={"article"}>
+        <div
+          className={wrapperClass}
+          dangerouslySetInnerHTML={{ __html: processedHtml }}
+          data-source={getWebsiteNameFromUrl(props.meta.canonical)}
+          data-loaded={props.loaded}
+          ref={onAttachNode}
+        />
+      </BlockBaseComponent>
     );
   }
   return <>Unimplemented</>;
 };
 
-export const OEmbedPlaceholder = (props: OEmbedData) => {
+// Not sure if we actually want the BlockBaseComponent here,
+// since if the width and height attributes have been set,
+// it will take up that space.
+// If the goal is to just have something that holds the data attributes,
+// it may be better to go back to a plain <article>
+export const OEmbedPlaceholder = (props: BlockBaseProps) => {
   return (
-    <article
-      data-src={props.src}
-      data-spoilers={props.spoilers}
-      data-width={props.width}
-      data-height={props.height}
+    <BlockBaseComponent
+      {...props}
+      className="embed-placeholder"
+      enclosingTag={"article"}
     />
   );
 };
 
 export const OEmbedLoader = (
   props: Partial<NodeViewProps> &
-    Required<Pick<NodeViewProps, "node" | "extension">>
+    Required<Pick<NodeViewProps, "node" | "extension" | "editor">>
 ) => {
   const [loaded, setLoaded] = React.useState(false);
   const attributes = props.node.attrs as OEmbedData;
+  const editable = props.editor.isEditable;
   const { isLoading, data } = useQuery<OEmbedResult>(
     ["oembed", { src: attributes.src }],
     async () => {
@@ -137,9 +143,12 @@ export const OEmbedLoader = (
 
   return (
     <NodeViewWrapper data-type={PLUGIN_NAME}>
+      {editable && <BlockBaseMenu {...props} deleteTitle="Embed" />}
       <OEmbed
         {...data}
+        pluginName={PLUGIN_NAME}
         attributes={attributes}
+        editable={editable}
         loaded={loaded}
         onSizeSettled={(sizes) => {
           props.updateAttributes?.({

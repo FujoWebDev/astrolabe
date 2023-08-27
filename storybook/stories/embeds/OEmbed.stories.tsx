@@ -67,6 +67,33 @@ export const Pixiv: Story = {
   },
 };
 
+export const ViewOnlyPixiv: Story = {
+  ...Empty,
+  args: {
+    ...Pixiv.args,
+    editable: false,
+  },
+};
+
+export const SpoileredPixiv: Story = {
+  args: {
+    editable: false,
+    embedUrl: Pixiv.args?.embedUrl,
+  },
+  render: (args) => (
+    <QueryClientProvider client={queryClient}>
+      <Editor
+        {...args}
+        initialContent={
+          args.embedUrl
+            ? `<article data-type="oembed" data-src="${args.embedUrl}" data-spoilers="true" />`
+            : args.initialContent
+        }
+      />
+    </QueryClientProvider>
+  ),
+};
+
 export const Tumblr: Story = {
   ...Empty,
   args: {
@@ -80,6 +107,14 @@ export const Twitter: Story = {
   args: {
     editable: true,
     embedUrl: `https://twitter.com/Horse_ebooks/status/218439593240956928`,
+  },
+};
+
+export const SpoileredTwitter: Story = {
+  ...SpoileredPixiv,
+  args: {
+    ...SpoileredPixiv.args,
+    embedUrl: Twitter.args?.embedUrl,
   },
 };
 
