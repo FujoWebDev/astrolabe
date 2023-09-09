@@ -13,7 +13,7 @@ export default defineConfig({
     },
     minify: false,
     rollupOptions: {
-      external: ["react", "react-dom", "react-query"],
+      external: ["react", "react-dom", "react-query", "react/jsx-runtime", "react-dom/server"],
       output: {
         globals: {
           react: "React",

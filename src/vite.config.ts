@@ -17,7 +17,7 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: ["react", "react-dom"],
+      external: ["react", "react-dom", "react/jsx-runtime", "react-dom/server"],
       output: {
         globals: {
           react: "React",
@@ -45,6 +45,6 @@ export default defineConfig({
         "react-dom": "ReactDOM",
       },
     }),
-    commonjsExternals({ externals: ["react", "react-dom"] }),
+    // commonjsExternals({ externals: ["react", "react-dom", "react/jsx-runtime", "react-dom/server"] }),
   ],
 });

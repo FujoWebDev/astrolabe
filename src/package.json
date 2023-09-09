@@ -31,6 +31,7 @@
     "@tiptap/react": "^2.0.0-beta.194",
     "@uiw/codemirror-theme-dracula": "^4.11.0",
     "@uiw/react-codemirror": "^4.11.0",
+    "iconoir-react": "^6.11.0",
     "prettier": "^2.7.1",
     "prosemirror-commands": "^1.5.0",
     "prosemirror-dropcursor": "^1.6.1",
@@ -39,6 +40,7 @@
     "prosemirror-keymap": "^1.2.0",
     "prosemirror-schema-list": "^1.2.2",
     "react-json-view": "^1.21.3",
+    "react-query": "^3.39.3",
     "use-debounce": "^8.0.4"
   },
   "devDependencies": {

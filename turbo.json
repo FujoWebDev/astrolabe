@@ -6,16 +6,16 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "storybook": {
-      "dependsOn": ["^build"],
-      "outputs": []
-    },
-    "build-storybook": {
-      "inputs": ["storybook/**/*.tsx", "storybook/**/*.ts"],
-      "dependsOn": ["^build"],
-      "env": ["NODE_OPTIONS"],
-      "outputs": ["storybook/storybook-static/**"]
-    },
+    // "storybook": {
+    //   "dependsOn": ["^build"],
+    //   "outputs": []
+    // },
+    // "build-storybook": {
+    //   "inputs": ["storybook/**/*.tsx", "storybook/**/*.ts"],
+    //   "dependsOn": ["^build"],
+    //   "env": ["NODE_OPTIONS"],
+    //   "outputs": ["storybook/storybook-static/**"]
+    // },
     "clean": {
       "cache": false
     }

@@ -10,16 +10,16 @@ import {
 import { BubbleMenuOptions, MenuOption } from "./BubbleMenu";
 import { Mark, Node, isTextSelection } from "@tiptap/core";
 
-// import { BlockWithMenuPlugin } from "@bobaboard/tiptap-block-with-menu";
+import { BlockWithMenuPlugin } from "@bobaboard/tiptap-block-with-menu";
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
 import { FloatingMenuOptions } from "./FloatingMenu";
 import HardBreak from "@tiptap/extension-hard-break";
-// import { ImagePlugin } from "@bobaboard/tiptap-image";
-// import { InlineSpoilersPlugin } from "@bobaboard/tiptap-inline-spoilers";
+import { ImagePlugin } from "@bobaboard/tiptap-image";
+import { InlineSpoilersPlugin } from "@bobaboard/tiptap-inline-spoilers";
 import Link from "@tiptap/extension-link";
 // import Italic from "@tiptap/extension-italic";
-// import { OEmbedPlugin } from "@bobaboard/tiptap-oembed";
+import { OEmbedPlugin } from "@bobaboard/tiptap-oembed";
 import Paragraph from "@tiptap/extension-paragraph";
 import React from "react";
 import Text from "@tiptap/extension-text";
@@ -48,34 +48,33 @@ export const DEFAULT_EXTENSIONS: (Node<any, any> | Mark<any, any>)[] = [
   Link.configure({
     openOnClick: false,
   }),
-  // ImagePlugin,
-  // OEmbedPlugin,
-  // InlineSpoilersPlugin,
+  ImagePlugin,
+  OEmbedPlugin,
+  InlineSpoilersPlugin,
 ];
 
 export const Editor = (props: EditorProps) => {
   const defaultExtensions = props.editable
     ? DEFAULT_EXTENSIONS
     : DEFAULT_EXTENSIONS.map((extension) => {
-        return true;
-        // return extension.name === InlineSpoilersPlugin.name
-        //   ? InlineSpoilersPlugin.configure({ focusable: true })
-        //   : extension;
+        return extension.name === InlineSpoilersPlugin.name
+          ? InlineSpoilersPlugin.configure({ focusable: true })
+          : extension;
       });
   const currentExtensions = props.addedExtensions
     ? [...defaultExtensions, ...props.addedExtensions]
     : defaultExtensions;
-  // const configuredExtensions =
-  //   props.extensionConfigs && props.extensionConfigs.length > 0
-  //     ? currentExtensions.map((extension) => {
-  //         const config = props.extensionConfigs?.find(
-  //           (config) => config.extensionName === extension.name
-  //         );
-  //         return config ? extension.configure(config.config) : extension;
-  //       })
-  //     : currentExtensions;
+  const configuredExtensions =
+    props.extensionConfigs && props.extensionConfigs.length > 0
+      ? currentExtensions.map((extension) => {
+          const config = props.extensionConfigs?.find(
+            (config) => config.extensionName === extension.name
+          );
+          return config ? extension.configure(config.config) : extension;
+        })
+      : currentExtensions;
   const editor = useEditor({
-    extensions: currentExtensions as any,
+    extensions: configuredExtensions,
     content: props.initialContent,
     editable: props.editable,
     // TODO: this will likely need to be kept in sync with the props
@@ -103,10 +102,10 @@ export const Editor = (props: EditorProps) => {
       // but since it requires the spoilered element to be focused we could consider having it triggered simply on "enter"
       if (
         editor.extensionManager.extensions.some(
-          (extension) => true
-          // extension.name === InlineSpoilersPlugin.name ||
-          // extension.name === BlockWithMenuPlugin.name ||
-          // extension.parent?.name === BlockWithMenuPlugin.name
+          (extension) =>
+            extension.name === InlineSpoilersPlugin.name ||
+            extension.name === BlockWithMenuPlugin.name ||
+            extension.parent?.name === BlockWithMenuPlugin.name
         )
       ) {
         document.addEventListener("keydown", toggleSpoilersOnKeydown);
@@ -116,6 +115,8 @@ export const Editor = (props: EditorProps) => {
       document.removeEventListener("keydown", toggleSpoilersOnKeydown);
     },
   });
+
+  console.log(editor);
   return (
     <>
       <EditorContent editor={editor} />
@@ -123,7 +124,7 @@ export const Editor = (props: EditorProps) => {
         <FloatingMenu editor={editor}>
           <FloatingMenuOptions
             editor={editor}
-            extensions={currentExtensions as any}
+            extensions={configuredExtensions}
             customButtons={props.customFloatingMenuButtons}
           />
         </FloatingMenu>
@@ -164,7 +165,7 @@ export const Editor = (props: EditorProps) => {
         >
           <BubbleMenuOptions
             editor={editor}
-            extensions={currentExtensions as any}
+            extensions={configuredExtensions}
             customButtons={props.customBubbleMenuButtons}
           />
         </BubbleMenu>
