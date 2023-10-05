@@ -14,6 +14,7 @@ import {
 
 import React from "react";
 import { css } from "@linaria/core";
+import { makeDataAttributes } from "../utils";
 import { useQuery } from "react-query";
 
 type OEmbedResult = Record<string, unknown> & {
@@ -82,7 +83,7 @@ export const OEmbed = (
         <div
           className={wrapperClass}
           dangerouslySetInnerHTML={{ __html: processedHtml }}
-          data-source={getWebsiteNameFromUrl(props.meta.canonical)}
+          data-site={getWebsiteNameFromUrl(props.meta.canonical)}
           data-loaded={props.loaded}
           ref={onAttachNode}
         />
@@ -92,18 +93,21 @@ export const OEmbed = (
   return <>Unimplemented</>;
 };
 
-// Not sure if we actually want the BlockBaseComponent here,
-// since if the width and height attributes have been set,
-// it will take up that space.
-// If the goal is to just have something that holds the data attributes,
-// it may be better to go back to a plain <article>
-export const OEmbedPlaceholder = (props: BlockBaseProps) => {
+// This Placeholder is only used in renderHTML and is intended to enable
+// data portability/sharing across platform eg. in an RSS feed.
+// Thus we render a plain html article with data-attributes instead of the full BlockBaseComponent
+// to let the end consumer have full control over how they rebuild the content.
+export const OEmbedPlaceholder = (
+  props: Pick<BlockBaseProps, "attributes" | "pluginName">
+) => {
+  const attributes = props.attributes;
+  const dataAttributes = makeDataAttributes(attributes);
   return (
-    <BlockBaseComponent
-      {...props}
+    <article
       className="embed-placeholder"
-      enclosingTag={"article"}
-    />
+      data-type={props.pluginName}
+      {...dataAttributes}
+    ></article>
   );
 };
 
