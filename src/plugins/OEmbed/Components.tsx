@@ -95,7 +95,7 @@ export const OEmbed = (
 
 // This Placeholder is only used in renderHTML and is intended to enable
 // data portability/sharing across platform eg. in an RSS feed.
-// Thus we render a plain html article with data-attributes instead of the full BlockBaseComponent
+// Thus we render a plain html article with data-attributes instead of the full BlockBaseComponent (which has some inherent styling)
 // to let the end consumer have full control over how they rebuild the content.
 export const OEmbedPlaceholder = (
   props: Pick<BlockBaseProps, "attributes" | "pluginName">
