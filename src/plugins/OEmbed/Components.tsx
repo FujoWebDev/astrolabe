@@ -102,13 +102,7 @@ export const OEmbedPlaceholder = (
 ) => {
   const attributes = props.attributes;
   const dataAttributes = makeDataAttributes(attributes);
-  return (
-    <article
-      className="embed-placeholder"
-      data-type={props.pluginName}
-      {...dataAttributes}
-    ></article>
-  );
+  return <article data-type={props.pluginName} {...dataAttributes}></article>;
 };
 
 export const OEmbedLoader = (
