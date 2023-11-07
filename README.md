@@ -19,6 +19,8 @@ badge"/> </a>
 
 </div>
 
+You can read a more in-depth explanation of the motivation behind and the goals of this editor in the [design README](./DESIGN.md).
+
 ## How to Install
 
 Check back later for the ability to install this without exploding your whole
