@@ -4,6 +4,9 @@
 
 ## Overview
 
+> [!WARNING]
+> This design doc is aspirational and might not represent what is currently possible with the editor.
+
 This document describes the overarching goal of a Rich Text Editor (RTE) for web applications. The editor should:
 
 - Offer a basic set of out-of-the-box plugins for modern content creation experiences. Examples include: gif selectors, spoilers/content warnings on both text and block elements, custom emojis, mentions, embeds, and tumblr-style "photosets".
@@ -11,6 +14,13 @@ This document describes the overarching goal of a Rich Text Editor (RTE) for web
 - Supports semantic output that can be further processed and built upon to allow compatibility and interoperability with (and extension by) other projects.
 
 In particular, we'll develop the core set of plugins and semantic schemas with an a eye to the needs for online self-expression of transformational fandom.
+
+## Motivation
+
+1. **There is no existing "out of the box" editor that enables plug-and-play, modern editing experiences.** Examples of missing features include: tumblr-style photosets, custom emojis, advanced image editing (e.g. cropping images before upload), or embedding content from external websites. This is a huge barrier for incumbent social software projects (since they need to reimplement this functionality from scratch), and for the migration of users across projects (since they may lose features that are essential to their self expression).
+
+2. **There is no semantic standard to express concepts that are a fundamental part of _modern_ communication on the web.** While HTML can represent things like headers, textual emphasis, or images (among others), there's no representation for concepts like "image with content warnings", "custom emoji" or "galleries". This semantic void makes transferring content across projects an inevitably-lossy (and herculean) effort, and restricts how external consumers are able to interact with content across sites.
+3. **There is no widely-available visual editor that supports the [MDX file format](https://mdxjs.com/).** At present, the MDX format is establishing itself as a widespread, portable format for content creation on the web, and is supported out of the box by many existing frameworks. Paired with the wider [UnifiedJS ecosystem](https://unifiedjs.com/), MDX provides a format that is both human and machine readable, with an vast ecosystem of plugins to both extend its capabilities and manipulate its output.
 
 ### Relationship with "Boba Editor Next"
 
