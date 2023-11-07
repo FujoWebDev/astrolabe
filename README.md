@@ -125,7 +125,8 @@ Example:
 Make sure to run `yarn install` from the root directory of the project after
 modifying these dependencies.
 
-> [!NOTE] If you want to include a plugin within another one, you will need to
+> [!NOTE]
+> If you want to include a plugin within another one, you will need to
 > follow a similar procedure.
 
 ### View rendering vs edit rendering
