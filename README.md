@@ -26,6 +26,8 @@ project.
 
 ## How to Develop Locally
 
+First install the editor dependencies by running `yarn install`.
+
 You can start an auto-updating dev preview of the editor by running Storybook:
 
 ```bash
@@ -38,6 +40,22 @@ documentation](https://tiptap.dev/introduction) first, and (if you're really
 desperate) the [ProseMirror docs](https://prosemirror.net/docs/guide/).
 
 Currently all our plugins and our editor are written in React.
+
+### Adding external packages
+
+This project uses yarn workspaces for monorepo setup. To install a dependency in
+a specific package you need the name of the package you're targeting (specified
+within its `package.json`).
+
+```
+yarn workspace [target-workspace] add [target-library]
+```
+
+For example, to add the `react-query` dependency to the main editor you can run:
+
+```
+yarn workspace @bobaboard/boba-editor-next add react-query
+```
 
 ## Project Structure
 
@@ -75,13 +93,40 @@ The editor folder (`src/`) is further divided in the following sub-packages:
 1. Create a new folder within `src/plugins`.
 2. Create a `package.json` and a `vite.config.ts` files. Since we're using a
    monorepo, every plugin needs its own configuration. You can generally copy
-   these from other plugins.
+   these from other plugins, but make sure to change the `name` in
+   `package.json` to match your plugin's.
 3. Create a `Plugin.tsx` file. This file should export a TipTap plugin that
    creates either a [Mark](https://tiptap.dev/api/marks) (for inline formatting)
    or a [Node](https://tiptap.dev/api/nodes) (for content).
 4. If you're creating a new type of Node, you might want to create a
    `Component.tsx` file to contain the components that are needed by the plugin.
 5. Create a `index.ts` file to re-export the plugin exported by `Plugin.tsx`.
+
+### Importing your plugin into Storybook
+
+Before you can use your plugin with Storybook you will need to add it to the
+dependencies specified in `storybook/package.json`. You can do so by copying the
+`name` field in the `package.json` of the plugin and adding an additional entry
+in the `dependencies` object.
+
+Example:
+
+```json
+ "dependencies": {
+    // more dependencies
+    // ...
+    "@bobaboard/tiptap-inline-spoilers": "*",
+    // ...
+    // more dependencies
+ }
+
+```
+
+Make sure to run `yarn install` from the root directory of the project after
+modifying these dependencies.
+
+> [!NOTE] If you want to include a plugin within another one, you will need to
+> follow a similar procedure.
 
 ### View rendering vs edit rendering
 
@@ -104,4 +149,7 @@ There are 3 different modes a plugin can be outputted as:
 
 ## Contributing
 
-Contributions are always welcome! You can check currently-planned features by looking [at this issue](https://github.com/essential-randomness/boba-editor-next/issues/1) or the other issues in this repo.
+Contributions are always welcome! You can check currently-planned features by
+looking [at this
+issue](https://github.com/essential-randomness/boba-editor-next/issues/1) or the
+other issues in this repo.
