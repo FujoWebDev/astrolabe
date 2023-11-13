@@ -18,6 +18,11 @@
   list-style: none;
 }
 
+.gif-previews {
+  display: grid;
+  grid-auto-flow: row;
+}
+
 .base-block {
   background-color: cornflowerblue;
 }

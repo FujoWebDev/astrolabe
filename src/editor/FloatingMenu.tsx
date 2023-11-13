@@ -1,6 +1,6 @@
 import { AddMediaImage, Code, GifFormat, Www } from "iconoir-react";
 import { MenuButtonProps, MenuOption, MenuOptionsProps } from "./BubbleMenu";
-import React, { useId } from "react";
+import React, { useId, useRef, useState } from "react";
 
 const handleFileLoadRequest = (
   callback: (loadPromise: Promise<string | ArrayBuffer>) => void
@@ -85,22 +85,43 @@ export const OEmbedButton = ({ editor }: MenuButtonProps) => {
 };
 
 // TODO: Implement actual logic (and add button to map) once we have GIF selecting figured out
-// export const GifButton = ({ editor }: MenuButtonProps) => {
-//   return (
-//     <button
-//       title="Add GIF"
-//       aria-label="add GIF"
-//       onClick={() => {
-
-//       }}
-//     >
-//       <GifFormat />
-//     </button>
-//   );
-// };
+export const GifSearchButton = ({ editor }: MenuButtonProps) => {
+  const [gifPreviews, setGifPreviews] = useState<string[]>([]);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const id = useId();
+  return (
+    <>
+      <button
+        title="Search for GIF"
+        aria-label="search for GIF"
+        onClick={() => {
+          dialogRef.current?.show();
+        }}
+      >
+        <GifFormat />
+      </button>
+      <dialog ref={dialogRef}>
+        <label>
+          Search GIFs:
+          <input aria-controls={id}></input>
+        </label>
+        <ul id={id} className="gif-previews" aria-label="GIF Previews">
+          {gifPreviews.map((preview) => (
+            <li key={preview}>
+              <button>
+                <img src={preview}></img>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </dialog>
+    </>
+  );
+};
 
 const floatingMenuButtons = new Map<string, React.FC<MenuButtonProps>>();
 floatingMenuButtons.set("image", ImageButton);
+floatingMenuButtons.set("gifSearch", GifSearchButton);
 floatingMenuButtons.set("oembed", OEmbedButton);
 
 export const FloatingMenuOptions = ({
