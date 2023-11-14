@@ -1,6 +1,6 @@
 import { AddMediaImage, Code, GifFormat, Www } from "iconoir-react";
 import { MenuButtonProps, MenuOption, MenuOptionsProps } from "./BubbleMenu";
-import React, { useId, useRef, useState } from "react";
+import React, { forwardRef, useId, useRef, useState } from "react";
 
 const handleFileLoadRequest = (
   callback: (loadPromise: Promise<string | ArrayBuffer>) => void
@@ -84,11 +84,75 @@ export const OEmbedButton = ({ editor }: MenuButtonProps) => {
   );
 };
 
-// TODO: Implement actual logic (and add button to map) once we have GIF selecting figured out
+export interface ImageSearchBoxProps {
+  onDialogClose: () => void;
+}
+
+// TODO: make generic and figure out props
+export const ImageSearchBox = forwardRef<
+  HTMLDialogElement,
+  ImageSearchBoxProps
+>((props, ref) => {
+  const [imageResults, setImageResults] = useState<Record<string, any>[]>([]);
+  const [autocompleteResponses, setAutocompleteResponses] = useState<string[]>(
+    []
+  );
+  const [moreResults, setMoreResults] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const previewsListId = useId();
+  const autocompleteListId = useId();
+  return (
+    <dialog
+      ref={ref}
+      onClose={() => {
+        props.onDialogClose();
+        if (inputRef.current) {
+          inputRef.current.value = "";
+        }
+        setImageResults([]);
+        setAutocompleteResponses([]);
+        setMoreResults(false);
+      }}
+    >
+      <label>
+        Search GIFs:
+        <input
+          ref={inputRef}
+          placeholder="Search Tenor"
+          aria-controls={previewsListId + " " + autocompleteListId}
+        ></input>
+      </label>
+      <ul
+        id={autocompleteListId}
+        className="gif-autocomplete"
+        aria-label="GIF search autocomplete"
+      >
+        {autocompleteResponses.map((response) => (
+          <li key={response}>
+            <button>{response}</button>
+          </li>
+        ))}
+      </ul>
+      <ul
+        id={previewsListId}
+        className="gif-previews"
+        aria-label="GIF Previews"
+      >
+        {imageResults.map((result) => (
+          <li key={result.id}>
+            <button>
+              <img src={result.media_formats.nanogif.url}></img>
+            </button>
+          </li>
+        ))}
+      </ul>
+      {moreResults && <button>Load More Results</button>}
+    </dialog>
+  );
+});
+
 export const GifSearchButton = ({ editor }: MenuButtonProps) => {
-  const [gifPreviews, setGifPreviews] = useState<string[]>([]);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const id = useId();
   return (
     <>
       <button
@@ -100,21 +164,12 @@ export const GifSearchButton = ({ editor }: MenuButtonProps) => {
       >
         <GifFormat />
       </button>
-      <dialog ref={dialogRef}>
-        <label>
-          Search GIFs:
-          <input aria-controls={id}></input>
-        </label>
-        <ul id={id} className="gif-previews" aria-label="GIF Previews">
-          {gifPreviews.map((preview) => (
-            <li key={preview}>
-              <button>
-                <img src={preview}></img>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </dialog>
+      <ImageSearchBox
+        ref={dialogRef}
+        onDialogClose={() => {
+          editor.commands.focus();
+        }}
+      />
     </>
   );
 };
