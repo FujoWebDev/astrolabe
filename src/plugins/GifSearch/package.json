@@ -1,0 +1,26 @@
+{
+  "name": "@bobaboard/tiptap-gif-search",
+  "type": "module",
+  "version": "0.0.1",
+  "exports": {
+    ".": {
+      "import": "./dist/tiptap-gif-search.js",
+      "require": "./dist/tiptap-gif-search.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsc && vite build",
+    "clean": "rm -rf node_modules && rm -rf dist"
+  },
+  "dependencies": {
+    "@bobaboard/tiptap-block-with-menu": "*",
+    "@bobaboard/tiptap-image": "*",
+    "@linaria/babel-preset": "^4.4.3",
+    "@linaria/core": "^4.2.8",
+    "@linaria/react": "^4.3.6"
+  },
+  "devDependencies": {
+    "@linaria/vite": "^4.2.9",
+    "typescript": "^5.0.2"
+  }
+}
