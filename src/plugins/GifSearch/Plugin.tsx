@@ -55,7 +55,7 @@ export interface GifSearchOptions {
   tenorAPIKey: string;
   tenorClientKey: string;
   gifResultsPerRequest: number;
-  autocompleteResultsPerRequest: number;
+  // autocompleteResultsPerRequest: number;
   country: string;
   language: string;
   formats: string;
@@ -72,7 +72,7 @@ export interface GifSearchOptions {
 export interface GifSearchStorage {
   pos: string | number;
   lastSearch: string;
-  // latestGifResponse: GifSearchResponse | null;
+  gifResults: GifSearchResponseObject[];
   // latestAutocompleteResponse: AutocompleteResponse | null;
   // onImageSearchSelectorRequest: (callbacks: {
   //   onSearchRequest: (searchTerm: string) => Promise<GifSearchResponse>;
@@ -87,10 +87,11 @@ declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     [PLUGIN_NAME]: {
       searchGifs: (
-        searchTerm: string,
-        onGifSearch: (responses: GifSearchResponse) => void
+        searchTerm: string
+        // onGifSearch: (responses: GifSearchResponse) => void
       ) => ReturnType;
       setGif: (response: GifSearchResponseObject) => ReturnType;
+      resetGifSearchState: () => ReturnType;
     };
   }
 }
@@ -126,7 +127,7 @@ export const GifSearchPlugin = ImagePlugin.extend<
     return {
       pos: "",
       lastSearch: "",
-      // latestGifResponse: null,
+      gifResults: [],
       // latestAutocompleteResponse: null,
       // onImageSearchSelectorRequest: this.options.onImageSearchSelectorRequest,
       // onSearchRequest: async (searchTerm) => {
@@ -147,15 +148,25 @@ export const GifSearchPlugin = ImagePlugin.extend<
             alt: response.content_description,
           });
         },
+      resetGifSearchState: () => () => {
+        this.storage.pos = "";
+        this.storage.lastSearch = "searchTerm";
+        this.storage.gifResults = [];
+        return true;
+      },
       searchGifs:
         (
-          searchTerm: string,
-          onGifSearch: (responses: GifSearchResponse) => void
+          searchTerm: string
+          // onGifSearch: (responses: GifSearchResponse) => void
         ) =>
-        () => {
+        ({ commands }) => {
+          // debugger;
           if (searchTerm.length < 1) {
-            return false;
+            commands.resetGifSearchState();
           }
+          const isGetMoreRequest = !!(
+            this.storage.pos && this.storage.lastSearch === searchTerm
+          );
           const searchURL = `https://tenor.googleapis.com/v2/search?q=${searchTerm}&key=${
             this.options.tenorAPIKey
           }&client_key=${this.options.tenorClientKey}&limit=${
@@ -163,21 +174,22 @@ export const GifSearchPlugin = ImagePlugin.extend<
           }&country=${this.options.country}&locale=${this.options.language}_${
             this.options.country
           }&media_filter=${this.options.formats}${
-            this.storage.pos && this.storage.lastSearch === searchTerm
-              ? "&pos=" + this.storage.pos.toString()
-              : ""
+            isGetMoreRequest ? "&pos=" + this.storage.pos.toString() : ""
           }`;
-          (async () => {
-            // const autocompleteURL = `https://tenor.googleapis.com/v2/autocomplete?q=${searchTerm}&key=${this.options.tenorAPIKey}&client_key=${this.options.tenorClientKey}&limit=${this.options.autocompleteResultsPerRequest}&country=${this.options.country}&locale=${this.options.language}_${this.options.country}`;
+          // const autocompleteURL = `https://tenor.googleapis.com/v2/autocomplete?q=${searchTerm}&key=${this.options.tenorAPIKey}&client_key=${this.options.tenorClientKey}&limit=${this.options.autocompleteResultsPerRequest}&country=${this.options.country}&locale=${this.options.language}_${this.options.country}`;
 
+          (async () => {
             //TODO: Presumably we should actually validate this
             try {
               const response = (await (
                 await fetch(searchURL)
               ).json()) as GifSearchResponse;
+              console.log("tenor response", response);
               this.storage.pos = response.next;
               this.storage.lastSearch = searchTerm;
-              onGifSearch(response);
+              this.storage.gifResults = isGetMoreRequest
+                ? [...this.storage.gifResults, ...response.results]
+                : response.results;
             } catch (error) {
               console.error(error);
             }
