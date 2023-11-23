@@ -23,17 +23,6 @@ import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector"
 const meta = {
   title: "Editor",
   component: Editor,
-  // parameters: {
-  //   docs: {
-  //     controls: {
-  //       exclude: [
-  //         "addedExtensions",
-  //         "customFloatingMenuButtons",
-  //         "extensionConfigs",
-  //       ],
-  //     },
-  //   },
-  // },
   tags: ["autodocs"],
   decorators: [
     withContentChangeHandler([
@@ -198,34 +187,8 @@ export const LimitedHeadings: Story = {
 };
 
 export const GifSearch: Story = {
-  // argTypes: {
-  //   customFloatingMenuButtons: {
-  //     options: ["Default"],
-  //     mapping: {
-  //       Default: [
-  //         {
-  //           extensionName: GifSearchPlugin.name,
-  //           menuButton: GifSearchButton,
-  //         },
-  //       ],
-  //     },
-  //   },
-  // addedExtensions: {
-  //   options: ["GifSearch"],
-  //   mapping: {
-  //     GifSearch: [GifSearchPlugin],
-  //   },
-  // },
-  // },
   args: {
     ...Editable.args,
-    // addedExtensions: [GifSearchPlugin],
-    // customFloatingMenuButtons: [
-    //   {
-    //     extensionName: GifSearchPlugin.name,
-    //     menuButton: GifSearchButton,
-    //   },
-    // ],
     extensionConfigs: [
       {
         extensionName: GifSearchPlugin.name,
@@ -238,7 +201,7 @@ export const GifSearch: Story = {
   },
   // Passing complex objects/jsx as args causes errors in Storybook, see https://github.com/storybookjs/storybook/issues/16688
   // Listed solution (https://storybook.js.org/docs/react/writing-stories/args#mapping-to-complex-arg-values) doesn't work in our case,
-  // but we don't actually want to be able to change the editor setup props dynamically, so just rendering them directly.
+  // but we don't actually want to be able to change the editor setup props dynamically, so just passing them directly.
   render: (args) => {
     return (
       <div>

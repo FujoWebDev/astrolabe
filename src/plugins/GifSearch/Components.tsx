@@ -5,37 +5,39 @@ import { Editor } from "@tiptap/react";
 import { GifFormat } from "iconoir-react";
 
 export interface GifSearchBoxProps {
-  imageResults: GifSearchResponseObject[];
-  moreResults: boolean;
   onDialogClose: () => void;
+  onClickClose: () => void;
   onUserInput: (
-    searchTerm: string
-    // onGifSearch: (responses: GifSearchResponse) => void
+    searchTerm: string,
+    onGifSearch: (responses: GifSearchResponse) => void
   ) => void;
   onSelectImage: (response: GifSearchResponseObject) => void;
 }
 
 export const GifSearchBox = forwardRef<HTMLDialogElement, GifSearchBoxProps>(
   (props, ref) => {
-    const { imageResults, moreResults } = props;
-    // const [imageResults, setImageResults] = useState<GifSearchResponseObject[]>(
-    //   []
-    // );
+    const [imageResults, setImageResults] = useState<GifSearchResponseObject[]>(
+      []
+    );
     const [searchTerm, setSearchTerm] = useState("");
     // const [autocompleteResponses, setAutocompleteResponses] = useState<string[]>(
     //   []
     // );
-    // const [moreResults, setMoreResults] = useState<boolean>(false);
+    const [moreResults, setMoreResults] = useState<boolean>(false);
     const previewsListId = useId();
     // const autocompleteListId = useId();
     return (
       <dialog
         ref={ref}
+        className="gif-search-popup"
         onClose={() => {
           props.onDialogClose();
           setSearchTerm("");
+          setImageResults([]);
+          setMoreResults(false);
         }}
       >
+        <button onClick={props.onClickClose}>Close</button>
         <label>
           Search GIFs:
           <input
@@ -45,7 +47,18 @@ export const GifSearchBox = forwardRef<HTMLDialogElement, GifSearchBoxProps>(
             onChange={(e) => {
               const query = e.currentTarget.value;
               setSearchTerm(query);
-              props.onUserInput(query);
+              props.onUserInput(query, (response) => {
+                setImageResults(response.results);
+                if (response.next) {
+                  setMoreResults(true);
+                } else {
+                  setMoreResults(false);
+                }
+              });
+              if (!query) {
+                setImageResults([]);
+                setMoreResults(false);
+              }
             }}
           ></input>
         </label>
@@ -69,7 +82,9 @@ export const GifSearchBox = forwardRef<HTMLDialogElement, GifSearchBoxProps>(
             <li key={result.id}>
               <button
                 onClick={() => {
+                  console.log("result image clicked");
                   props.onSelectImage(result);
+                  props.onClickClose();
                 }}
               >
                 <img src={result.media_formats.nanogif.url}></img>
@@ -80,7 +95,14 @@ export const GifSearchBox = forwardRef<HTMLDialogElement, GifSearchBoxProps>(
         {moreResults && (
           <button
             onClick={() => {
-              props.onUserInput(searchTerm);
+              props.onUserInput(searchTerm, (response) => {
+                setImageResults((prev) => [...prev, ...response.results]);
+                if (response.next) {
+                  setMoreResults(true);
+                } else {
+                  setMoreResults(false);
+                }
+              });
             }}
           >
             Load More Results
@@ -106,20 +128,22 @@ export const GifSearchButton = ({ editor }: { editor: Editor }) => {
       </button>
       <GifSearchBox
         ref={dialogRef}
-        imageResults={editor.storage.gifSearch.gifResults}
-        moreResults={!!editor.storage.gifSearch.pos}
         onDialogClose={() => {
-          editor.chain().focus().resetGifSearchState().run();
+          editor.commands.resetGifSearchState();
         }}
         onUserInput={(
-          searchTerm: string
-          // onGifSearch: (responses: GifSearchResponse) => void
+          searchTerm: string,
+          onGifSearch: (responses: GifSearchResponse) => void
         ) => {
-          editor.commands.searchGifs(searchTerm);
+          editor.commands.searchGifs(searchTerm, onGifSearch);
         }}
         onSelectImage={(response) => {
+          console.log("setting gif");
+          editor.commands.setGif(response);
+        }}
+        onClickClose={() => {
+          console.log("closing dialog");
           dialogRef.current?.close();
-          editor.chain().focus().setGif(response);
         }}
       />
     </>

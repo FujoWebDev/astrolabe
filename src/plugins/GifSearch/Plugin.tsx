@@ -72,14 +72,7 @@ export interface GifSearchOptions {
 export interface GifSearchStorage {
   pos: string | number;
   lastSearch: string;
-  gifResults: GifSearchResponseObject[];
   // latestAutocompleteResponse: AutocompleteResponse | null;
-  // onImageSearchSelectorRequest: (callbacks: {
-  //   onSearchRequest: (searchTerm: string) => Promise<GifSearchResponse>;
-  //   onSelectElement: (selectedElement: GifSearchResponseObject) => void;
-  // }) => void;
-  // onSearchRequest: (searchTerm: string) => Promise<Record<string, any>>;
-  // onSelectElement: (selectedElement: Record<string, any>) => void;
 }
 
 export const PLUGIN_NAME = "gifSearch";
@@ -87,8 +80,8 @@ declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     [PLUGIN_NAME]: {
       searchGifs: (
-        searchTerm: string
-        // onGifSearch: (responses: GifSearchResponse) => void
+        searchTerm: string,
+        onGifSearch: (responses: GifSearchResponse) => void
       ) => ReturnType;
       setGif: (response: GifSearchResponseObject) => ReturnType;
       resetGifSearchState: () => ReturnType;
@@ -127,14 +120,6 @@ export const GifSearchPlugin = ImagePlugin.extend<
     return {
       pos: "",
       lastSearch: "",
-      gifResults: [],
-      // latestAutocompleteResponse: null,
-      // onImageSearchSelectorRequest: this.options.onImageSearchSelectorRequest,
-      // onSearchRequest: async (searchTerm) => {
-      //   const searchURL = `https://tenor.googleapis.com/v2/search?q=${searchTerm}&key=${this.options.tenorAPIKey}&client_key=${this.options.tenorClientKey}&limit=${this.options.gifResultsPerRequest}&country=${this.options.country}&locale=${this.options.language}_${this.options.country}&media_filter=${this.options.formats}`;
-      //   return await (await fetch(searchURL)).json();
-      // },
-      // onSelectElement: (selectedElement) => {},
     };
   },
 
@@ -151,18 +136,17 @@ export const GifSearchPlugin = ImagePlugin.extend<
       resetGifSearchState: () => () => {
         this.storage.pos = "";
         this.storage.lastSearch = "searchTerm";
-        this.storage.gifResults = [];
         return true;
       },
       searchGifs:
         (
-          searchTerm: string
-          // onGifSearch: (responses: GifSearchResponse) => void
+          searchTerm: string,
+          onGifSearch: (responses: GifSearchResponse) => void
         ) =>
         ({ commands }) => {
           // debugger;
           if (searchTerm.length < 1) {
-            commands.resetGifSearchState();
+            return commands.resetGifSearchState();
           }
           const isGetMoreRequest = !!(
             this.storage.pos && this.storage.lastSearch === searchTerm
@@ -179,52 +163,22 @@ export const GifSearchPlugin = ImagePlugin.extend<
           // const autocompleteURL = `https://tenor.googleapis.com/v2/autocomplete?q=${searchTerm}&key=${this.options.tenorAPIKey}&client_key=${this.options.tenorClientKey}&limit=${this.options.autocompleteResultsPerRequest}&country=${this.options.country}&locale=${this.options.language}_${this.options.country}`;
 
           (async () => {
-            //TODO: Presumably we should actually validate this
+            // TODO: Guard against race conditions/sending unneeded requests when user typing fast
+            // TODO: Also presumably we should actually validate the response
             try {
               const response = (await (
                 await fetch(searchURL)
               ).json()) as GifSearchResponse;
               console.log("tenor response", response);
+              onGifSearch(response);
               this.storage.pos = response.next;
               this.storage.lastSearch = searchTerm;
-              this.storage.gifResults = isGetMoreRequest
-                ? [...this.storage.gifResults, ...response.results]
-                : response.results;
             } catch (error) {
               console.error(error);
             }
           })();
           return true;
         },
-      // searchGifs: () => () => {
-
-      //   this.options.onImageSearchSelectorRequest({
-      //     onSearchRequest: async (searchTerm) => {
-      //       const searchURL = `https://tenor.googleapis.com/v2/search?q=${searchTerm}&key=${
-      //         this.options.tenorAPIKey
-      //       }&client_key=${this.options.tenorClientKey}&limit=${
-      //         this.options.gifResultsPerRequest
-      //       }&country=${this.options.country}&locale=${this.options.language}_${
-      //         this.options.country
-      //       }&media_filter=${this.options.formats}${
-      //         this.storage.pos && this.storage.lastSearch === searchTerm
-      //           ? "&pos=" + this.storage.pos.toString()
-      //           : ""
-      //       }`;
-      //       // const autocompleteURL = `https://tenor.googleapis.com/v2/autocomplete?q=${searchTerm}&key=${this.options.tenorAPIKey}&client_key=${this.options.tenorClientKey}&limit=${this.options.autocompleteResultsPerRequest}&country=${this.options.country}&locale=${this.options.language}_${this.options.country}`;
-
-      //       //TODO: Presumably we should actually validate this
-      //       const response = await (await fetch(searchURL)).json() as GifSearchResponse;
-      //       this.storage.pos = response.next;
-      //       this.storage.lastSearch = searchTerm;
-      //       return response;
-      //     },
-      //     onSelectElement: (selectedElement) => {
-      //       this.editor.commands.setGif({src: selectedElement.media_formats.gif.url, alt: selectedElement.content_description});
-      //     },
-      //   });
-      //   return true;
-      // },
     };
   },
 });
