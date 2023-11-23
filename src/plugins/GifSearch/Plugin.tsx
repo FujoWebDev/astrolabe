@@ -144,7 +144,9 @@ export const GifSearchPlugin = ImagePlugin.extend<
           onGifSearch: (responses: GifSearchResponse) => void
         ) =>
         ({ commands }) => {
-          // debugger;
+          if (!this.options.tenorAPIKey) {
+            return false;
+          }
           if (searchTerm.length < 1) {
             return commands.resetGifSearchState();
           }
