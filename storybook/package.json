@@ -12,6 +12,7 @@
     "@bobaboard/boba-editor-next": "*",
     "@bobaboard/tiptap-block-with-menu": "*",
     "@bobaboard/tiptap-image": "*",
+    "@bobaboard/tiptap-gif-search": "*",
     "@bobaboard/tiptap-inline-spoilers": "*",
     "@bobaboard/tiptap-oembed": "*",
     "@bobaboard/tiptap-storybook-inspector": "*",

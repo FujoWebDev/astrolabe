@@ -5,24 +5,27 @@ import { Editor } from "@tiptap/react";
 import { GifFormat } from "iconoir-react";
 
 export interface GifSearchBoxProps {
+  imageResults: GifSearchResponseObject[];
+  moreResults: boolean;
   onDialogClose: () => void;
   onUserInput: (
-    searchTerm: string,
-    onGifSearch: (responses: GifSearchResponse) => void
+    searchTerm: string
+    // onGifSearch: (responses: GifSearchResponse) => void
   ) => void;
   onSelectImage: (response: GifSearchResponseObject) => void;
 }
 
 export const GifSearchBox = forwardRef<HTMLDialogElement, GifSearchBoxProps>(
   (props, ref) => {
-    const [imageResults, setImageResults] = useState<GifSearchResponseObject[]>(
-      []
-    );
+    const { imageResults, moreResults } = props;
+    // const [imageResults, setImageResults] = useState<GifSearchResponseObject[]>(
+    //   []
+    // );
     const [searchTerm, setSearchTerm] = useState("");
     // const [autocompleteResponses, setAutocompleteResponses] = useState<string[]>(
     //   []
     // );
-    const [moreResults, setMoreResults] = useState<boolean>(false);
+    // const [moreResults, setMoreResults] = useState<boolean>(false);
     const previewsListId = useId();
     // const autocompleteListId = useId();
     return (
@@ -30,9 +33,6 @@ export const GifSearchBox = forwardRef<HTMLDialogElement, GifSearchBoxProps>(
         ref={ref}
         onClose={() => {
           props.onDialogClose();
-          setImageResults([]);
-          // setAutocompleteResponses([]);
-          setMoreResults(false);
           setSearchTerm("");
         }}
       >
@@ -45,14 +45,7 @@ export const GifSearchBox = forwardRef<HTMLDialogElement, GifSearchBoxProps>(
             onChange={(e) => {
               const query = e.currentTarget.value;
               setSearchTerm(query);
-              props.onUserInput(query, (response) => {
-                setImageResults([...response.results]);
-                if (response.next) {
-                  setMoreResults(true);
-                } else {
-                  setMoreResults(false);
-                }
-              });
+              props.onUserInput(query);
             }}
           ></input>
         </label>
@@ -87,14 +80,7 @@ export const GifSearchBox = forwardRef<HTMLDialogElement, GifSearchBoxProps>(
         {moreResults && (
           <button
             onClick={() => {
-              props.onUserInput(searchTerm, (response) => {
-                setImageResults([...response.results]);
-                if (response.next) {
-                  setMoreResults(true);
-                } else {
-                  setMoreResults(false);
-                }
-              });
+              props.onUserInput(searchTerm);
             }}
           >
             Load More Results
@@ -120,18 +106,20 @@ export const GifSearchButton = ({ editor }: { editor: Editor }) => {
       </button>
       <GifSearchBox
         ref={dialogRef}
+        imageResults={editor.storage.gifSearch.gifResults}
+        moreResults={!!editor.storage.gifSearch.pos}
         onDialogClose={() => {
-          editor.commands.focus();
+          editor.chain().focus().resetGifSearchState().run();
         }}
         onUserInput={(
-          searchTerm: string,
-          onGifSearch: (responses: GifSearchResponse) => void
+          searchTerm: string
+          // onGifSearch: (responses: GifSearchResponse) => void
         ) => {
-          editor.commands.searchGifs(searchTerm, onGifSearch);
+          editor.commands.searchGifs(searchTerm);
         }}
         onSelectImage={(response) => {
-          editor.commands.setGif(response);
           dialogRef.current?.close();
+          editor.chain().focus().setGif(response);
         }}
       />
     </>

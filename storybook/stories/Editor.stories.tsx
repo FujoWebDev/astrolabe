@@ -1,5 +1,7 @@
 import { DEFAULT_EXTENSIONS, Editor } from "../../src/editor";
+import { GifSearchButton, GifSearchPlugin } from "@bobaboard/tiptap-gif-search";
 import { Meta, StoryObj } from "@storybook/react";
+import React, { useState } from "react";
 
 import { BlockWithMenuPlugin } from "@bobaboard/tiptap-block-with-menu";
 import Blockquote from "@tiptap/extension-blockquote";
@@ -11,7 +13,6 @@ import Italic from "@tiptap/extension-italic";
 import ListItem from "@tiptap/extension-list-item";
 import { MenuButtonProps } from "../../src/editor/BubbleMenu";
 import OrderedList from "@tiptap/extension-ordered-list";
-import React from "react";
 import Strike from "@tiptap/extension-strike";
 import Underline from "@tiptap/extension-underline";
 import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
@@ -22,6 +23,17 @@ import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector"
 const meta = {
   title: "Editor",
   component: Editor,
+  // parameters: {
+  //   docs: {
+  //     controls: {
+  //       exclude: [
+  //         "addedExtensions",
+  //         "customFloatingMenuButtons",
+  //         "extensionConfigs",
+  //       ],
+  //     },
+  //   },
+  // },
   tags: ["autodocs"],
   decorators: [
     withContentChangeHandler([
@@ -37,6 +49,7 @@ const meta = {
       Strike,
       Underline,
       BlockWithMenuPlugin,
+      GifSearchPlugin,
     ]),
     (Story, ctx) => {
       return (
@@ -181,6 +194,66 @@ export const LimitedHeadings: Story = {
       { extensionName: Heading.name, config: { levels: [1, 2] } },
     ],
     initialContent: `<h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><p>Regular paragraph</p>`,
+  },
+};
+
+export const GifSearch: Story = {
+  // argTypes: {
+  //   customFloatingMenuButtons: {
+  //     options: ["Default"],
+  //     mapping: {
+  //       Default: [
+  //         {
+  //           extensionName: GifSearchPlugin.name,
+  //           menuButton: GifSearchButton,
+  //         },
+  //       ],
+  //     },
+  //   },
+  // addedExtensions: {
+  //   options: ["GifSearch"],
+  //   mapping: {
+  //     GifSearch: [GifSearchPlugin],
+  //   },
+  // },
+  // },
+  args: {
+    ...Editable.args,
+    // addedExtensions: [GifSearchPlugin],
+    // customFloatingMenuButtons: [
+    //   {
+    //     extensionName: GifSearchPlugin.name,
+    //     menuButton: GifSearchButton,
+    //   },
+    // ],
+    extensionConfigs: [
+      {
+        extensionName: GifSearchPlugin.name,
+        // TODO: Figure out env in Storybook, vite instructions here not working https://storybook.js.org/docs/7.0/react/configure/environment-variables
+        // For now manually removing before commiting.
+        config: { tenorAPIKey: "" },
+      },
+    ],
+    initialContent: `Try searching for a GIF!`,
+  },
+  // Passing complex objects/jsx as args causes errors in Storybook, see https://github.com/storybookjs/storybook/issues/16688
+  // Listed solution (https://storybook.js.org/docs/react/writing-stories/args#mapping-to-complex-arg-values) doesn't work in our case,
+  // but we don't actually want to be able to change the editor setup props dynamically, so just rendering them directly.
+  render: (args) => {
+    return (
+      <div>
+        <Editor
+          {...args}
+          addedExtensions={[GifSearchPlugin]}
+          customFloatingMenuButtons={[
+            {
+              extensionName: GifSearchPlugin.name,
+              menuButton: GifSearchButton,
+            },
+          ]}
+        />
+      </div>
+    );
   },
 };
 
