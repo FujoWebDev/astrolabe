@@ -7,6 +7,11 @@
 > [!WARNING]
 > This design doc is aspirational and might not represent what is currently possible with the editor.
 
+> [!NOTE]
+> Some of the goals outlined in this document might be best achieved outside of Astrolabe itself, possibly as independent
+> libraries that are editor-agnostic. As always, identifying and outlining the problems and goals is important, but so
+> is being open to discovering alternative–hopefully better!–solutions to them.
+
 This document describes the overarching goal of a Rich Text Editor (RTE) for web applications. The editor should:
 
 - Offer a basic set of out-of-the-box plugins for modern content creation experiences. Examples include: gif selectors, spoilers/content warnings on both text and block elements, custom emojis, mentions, embeds, and tumblr-style "photosets".
