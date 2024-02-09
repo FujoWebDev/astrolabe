@@ -1,6 +1,6 @@
 import { AddMediaImage, Code, GifFormat, Www } from "iconoir-react";
 import { MenuButtonProps, MenuOption, MenuOptionsProps } from "./BubbleMenu";
-import React, { useId } from "react";
+import React from "react";
 
 const handleFileLoadRequest = (
   callback: (loadPromise: Promise<string | ArrayBuffer>) => void
@@ -29,7 +29,7 @@ const handleFileLoadRequest = (
 };
 
 export const ImageButton = ({ editor }: MenuButtonProps) => {
-  const id = useId();
+  const id = "dfasdfas";
   return (
     <>
       <input

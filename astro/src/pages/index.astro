@@ -1,10 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+// @ts-ignore
 import {Editor} from "@bobaboard/boba-editor-next";
+import {Test} from "../components/Test"
 ---
 
 <Layout title="Welcome to Astro.">
 	<main>
+		<Test client:load />
 		<div class="editor">
 		<Editor editable client:load />
 		</div>
