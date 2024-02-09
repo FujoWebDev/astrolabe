@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "scripts": {
     "build": "tsc && vite build",
-    "clean": "rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo"
   },
   "exports": {
     ".": {
@@ -41,7 +41,11 @@
     "prosemirror-schema-list": "^1.2.2",
     "react-json-view": "^1.21.3",
     "react-query": "^3.39.3",
-    "use-debounce": "^8.0.4"
+    "use-debounce": "^8.0.4",
+    "@bobaboard/tiptap-block-with-menu": "*",
+    "@bobaboard/tiptap-image": "*",
+    "@bobaboard/tiptap-inline-spoilers": "*",
+    "@bobaboard/tiptap-oembed": "*"
   },
   "devDependencies": {
     "@storybook/builder-vite": "^0.2.2",
