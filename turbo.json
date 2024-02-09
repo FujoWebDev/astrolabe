@@ -6,10 +6,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    // "storybook": {
-    //   "dependsOn": ["^build"],
-    //   "outputs": []
-    // },
+    "storybook": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
     // "build-storybook": {
     //   "inputs": ["storybook/**/*.tsx", "storybook/**/*.ts"],
     //   "dependsOn": ["^build"],
