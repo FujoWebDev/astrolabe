@@ -6,6 +6,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "dev": {
+      "dependsOn": ["^dev"],
+      "outputs": []
+    },
     "storybook": {
       "dependsOn": ["^build"],
       "outputs": []

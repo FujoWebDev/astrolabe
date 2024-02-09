@@ -16,6 +16,7 @@
     "src/plugins/*",
     "src",
     "storybook",
+    "astro",
     "OutputInspectorAddon"
   ],
   "dependencies": {
