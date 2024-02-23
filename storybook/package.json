@@ -3,25 +3,24 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "storybook": "sb dev -p 6006",
-    "storybook:force-update": "sb dev -p 6006",
-    "build-storybook": "sb build",
+    "storybook": "storybook dev -p 6006",
+    "storybook:force-update": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "clean": "rm -rf node_modules && rm -rf storybook-static"
   },
   "dependencies": {
     "@bobaboard/boba-editor-next": "*",
-    "@bobaboard/tiptap-image": "*",
-    "@bobaboard/tiptap-oembed": "*",
-    "@bobaboard/tiptap-inline-spoilers": "*",
     "@bobaboard/tiptap-block-with-menu": "*",
-    "@bobaboard/tiptap-storybook-inspector": "*",
-    "@storybook/addon-actions": "^7.0.0-beta.28",
-    "@storybook/addon-essentials": "^7.0.0-beta.28",
-    "@storybook/addon-interactions": "^7.0.0-beta.28",
-    "@storybook/addon-links": "^7.0.0-beta.28",
-    "@storybook/builder-vite": "^7.0.0-beta.28",
-    "@storybook/react": "^7.0.0-beta.28",
-    "@storybook/react-vite": "^7.0.0-beta.28",
+    "@bobaboard/tiptap-image": "*",
+    "@bobaboard/tiptap-inline-spoilers": "*",
+    "@bobaboard/tiptap-oembed": "*",
+    "@storybook/addon-actions": "^7.6.17",
+    "@storybook/addon-essentials": "^7.6.17",
+    "@storybook/addon-interactions": "^7.6.17",
+    "@storybook/addon-links": "^7.6.17",
+    "@storybook/builder-vite": "^7.6.17",
+    "@storybook/react": "^7.6.17",
+    "@storybook/react-vite": "^7.6.17",
     "@storybook/testing-library": "^0.0.13",
     "@tiptap/extension-blockquote": "^2.0.2",
     "@tiptap/extension-bullet-list": "^2.0.2",
@@ -37,7 +36,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-query": "^3.39.2",
-    "storybook": "^7.0.0-beta.28"
+    "storybook": "^7.6.17"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",
@@ -47,7 +46,7 @@
     "babel-loader": "^8.2.5",
     "prettier": "^2.7.1",
     "typescript": "^4.6.3",
-    "vite": "^3.1.0"
+    "vite": "^5.1.4"
   },
   "msw": {
     "workerDirectory": "stories/utilities/mocks"

@@ -1,5 +1,5 @@
 import { AddMediaImage, Code, GifFormat, Www } from "iconoir-react";
-import { MenuButtonProps, MenuOption, MenuOptionsProps } from "./BubbleMenu";
+// import { MenuButtonProps, MenuOption, any } from "./BubbleMenu";
 import React from "react";
 
 const handleFileLoadRequest = (
@@ -28,7 +28,7 @@ const handleFileLoadRequest = (
   };
 };
 
-export const ImageButton = ({ editor }: MenuButtonProps) => {
+export const ImageButton = ({ editor }: any) => {
   const id = "dfasdfas";
   return (
     <>
@@ -59,7 +59,7 @@ export const ImageButton = ({ editor }: MenuButtonProps) => {
   );
 };
 
-export const OEmbedButton = ({ editor }: MenuButtonProps) => {
+export const OEmbedButton = ({ editor }: any) => {
   return (
     <button
       title="Add Embed"
@@ -99,7 +99,7 @@ export const OEmbedButton = ({ editor }: MenuButtonProps) => {
 //   );
 // };
 
-const floatingMenuButtons = new Map<string, React.FC<MenuButtonProps>>();
+const floatingMenuButtons = new Map<string, React.FC<any>>();
 floatingMenuButtons.set("image", ImageButton);
 floatingMenuButtons.set("oembed", OEmbedButton);
 
@@ -107,15 +107,15 @@ export const FloatingMenuOptions = ({
   editor,
   extensions,
   customButtons,
-}: MenuOptionsProps) => {
+}: any) => {
   const buttonMap = new Map(floatingMenuButtons);
   if (customButtons?.length) {
-    customButtons.forEach((customButton) => {
+    customButtons.forEach((customButton: any) => {
       buttonMap.set(customButton.extensionName, customButton.menuButton);
     });
   }
   const options = extensions
-    .map((extension) => {
+    .map((extension: any) => {
       if (buttonMap.has(extension.name)) {
         return {
           extensionName: extension.name,
@@ -123,10 +123,10 @@ export const FloatingMenuOptions = ({
         };
       }
     })
-    .filter((option): option is MenuOption => !!option);
+    .filter((option: any): option is any => !!option);
   return (
     <ul role="menubar">
-      {options.map((option) => (
+      {options.map((option: any) => (
         <li key={option.extensionName} role="menuitem">
           <option.menuButton editor={editor} />
         </li>

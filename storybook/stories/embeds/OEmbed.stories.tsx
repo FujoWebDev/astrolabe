@@ -3,13 +3,13 @@ import { Meta, StoryObj } from "@storybook/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import React from "react";
-import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
+// import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
 const meta = {
   title: "Embeds/OEmbeds",
   tags: ["autodocs"],
   decorators: [
-    withContentChangeHandler([...DEFAULT_EXTENSIONS]),
+    // withContentChangeHandler([...DEFAULT_EXTENSIONS]),
     (Story, ctx) => {
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>

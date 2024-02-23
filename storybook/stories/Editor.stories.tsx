@@ -14,7 +14,7 @@ import OrderedList from "@tiptap/extension-ordered-list";
 import React from "react";
 import Strike from "@tiptap/extension-strike";
 import Underline from "@tiptap/extension-underline";
-import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
+// import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
 
 // We use const meta = {...} as Meta<typeof Component> instead of const meta:Meta<typeof Component> = {...} as shown in the CSF3 docs
 // because in the second case the typing becomes too specific to work with the generics in the DecoratorFunction type of withContentChangeHandler
@@ -24,20 +24,20 @@ const meta = {
   component: Editor,
   tags: ["autodocs"],
   decorators: [
-    withContentChangeHandler([
-      ...DEFAULT_EXTENSIONS,
-      Italic,
-      ListItem,
-      Blockquote,
-      BulletList,
-      Code,
-      CodeBlock,
-      Heading,
-      OrderedList,
-      Strike,
-      Underline,
-      BlockWithMenuPlugin,
-    ]),
+    // withContentChangeHandler([
+    //   ...DEFAULT_EXTENSIONS,
+    //   Italic,
+    //   ListItem,
+    //   Blockquote,
+    //   BulletList,
+    //   Code,
+    //   CodeBlock,
+    //   Heading,
+    //   OrderedList,
+    //   Strike,
+    //   Underline,
+    //   BlockWithMenuPlugin,
+    // ]),
     (Story, ctx) => {
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>

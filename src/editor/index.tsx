@@ -7,13 +7,13 @@ import {
   JSONContent,
   useEditor,
 } from "@tiptap/react";
-import { BubbleMenuOptions, MenuOption } from "./BubbleMenu";
+// import { BubbleMenuOptions, MenuOption } from "./BubbleMenu";
 import { Mark, Node, isTextSelection } from "@tiptap/core";
 
 import { BlockWithMenuPlugin } from "@bobaboard/tiptap-block-with-menu";
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
-import { FloatingMenuOptions } from "./FloatingMenu";
+// import { FloatingMenuOptions } from "./FloatingMenu";
 import HardBreak from "@tiptap/extension-hard-break";
 import { ImagePlugin } from "@bobaboard/tiptap-image";
 import { InlineSpoilersPlugin } from "@bobaboard/tiptap-inline-spoilers";
@@ -21,7 +21,6 @@ import Link from "@tiptap/extension-link";
 // import Italic from "@tiptap/extension-italic";
 import { OEmbedPlugin } from "@bobaboard/tiptap-oembed";
 import Paragraph from "@tiptap/extension-paragraph";
-import React from "react";
 import Text from "@tiptap/extension-text";
 import { toggleSpoilersOnKeydown } from "../plugins/utils";
 
@@ -34,8 +33,8 @@ export interface EditorProps {
     extensionName: string;
     config: Record<string, any>;
   }[];
-  customBubbleMenuButtons?: MenuOption[];
-  customFloatingMenuButtons?: MenuOption[];
+  customBubbleMenuButtons?: any[];
+  customFloatingMenuButtons?: any[];
 }
 
 export const DEFAULT_EXTENSIONS: (Node<any, any> | Mark<any, any>)[] = [
@@ -122,11 +121,12 @@ export const Editor = (props: EditorProps) => {
       <EditorContent editor={editor} />
       {editor && (
         <FloatingMenu editor={editor}>
-          <FloatingMenuOptions
+          {/* <FloatingMenuOptions
             editor={editor}
             extensions={configuredExtensions}
             customButtons={props.customFloatingMenuButtons}
-          />
+          /> */}
+          Whatever
         </FloatingMenu>
       )}
       {editor && (
@@ -163,11 +163,12 @@ export const Editor = (props: EditorProps) => {
             return true;
           }}
         >
-          <BubbleMenuOptions
+          What the fuck
+          {/* <BubbleMenuOptions
             editor={editor}
             extensions={configuredExtensions}
             customButtons={props.customBubbleMenuButtons}
-          />
+          /> */}
         </BubbleMenu>
       )}
     </>
