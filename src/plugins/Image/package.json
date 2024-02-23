@@ -1,7 +1,7 @@
 {
   "name": "@bobaboard/tiptap-image",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "exports": {
     ".": {
       "import": "./dist/tiptap-image.js",
@@ -10,7 +10,8 @@
   },
   "scripts": {
     "build": "tsc && vite build",
-    "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo"
+    "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo",
+    "publish:minor": "npm version minor && npm publish --access=public"
   },
   "dependencies": {
     "@bobaboard/tiptap-block-with-menu": "*",

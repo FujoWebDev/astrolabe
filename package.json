@@ -7,7 +7,8 @@
     "storybook": "turbo run storybook --no-cache",
     "storybook:force": "turbo run storybook --no-cache --force",
     "build-storybook": "dotenv -- turbo run build-storybook",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "publish:minor": "turbo run publish:minor --concurrency=1"
   },
   "devDependencies": {
     "turbo": "^1.4.6"
@@ -16,8 +17,7 @@
   "workspaces": [
     "src/plugins/*",
     "src",
-    "storybook",
-    "OutputInspectorAddon"
+    "storybook"
   ],
   "dependencies": {
     "dotenv-cli": "^7.1.0"

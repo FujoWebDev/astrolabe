@@ -1,7 +1,7 @@
 {
   "name": "@bobaboard/tiptap-inline-spoilers",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "exports": {
     ".": {
       "import": "./dist/tiptap-inline-spoilers.js",
@@ -10,7 +10,8 @@
   },
   "scripts": {
     "build": "tsc && vite build",
-    "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo"
+    "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo",
+    "publish:minor": "npm version minor && npm publish --access=public"
   },
   "dependencies": {
     "@linaria/babel-preset": "^4.4.5",

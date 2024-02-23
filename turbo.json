@@ -10,6 +10,10 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
+    "publish:minor": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
     "build-storybook": {
       "inputs": ["storybook/**/*.tsx", "storybook/**/*.ts"],
       "dependsOn": ["^build"],
