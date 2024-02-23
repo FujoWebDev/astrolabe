@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc && vite build",
-    "clean": "rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo"
   },
   "dependencies": {
     "@bobaboard/tiptap-block-with-menu": "*",

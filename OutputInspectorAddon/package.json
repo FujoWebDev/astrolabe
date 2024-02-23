@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "scripts": {
     "build": "tsc && vite build",
-    "clean": "rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo"
   },
   "exports": {
     ".": {
