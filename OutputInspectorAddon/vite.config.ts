@@ -14,7 +14,7 @@ export default defineConfig({
         index: path.resolve(__dirname, "src/index.ts"),
         preset: path.resolve(__dirname, "src/preset.js"),
       },
-      external: ["react", "react-dom", "react/jsx-runtime", "react-dom/server"],
+      external: ["react", "react-dom"],
       output: {
         globals: {
           react: "React",
