@@ -4,7 +4,7 @@ import { TextSelection, Transaction } from "prosemirror-state";
 
 import { Attrs } from "@tiptap/pm/model";
 import { NodeViewWrapper } from "@tiptap/react";
-// import { renderToStaticMarkup } from "react-dom/server";
+import { renderToString } from "react-dom/server";
 
 /**
  * Return selection corresponding to the node following the inserted image.
@@ -79,7 +79,7 @@ export const loadToDom = <ComponentProps extends {}>(
   props: ComponentProps
 ) => {
   const domRoot = document.createElement("div");
-  // domRoot.innerHTML = renderToStaticMarkup(<Component {...props} />);
+  domRoot.innerHTML = renderToString(<Component {...props} />);
   const element = domRoot.firstElementChild;
   if (!element) {
     throw new Error(
