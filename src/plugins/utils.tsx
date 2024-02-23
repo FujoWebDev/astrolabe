@@ -82,7 +82,9 @@ export const loadToDom = <ComponentProps extends {}>(
   // domRoot.innerHTML = renderToStaticMarkup(<Component {...props} />);
   const element = domRoot.firstElementChild;
   if (!element) {
-    throw `No element returned when loading ${Component.name} to the dom.`;
+    throw new Error(
+      `No element returned when loading ${Component.name} to the dom.`
+    );
   }
   return element;
 };
