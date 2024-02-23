@@ -1,7 +1,6 @@
 import { Extensions, JSONContent, generateHTML } from "@tiptap/core";
 
 import { DecoratorFunction } from "@storybook/types";
-import React from "react";
 import htmlParsers from "prettier/parser-html";
 import prettier from "prettier/standalone";
 import { useChannel } from "@storybook/addons";
@@ -44,7 +43,7 @@ const formatHtml = (json: JSONContent, extensions: Extensions) => {
     .trim();
 };
 
-export const CHANNEL_NAME = "CONTENT_UPDATED_CHANNEL";
+// export const CHANNEL_NAME = "CONTENT_UPDATED_CHANNEL";
 // export const withContentChangeHandler =
 //   (extensions: Extensions) => (json: JSONContent) => {
 //     const sanitizedJson = sanitizeJson(json);
@@ -62,7 +61,7 @@ export const withContentChangeHandler = (
     const emit = useChannel({});
     context.args.onContentChange = (json: JSONContent) => {
       const sanitizedJson = sanitizeJson(json);
-      emit(CHANNEL_NAME, {
+      emit("CONTENT_UPDATED_CHANNEL", {
         json: sanitizedJson,
         html: formatHtml(sanitizedJson, extensions),
       });

@@ -14,7 +14,7 @@ addons.register("output-inspector", () => {
     },
     render: ({ active, key }) => {
       return (
-        <AddonPanel key={key} active={!!active}>
+        <AddonPanel key={key as string} active={!!active}>
           <OutputInspector />
         </AddonPanel>
       );

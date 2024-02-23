@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { CHANNEL_NAME } from ".";
 import CodeMirror from "@uiw/react-codemirror";
 import { JSONContent } from "@tiptap/core";
 import ReactJsonView from "react-json-view";
@@ -22,7 +21,7 @@ export const OutputInspector = () => {
     { leading: true, trailing: true }
   );
   useEffect(() => {
-    addons.getChannel().addListener(CHANNEL_NAME, (content) => {
+    addons.getChannel().addListener("CONTENT_UPDATED_CHANNEL", (content) => {
       // TODO: change this with start transition once you can use React 18 in
       // Storybook addons
       contentCallback(content);

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "storybook": "turbo run storybook --no-cache",
+    "storybook": "turbo run storybook --no-cache --force",
     "build-storybook": "dotenv -- turbo run build-storybook",
     "clean": "turbo run clean"
   },
