@@ -1,13 +1,16 @@
 {
   "name": "@bobaboard/tiptap-oembed",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "exports": {
     ".": {
       "import": "./dist/tiptap-oembed.js",
       "require": "./dist/tiptap-oembed.cjs"
     }
   },
+  "files": [
+    "./dist/*"
+  ],
   "scripts": {
     "build": "tsc && vite build",
     "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo",

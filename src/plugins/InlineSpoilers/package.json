@@ -1,13 +1,16 @@
 {
   "name": "@bobaboard/tiptap-inline-spoilers",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.8.0",
   "exports": {
     ".": {
       "import": "./dist/tiptap-inline-spoilers.js",
       "require": "./dist/tiptap-inline-spoilers.cjs"
     }
   },
+  "files": [
+    "./dist/*"
+  ],
   "scripts": {
     "build": "tsc && vite build",
     "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo",

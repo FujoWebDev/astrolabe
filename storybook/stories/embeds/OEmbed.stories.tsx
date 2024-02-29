@@ -1,6 +1,5 @@
 import { DEFAULT_EXTENSIONS, Editor, EditorProps } from "../../../src/editor";
 import { Meta, StoryObj } from "@storybook/react";
-import { QueryClient, QueryClientProvider } from "react-query";
 
 import React from "react";
 import { withContentChangeHandler } from "@bobaboard/tiptap-storybook-inspector";
@@ -31,23 +30,19 @@ export default meta;
 
 type Story = StoryObj<EditorProps & { embedUrl?: string }>;
 
-const queryClient = new QueryClient();
-
 export const Empty: Story = {
   args: {
     editable: true,
   },
   render: (args) => (
-    <QueryClientProvider client={queryClient}>
-      <Editor
-        {...args}
-        initialContent={
-          args.embedUrl
-            ? `<article data-type="oembed" data-src="${args.embedUrl}" />`
-            : args.initialContent
-        }
-      />
-    </QueryClientProvider>
+    <Editor
+      {...args}
+      initialContent={
+        args.embedUrl
+          ? `<article data-type="oembed" data-src="${args.embedUrl}" />`
+          : args.initialContent
+      }
+    />
   ),
 };
 

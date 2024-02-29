@@ -1,13 +1,16 @@
 {
   "name": "@bobaboard/tiptap-block-with-menu",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.11.0",
   "exports": {
     ".": {
       "import": "./dist/tiptap-block-with-menu.js",
       "require": "./dist/tiptap-block-with-menu.cjs"
     }
   },
+  "files": [
+    "./dist/*"
+  ],
   "scripts": {
     "build": "tsc && vite build",
     "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo",

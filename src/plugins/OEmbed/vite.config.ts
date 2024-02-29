@@ -2,18 +2,19 @@ import { defineConfig } from "vite";
 import linaria from "@linaria/vite";
 import path from "path";
 import react from "@vitejs/plugin-react";
+import createExternals from "vite-plugin-external";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
+    minify: false,
     lib: {
       entry: path.resolve(__dirname, "index.ts"),
       name: "TipTapOEmbed",
       formats: ["cjs", "es"],
     },
-    minify: false,
     rollupOptions: {
-      external: ["react", "react-dom", "react-query"],
+      external: ["react", "react-dom"],
       output: {
         globals: {
           react: "React",
@@ -27,5 +28,14 @@ export default defineConfig({
     linaria({
       sourceMap: process.env.NODE_ENV !== "production",
     }),
+    createExternals({
+      externals: {
+        react: "React",
+        "react-dom": "ReactDOM",
+      },
+    }),
   ],
+  optimizeDeps: {
+    exclude: ["react", "react-dom"],
+  },
 });

@@ -15,7 +15,6 @@ import {
 import React from "react";
 import { css } from "@linaria/core";
 import { makeDataAttributes } from "../utils";
-import { useQuery } from "react-query";
 
 type OEmbedResult = Record<string, unknown> & {
   html: string;
@@ -103,6 +102,18 @@ export const OEmbedPlaceholder = (
   const attributes = props.attributes;
   const dataAttributes = makeDataAttributes(attributes);
   return <article data-type={props.pluginName} {...dataAttributes}></article>;
+};
+
+const useQuery = <T extends Object>(key: any[], getter: () => Promise<T>) => {
+  const [isLoading, setLoading] = React.useState(true);
+  const [data, setData] = React.useState<T | null>(null);
+
+  getter().then((result) => {
+    setLoading(false);
+    setData(result);
+  });
+
+  return { isLoading, data };
 };
 
 export const OEmbedLoader = (
