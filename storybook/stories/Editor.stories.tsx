@@ -68,7 +68,7 @@ export const Editable: Story = {
   args: {
     editable: true,
     addedExtensions: [Italic],
-    initialContent: `<picture data-type="image"><img src="https://placekitten.com/200/300" /></picture>`,
+    initialContent: `<picture data-type="image"><img src="https://loremflickr.com/200/300" /></picture>`,
   },
 };
 
@@ -82,7 +82,7 @@ export const ViewOnly: Story = {
 export const ViewOnlyImagesSpoilers: Story = {
   args: {
     ...ViewOnly.args,
-    initialContent: `<picture data-type="image"><img src="https://placekitten.com/200/300" /></picture><picture data-type="image" data-spoilers="true"><img src="https://placekitten.com/200/300" alt="A kitten" /></picture><picture data-type="image" data-spoilers="true" data-width="200" data-height="300"><img src="https://placekitten.com/200/300" alt="A kitten" /></picture>`,
+    initialContent: `<picture data-type="image"><img src="https://loremflickr.com/200/300" /></picture><picture data-type="image" data-spoilers="true"><img src="https://loremflickr.com/200/300" alt="A kitten" /></picture><picture data-type="image" data-spoilers="true" data-width="200" data-height="300"><img src="https://loremflickr.com/200/300" alt="A kitten" /></picture>`,
   },
 };
 
