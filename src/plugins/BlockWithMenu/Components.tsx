@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, EyeAlt, EyeOff, Trash } from "iconoir-react";
+import { ArrowDown, ArrowUp, Eye, EyeClosed, Trash } from "iconoir-react";
 import {
   BlockSettingsMenuProps,
   Button,
@@ -43,7 +43,7 @@ export const BlockBaseMenu = (
             })
           }
         >
-          {spoilers ? <EyeAlt /> : <EyeOff />}
+          {spoilers ? <Eye /> : <EyeClosed />}
         </ToggleButton>
       </li>
       <li role="menuitem">

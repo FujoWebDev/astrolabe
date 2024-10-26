@@ -193,7 +193,7 @@ export const GifSearch: Story = {
       {
         extensionName: GifSearchPlugin.name,
         // TODO: Figure out env in Storybook, vite instructions here not working https://storybook.js.org/docs/7.0/react/configure/environment-variables
-        // For now manually removing before commiting.
+        // For now manually removing tenor API key before committing.
         config: { tenorAPIKey: "" },
       },
     ],
