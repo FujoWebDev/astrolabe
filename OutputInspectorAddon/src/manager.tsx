@@ -12,9 +12,9 @@ addons.register("output-inspector", () => {
     match: ({ viewMode }) => {
       return viewMode === "story";
     },
-    render: ({ active, key }) => {
+    render: ({ active }) => {
       return (
-        <AddonPanel key={key} active={!!active}>
+        <AddonPanel active={!!active}>
           <OutputInspector />
         </AddonPanel>
       );
