@@ -2,7 +2,7 @@
 import {
   Code,
   CodeBracketsSquare,
-  EyeOff,
+  EyeClosed,
   Link,
   List,
   NumberedListLeft,
@@ -173,7 +173,7 @@ export const InlineSpoilersButton = ({ editor }: MenuButtonProps) => {
       aria-pressed={editor.isActive("inlineSpoilers")}
       onClick={() => editor.chain().focus().toggleInlineSpoilers().run()}
     >
-      <EyeOff />
+      <EyeClosed />
     </button>
   );
 };

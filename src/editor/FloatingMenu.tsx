@@ -1,4 +1,4 @@
-import { AddMediaImage, Code, GifFormat, Www } from "iconoir-react";
+import { Code, GifFormat, MediaImagePlus, Www } from "iconoir-react";
 import { MenuButtonProps, MenuOption, MenuOptionsProps } from "./BubbleMenu";
 import React, { forwardRef, useId, useRef, useState } from "react";
 
@@ -53,7 +53,7 @@ export const ImageButton = ({ editor }: MenuButtonProps) => {
         accept="image/png, image/gif, image/jpeg, image/bmp, image/x-icon"
       />
       <label htmlFor={id}>
-        <AddMediaImage aria-label="add image from file" />
+        <MediaImagePlus aria-label="add image from file" />
       </label>
     </>
   );
