@@ -4,7 +4,7 @@ import {
   markPasteRule,
   mergeAttributes,
 } from "@tiptap/core";
-// import { toggleAttributeOnClick, toggleSpoilersOnKeydown } from "../utils";
+import { toggleAttributeOnClick } from "./utils";
 
 import { PluginKey } from "@tiptap/pm/state";
 
@@ -127,10 +127,10 @@ export const InlineSpoilersPlugin = Mark.create<InlineSpoilersOptions>({
 
   addProseMirrorPlugins() {
     return [
-      // toggleAttributeOnClick({
-      //   name: this.name,
-      //   attribute: "data-visible",
-      // }),
+      toggleAttributeOnClick({
+        name: this.name,
+        attribute: "data-visible",
+      }),
     ];
   },
 });

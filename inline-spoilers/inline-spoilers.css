@@ -1,3 +1,14 @@
-span[data-type="inlineSpoilers"][data-visible="false"] {
-  color: blue;
+.tiptap[contenteditable="true"] span[data-type="inlineSpoilers"] {
+  background-color: lightgray;
+  border: 1px dashed black;
+}
+
+.tiptap[contenteditable="false"]
+  span[data-type="inlineSpoilers"][data-visible="false"] {
+  background-color: black;
+}
+
+.tiptap[contenteditable="false"]
+  span[data-type="inlineSpoilers"][data-visible="true"] {
+  border: 1px dashed black;
 }
