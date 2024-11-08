@@ -1,10 +1,6 @@
 import { useCurrentEditor, type Editor } from "@tiptap/react";
 
-export const InlineSpoilersButton = ({
-  editor,
-}: {
-  editor?: Editor | null;
-}) => {
+export const Button = ({ editor }: { editor?: Editor | null }) => {
   const { editor: currentEditor } = useCurrentEditor();
   const menuEditor = editor ?? currentEditor!;
   return (

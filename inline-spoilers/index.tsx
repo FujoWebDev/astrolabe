@@ -8,12 +8,12 @@ import { toggleAttributeOnClick } from "./utils";
 
 import { PluginKey } from "@tiptap/pm/state";
 
-export interface InlineSpoilersOptions {
+export interface Options {
   visible?: boolean;
   focusable?: boolean;
 }
 
-export const InlineSpoilersPluginKey = new PluginKey("InlineSpoilersPlugin");
+export const Key = new PluginKey("InlineSpoilersPlugin");
 
 export const PLUGIN_NAME = "inline-spoilers";
 declare module "@tiptap/core" {
@@ -33,7 +33,7 @@ declare module "@tiptap/core" {
 export const inputRegex = /(?:^|\s)((?:\|\|)((?:[^\|]+))(?:\|\|))$/;
 export const pasteRegex = /(?:^|\s)((?:\|\|)((?:[^\|]+))(?:\|\|))/g;
 
-export const InlineSpoilersPlugin = Mark.create<InlineSpoilersOptions>({
+export const Plugin = Mark.create<Options>({
   name: PLUGIN_NAME,
   priority: 1001,
 
