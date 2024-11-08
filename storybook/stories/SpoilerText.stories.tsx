@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
 
 import {
   EditorProvider,
@@ -34,7 +33,7 @@ const meta = {
         >
           <FloatingMenu editor={null}>This is the floating menu</FloatingMenu>
           <BubbleMenu editor={null}>
-            <InlineSpoilersButton editor={null} />
+            <InlineSpoilersButton />
           </BubbleMenu>
         </EditorProvider>
       </div>
@@ -48,14 +47,14 @@ type Story = StoryObj<typeof meta>;
 export const Editable: Story = {
   args: {
     initialText:
-      "Initial <span data-type='inlineSpoilers' data-visible='false'>text 1</span>",
+      "Some <span data-type='inline-spoilers' data-visible='false'>spoilered</span> text",
   },
 };
 
 export const ViewOnly: Story = {
   args: {
     initialText:
-      "Initial <span data-type='inlineSpoilers' data-visible='false'>text 2</span>",
+      "Some <span data-type='inline-spoilers' data-visible='false'>spoilered</span> text",
     editable: false,
   },
 };
