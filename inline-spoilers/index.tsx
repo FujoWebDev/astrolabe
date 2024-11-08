@@ -15,7 +15,7 @@ export interface InlineSpoilersOptions {
 
 export const InlineSpoilersPluginKey = new PluginKey("InlineSpoilersPlugin");
 
-export const PLUGIN_NAME = "inlineSpoilers";
+export const PLUGIN_NAME = "inline-spoilers";
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     [PLUGIN_NAME]: {
