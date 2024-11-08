@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
-import { EditorProvider, FloatingMenu, BubbleMenu } from "@tiptap/react";
+import {
+  EditorProvider,
+  FloatingMenu,
+  BubbleMenu,
+  type EditorProviderProps,
+} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { InlineSpoilersPlugin } from "@fujocoded/astrolabe-inline-spoilers";
 import { InlineSpoilersButton } from "@fujocoded/astrolabe-inline-spoilers/button";
@@ -25,6 +30,7 @@ const meta = {
         <EditorProvider
           extensions={[StarterKit, InlineSpoilersPlugin]}
           content={`<p>${args.initialText}</p>`}
+          editable={args.editable ?? true}
         >
           <FloatingMenu editor={null}>This is the floating menu</FloatingMenu>
           <BubbleMenu editor={null}>
@@ -34,7 +40,7 @@ const meta = {
       </div>
     );
   },
-} satisfies Meta<SpoilerText & { initialText: string }>;
+} satisfies Meta<EditorProviderProps & { initialText: string }>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -48,6 +54,8 @@ export const Editable: Story = {
 
 export const ViewOnly: Story = {
   args: {
-    initialText: "Initial text 2",
+    initialText:
+      "Initial <span data-type='inlineSpoilers' data-visible='false'>text 2</span>",
+    editable: false,
   },
 };
