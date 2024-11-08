@@ -25,10 +25,10 @@
     },
     "./css": {
       "import": {
-        "default": "./inline-spoilers.css"
+        "default": "./src/inline-spoilers.css"
       },
       "require": {
-        "default": "./inline-spoilers.css"
+        "default": "./src/inline-spoilers.css"
       }
     }
   },
