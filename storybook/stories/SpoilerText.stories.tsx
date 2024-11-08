@@ -3,6 +3,9 @@ import { fn } from "@storybook/test";
 
 import { EditorProvider, FloatingMenu, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { InlineSpoilersPlugin } from "@fujocoded/astrolabe-inline-spoilers";
+import { InlineSpoilersButton } from "@fujocoded/astrolabe-inline-spoilers/button";
+import "@fujocoded/astrolabe-inline-spoilers/css";
 
 type SpoilerText = {};
 
@@ -20,11 +23,13 @@ const meta = {
     return (
       <div style={{ backgroundColor: "red" }}>
         <EditorProvider
-          extensions={[StarterKit]}
+          extensions={[StarterKit, InlineSpoilersPlugin]}
           content={`<p>${args.initialText}</p>`}
         >
           <FloatingMenu editor={null}>This is the floating menu</FloatingMenu>
-          <BubbleMenu editor={null}>This is the bubble menu</BubbleMenu>
+          <BubbleMenu editor={null}>
+            <InlineSpoilersButton editor={null} />
+          </BubbleMenu>
         </EditorProvider>
       </div>
     );
@@ -34,10 +39,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Editable: Story = {
   args: {
-    initialText: "Initial text 1",
+    initialText:
+      "Initial <span data-type='inlineSpoilers' data-visible='false'>text 1</span>",
   },
 };
 

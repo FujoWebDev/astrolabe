@@ -2,7 +2,6 @@
   "name": "@fujocoded/astrolabe",
   "module": "index.ts",
   "type": "module",
-  "devDependencies": {},
   "peerDependencies": {
     "typescript": "^5.0.0"
   }
