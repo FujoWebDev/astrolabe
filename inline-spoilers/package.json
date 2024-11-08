@@ -1,0 +1,48 @@
+{
+  "name": "@fujocoded/astrolabe-inline-spoilers",
+  "module": "dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./button": {
+      "import": {
+        "types": "./dist/button.d.ts",
+        "default": "./dist/button.js"
+      },
+      "require": {
+        "types": "./dist/button.d.cts",
+        "default": "./dist/button.cjs"
+      }
+    },
+    "./css": {
+      "import": {
+        "default": "./inline-spoilers.css"
+      },
+      "require": {
+        "default": "./inline-spoilers.css"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@tiptap/pm": "^2.9.1",
+    "@tiptap/react": "^2.9.1",
+    "react": "^18.3.1",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@types/react": "^18.3.12",
+    "tsup": "^8.3.5"
+  }
+}
