@@ -7,8 +7,8 @@ import {
   type EditorProviderProps,
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { InlineSpoilersPlugin } from "@fujocoded/astrolabe-inline-spoilers";
-import { InlineSpoilersButton } from "@fujocoded/astrolabe-inline-spoilers/button";
+import { Plugin as InlineSpoilersPlugin } from "@fujocoded/astrolabe-inline-spoilers";
+import { Button as InlineSpoilersButton } from "@fujocoded/astrolabe-inline-spoilers/button";
 import "@fujocoded/astrolabe-inline-spoilers/css";
 
 type SpoilerText = {};
