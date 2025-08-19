@@ -34,15 +34,5 @@
   },
   "scripts": {
     "build": "tsup"
-  },
-  "peerDependencies": {
-    "@tiptap/pm": "^2.9.1",
-    "@tiptap/react": "^2.9.1",
-    "react": "^18.3.1",
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "@types/react": "^18.3.12",
-    "tsup": "^8.3.5"
   }
 }

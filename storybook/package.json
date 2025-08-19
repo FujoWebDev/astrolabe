@@ -2,33 +2,8 @@
   "name": "astrolabe-storybook",
   "module": "index.ts",
   "type": "module",
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
-  },
-  "dependencies": {
-    "@fujocoded/astrolabe-inline-spoilers": "file:../inline-spoilers",
-    "@tiptap/pm": "^2.9.1",
-    "@tiptap/react": "^2.9.1",
-    "@tiptap/starter-kit": "^2.9.1",
-    "react": "^18.3.1",
-    "vite": "^5.4.10"
-  },
-  "devDependencies": {
-    "@storybook/addon-essentials": "^8.5.0-alpha.3",
-    "@storybook/addon-interactions": "^8.5.0-alpha.3",
-    "@storybook/addon-onboarding": "^8.5.0-alpha.3",
-    "@storybook/blocks": "^8.5.0-alpha.3",
-    "@storybook/react": "^8.5.0-alpha.3",
-    "@storybook/react-vite": "^8.5.0-alpha.3",
-    "@storybook/test": "^8.5.0-alpha.3",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
-    "storybook": "^8.5.0-alpha.3",
-    "vite": "^5.4.10"
   }
 }
