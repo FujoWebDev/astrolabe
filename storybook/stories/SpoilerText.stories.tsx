@@ -27,7 +27,12 @@ const meta = {
     return (
       <div style={{ backgroundColor: "red" }}>
         <EditorProvider
-          extensions={[StarterKit, InlineSpoilersPlugin]}
+          extensions={[
+            StarterKit.configure({
+              orderedList: false,
+            }),
+            InlineSpoilersPlugin,
+          ]}
           content={`<p>${args.initialText}</p>`}
           editable={args.editable ?? true}
         >
