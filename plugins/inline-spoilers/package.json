@@ -1,0 +1,35 @@
+{
+  "name": "@fujocoded/astrolabe-inline-spoiler",
+  "version": "0.0.1",
+  "module": "./dist/Mark.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/Mark.d.ts",
+      "default": "./dist/Mark.js"
+    },
+    "./css": {
+      "default": "./dist/inline-spoiler.css"
+    }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch"
+  },
+  "devDependencies": {
+    "@tiptap/core": "catalog:",
+    "@tiptap/pm": "catalog:",
+    "@tiptap/react": "catalog:",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "peerDependencies": {
+    "@tiptap/starter-kit": "catalog:"
+  }
+}

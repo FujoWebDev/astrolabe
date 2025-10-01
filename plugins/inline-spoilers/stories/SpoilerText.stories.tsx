@@ -1,15 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import {
-  EditorProvider,
-  FloatingMenu,
-  BubbleMenu,
-  type EditorProviderProps,
-} from "@tiptap/react";
+import { EditorProvider, type EditorProviderProps } from "@tiptap/react";
+import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
-import { Plugin as InlineSpoilersPlugin } from "@fujocoded/astrolabe-inline-spoilers";
-import { Button as InlineSpoilersButton } from "@fujocoded/astrolabe-inline-spoilers/button";
-import "@fujocoded/astrolabe-inline-spoilers/css";
+import { Plugin as InlineSpoilersPlugin } from "../src/index.js";
+import { Button as InlineSpoilersButton } from "../src/button.tsx";
+import "../src/inline-spoilers.css";
 
 type SpoilerText = {};
 
@@ -36,8 +32,7 @@ const meta = {
           content={`<p>${args.initialText}</p>`}
           editable={args.editable ?? true}
         >
-          <FloatingMenu editor={null}>This is the floating menu</FloatingMenu>
-          <BubbleMenu editor={null}>
+          <BubbleMenu editor={undefined}>
             <InlineSpoilersButton />
           </BubbleMenu>
         </EditorProvider>

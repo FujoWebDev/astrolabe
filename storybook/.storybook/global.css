@@ -1,0 +1,20 @@
+.astrolabe-editor > [contenteditable] {
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px;
+  min-height: 300px;
+
+  &[contenteditable="true"] {
+    border: 1px solid #aaa;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  &[contenteditable="false"] {
+    border: 1px solid #eee;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}

@@ -1,4 +1,38 @@
 {
   "name": "@fujocoded/astrolabe",
-  "type": "module"
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "storybook": "turbo run storybook --filter=astrolabe-storybook",
+    "build-storybook": "turbo run build-storybook --filter=astrolabe-storybook",
+    "yalc:publish": "pnpm -r exec yalc publish"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@storybook/react": "^9.1.9",
+    "@storybook/addon-docs": "^9.1.2",
+    "@storybook/addon-vitest": "^9.1.2",
+    "@storybook/react-vite": "^9.1.2",
+    "@types/node": "^24.6.1",
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "tsdown": "^0.15.6",
+    "turbo": "^2.5.8",
+    "typescript": "^5.9.3",
+    "yalc": "1.0.0-pre.53"
+  },
+  "packageManager": "pnpm@10.0.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
 }
