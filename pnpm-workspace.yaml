@@ -1,0 +1,9 @@
+packages:
+  - "plugins/*"
+  - "addons/*"
+  - "storybook/"
+catalog:
+  "@tiptap/core": "^3.6.2"
+  "@tiptap/react": "^3.6.2"
+  "@tiptap/pm": "^3.6.2"
+  "@tiptap/starter-kit": "^3.6.2"
