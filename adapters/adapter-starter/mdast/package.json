@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@tiptap/core": "catalog:",
-    "@types/mdast": "catalog:mdast"
+    "@types/mdast": "catalog:mdast",
+    "@tiptap/starter-kit": "catalog:"
   }
 }
