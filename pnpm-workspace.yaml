@@ -2,7 +2,7 @@ packages:
   - "plugins/*"
   - "addons/*"
   - "storybook/"
-  - "adapters/*"
+  - "adapters/**/*"
 catalog:
   "@tiptap/core": "^3.6.2"
   "@tiptap/react": "^3.6.2"
