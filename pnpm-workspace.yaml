@@ -2,8 +2,14 @@ packages:
   - "plugins/*"
   - "addons/*"
   - "storybook/"
+  - "adapters/*"
 catalog:
   "@tiptap/core": "^3.6.2"
   "@tiptap/react": "^3.6.2"
   "@tiptap/pm": "^3.6.2"
   "@tiptap/starter-kit": "^3.6.2"
+catalogs:
+  mdast:
+    unist-util-visit: "^5.0.0"
+    unist-util-visit-parents: "^6.0.1"
+    "@types/mdast": "^4.0.4"

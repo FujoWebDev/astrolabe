@@ -1,0 +1,35 @@
+{
+  "name": "@fujocoded/astdapters-mdast-starter",
+  "version": "0.0.1",
+  "module": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "mdast-util-phrasing": "^4.1.0",
+    "mdast-util-to-string": "^4.0.0",
+    "unist-builder": "^4.0.0",
+    "unist-util-is": "^6.0.0",
+    "unist-util-visit": "catalog:mdast",
+    "unist-util-visit-parents": "catalog:mdast"
+  },
+  "devDependencies": {
+    "@tiptap/core": "catalog:",
+    "@types/mdast": "catalog:mdast"
+  }
+}
