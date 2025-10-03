@@ -30,7 +30,9 @@
   },
   "devDependencies": {
     "@tiptap/core": "catalog:",
+    "@tiptap/starter-kit": "catalog:",
     "@types/mdast": "catalog:mdast",
-    "@tiptap/starter-kit": "catalog:"
+    "@storybook/react-vite": "catalog:storybook",
+    "mdast-util-to-markdown": "^2.1.2"
   }
 }
