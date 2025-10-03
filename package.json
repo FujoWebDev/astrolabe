@@ -17,10 +17,9 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@storybook/addon-docs": "^9.1.2",
-    "@storybook/addon-vitest": "^9.1.2",
-    "@storybook/react": "^9.1.9",
-    "@storybook/react-vite": "^9.1.2",
+    "@storybook/addon-docs": "^10.0.0-beta.9",
+    "@storybook/addon-vitest": "^10.0.0-beta.9",
+    "@storybook/react-vite": "^10.0.0-beta.9",
     "@types/node": "^24.6.1",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",

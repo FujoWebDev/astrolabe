@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
 import type { StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
@@ -6,17 +8,15 @@ const config: StorybookConfig = {
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
     "../../plugins/*/stories/**/*.mdx",
     "../../plugins/*/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-    "../../plugins/*/*.stories.@(js|jsx|mjs|ts|tsx)",
-    "../../plugins/*/*/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+    "../../adapters/*/*.stories.@(js|jsx|mjs|ts|tsx)",
+    "../../adapters/*/*/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
-    "@storybook/addon-docs",
-    "@storybook/addon-vitest",
-    "@fujocoded/astrolabe-editor-json-viewer",
-    "storybook-addon-vis",
+    getAbsolutePath("@storybook/addon-docs"),
+    getAbsolutePath("@storybook/addon-vitest"),
   ],
   framework: {
-    name: "@storybook/react-vite",
+    name: getAbsolutePath("@storybook/react-vite"),
     options: {},
   },
   viteFinal: (config) => {
@@ -27,3 +27,7 @@ const config: StorybookConfig = {
   },
 };
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}

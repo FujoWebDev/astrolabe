@@ -13,3 +13,5 @@ catalogs:
     unist-util-visit: "^5.0.0"
     unist-util-visit-parents: "^6.0.1"
     "@types/mdast": "^4.0.4"
+  storybook:
+    "@storybook/react-vite": "^10.0.0-beta.9"
