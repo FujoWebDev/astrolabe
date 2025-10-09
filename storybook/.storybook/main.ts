@@ -12,22 +12,19 @@ const config: StorybookConfig = {
     "../../adapters/*/*/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
-    getAbsolutePath("@storybook/addon-docs"),
-    getAbsolutePath("@storybook/addon-vitest"),
+    "@storybook/addon-docs",
+    "@storybook/addon-vitest",
+    "@fujocoded/astrolabe-editor-tree-viewer",
   ],
   framework: {
-    name: getAbsolutePath("@storybook/react-vite"),
+    name: "@storybook/react-vite",
     options: {},
   },
-  viteFinal: (config) => {
-    config.optimizeDeps = config.optimizeDeps ?? {
-      exclude: ["chromium-bidi", "playwright", "@playwright/test"],
-    };
-    return config;
-  },
+  // viteFinal: (config) => {
+  //   config.optimizeDeps = config.optimizeDeps ?? {
+  //     exclude: ["chromium-bidi", "playwright", "@playwright/test"],
+  //   };
+  //   return config;
+  // },
 };
 export default config;
-
-function getAbsolutePath(value: string): any {
-  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
-}

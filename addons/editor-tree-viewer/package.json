@@ -1,0 +1,44 @@
+{
+  "name": "@fujocoded/astrolabe-editor-tree-viewer",
+  "version": "0.0.1",
+  "description": "Storybook addon to display the content of the TipTap Editor and transformations",
+  "type": "module",
+  "files": [
+    "dist/**/*",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch"
+  },
+  "author": "FujoCoded LLC",
+  "license": "MIT",
+  "exports": {
+    "./manager": {
+      "types": "./dist/manager.d.ts",
+      "import": "./dist/manager.js"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.ts",
+      "import": "./dist/constants.js"
+    },
+    "./decorator": {
+      "types": "./dist/decorator.d.ts",
+      "import": "./dist/decorator.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "devDependencies": {
+    "@storybook/react-vite": "catalog:storybook"
+  },
+  "peerDependencies": {
+    "storybook": "catalog:storybook",
+    "@tiptap/core": "catalog:",
+    "@tiptap/react": "catalog:",
+    "@tiptap/starter-kit": "catalog:"
+  }
+}
