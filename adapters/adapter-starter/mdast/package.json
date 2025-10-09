@@ -29,9 +29,12 @@
     "unist-util-visit-parents": "catalog:mdast"
   },
   "devDependencies": {
+    "@fujocoded/astrolabe-editor-tree-viewer": "workspace:*",
     "@tiptap/core": "catalog:",
+    "@tiptap/react": "catalog:",
     "@tiptap/starter-kit": "catalog:",
     "@types/mdast": "catalog:mdast",
+    "storybook": "catalog:storybook",
     "@storybook/react-vite": "catalog:storybook",
     "mdast-util-to-markdown": "^2.1.2"
   }

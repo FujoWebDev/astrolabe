@@ -4,39 +4,28 @@ import { toMarkdown } from "mdast-util-to-markdown";
 import { convert as toMdast } from "../src/index.js";
 
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { JSONContent } from "@tiptap/core";
-// import type {
-//   EditorTreeViewConfig,
-//   SerializableValue,
-// } from "@fujocoded/astrolabe-editor-tree-viewer/types";
+import { withEditorTreeViewer } from "@fujocoded/astrolabe-editor-tree-viewer/decorator";
 
-type SerializableValue = unknown;
-type EditorTreeViewConfig = unknown;
-
-const ensureJsonContent = (value: SerializableValue): JSONContent => {
-  return value as unknown as JSONContent;
-};
+import type { EditorTreeViewConfig } from "@fujocoded/astrolabe-editor-tree-viewer/types";
 
 const editorTreeViews: EditorTreeViewConfig[] = [
   {
     id: "mdast-json",
     label: "mdast JSON",
-    compute: ({ editorJson }) => {
-      const jsonContent = ensureJsonContent(editorJson);
-      const mdastTree = toMdast(jsonContent);
+    compute: async ({ editorJson }) => {
+      const mdastTree = toMdast(editorJson);
 
       return {
         type: "json",
-        content: mdastTree as unknown as SerializableValue,
+        content: mdastTree as unknown as Record<string, unknown>,
       };
     },
   },
   {
     id: "markdown",
     label: "Markdown",
-    compute: ({ editorJson }) => {
-      const jsonContent = ensureJsonContent(editorJson);
-      const mdastTree = toMdast(jsonContent);
+    compute: async ({ editorJson }) => {
+      const mdastTree = toMdast(editorJson);
 
       return {
         type: "markdown",
@@ -46,23 +35,21 @@ const editorTreeViews: EditorTreeViewConfig[] = [
   },
 ];
 
-const meta = {
+const Meta = {
   title: "Adapters/Starter—Markdown (mdast)",
   tags: ["autodocs"],
   parameters: {
     layout: "padded",
-    plugins: [],
-    hideEditor: false,
-    editorTreeViews,
+    editorTreeViewer: {
+      editorTreeViews,
+    },
   },
-  render: (...params) => {
-    console.log(params);
-    return <div>{params[0].initialText}</div>;
-  },
+  decorators: [withEditorTreeViewer],
+  component: () => null,
 } satisfies Meta<{ initialText: string }>;
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default Meta;
+type Story = StoryObj<typeof Meta>;
 
 export const BoldAndEmphasis: Story = {
   args: {

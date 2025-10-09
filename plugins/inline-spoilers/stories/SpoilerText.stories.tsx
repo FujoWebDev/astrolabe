@@ -7,8 +7,6 @@ import { Plugin as InlineSpoilersPlugin } from "../src/index.js";
 import { Button as InlineSpoilersButton } from "../src/button.tsx";
 import "../src/inline-spoilers.css";
 
-type SpoilerText = {};
-
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   title: "Astrolabe/SpoilerText",

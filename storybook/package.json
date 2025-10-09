@@ -3,14 +3,17 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@fujocoded/astrolabe-editor-tree-viewer": "workspace:*",
     "@storybook/react-vite": "catalog:storybook",
     "@tiptap/core": "catalog:",
     "@tiptap/react": "catalog:",
-    "@tiptap/starter-kit": "^3.6.2",
-    "storybook": "^10.0.0-beta.9"
+    "@tiptap/starter-kit": "catalog:",
+    "storybook": "catalog:storybook",
+    "react": "catalog:react",
+    "react-dom": "catalog:react"
   }
 }

@@ -26,8 +26,8 @@
     "@tiptap/core": "catalog:",
     "@tiptap/pm": "catalog:",
     "@tiptap/react": "catalog:",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "react": "catalog:react",
+    "react-dom": "catalog:react"
   },
   "peerDependencies": {
     "@tiptap/starter-kit": "catalog:"
