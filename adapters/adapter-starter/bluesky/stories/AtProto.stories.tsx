@@ -1,12 +1,12 @@
-import React from "react";
-
-import { toMarkdown } from "mdast-util-to-markdown";
-import { convert as toMdast } from "../src/index.js";
+import { convert as toBskyRichtText } from "../src/index.js";
+import { type DocumentType } from "@tiptap/core";
+import { convert as toMdast } from "@fujocoded/astdapters-mdast-starter";
 
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { withEditorTreeViewer } from "@fujocoded/astrolabe-editor-tree-viewer/decorator";
-
-import type { EditorTreeViewConfig } from "@fujocoded/astrolabe-editor-tree-viewer/types";
+import {
+  withEditorTreeViewer,
+  type EditorTreeViewConfig,
+} from "@fujocoded/astrolabe-editor-tree-viewer/decorator";
 
 const editorTreeViews: EditorTreeViewConfig[] = [
   {
@@ -14,7 +14,6 @@ const editorTreeViews: EditorTreeViewConfig[] = [
     label: "mdast JSON",
     compute: async ({ editorJson }) => {
       const mdastTree = toMdast(editorJson);
-
       return {
         type: "json",
         content: mdastTree as unknown as Record<string, unknown>,
@@ -22,23 +21,31 @@ const editorTreeViews: EditorTreeViewConfig[] = [
     },
   },
   {
-    id: "markdown",
-    label: "Markdown",
+    id: "bluesky-rich-text",
+    label: "Bluesky Rich Text",
     compute: async ({ editorJson }) => {
-      const mdastTree = toMdast(editorJson);
+      const richText = await toBskyRichtText(
+        structuredClone(editorJson) as DocumentType
+      );
 
       return {
-        type: "markdown",
-        content: toMarkdown(mdastTree, { emphasis: "_" }),
+        type: "json",
+        content: {
+          text: richText.text.text,
+          length: richText.text.text.length,
+          facets: richText.text.facets,
+        },
       };
     },
   },
 ];
 
-const Meta = {
-  title: "Adapters/Starter—Markdown (mdast)",
+const meta = {
+  title: "Adapters/Starter—Bluesky",
   parameters: {
     layout: "padded",
+    plugins: [],
+    hideEditor: false,
     editorTreeViewer: {
       editorTreeViews,
     },
@@ -47,8 +54,8 @@ const Meta = {
   component: () => null,
 } satisfies Meta<{ initialText: string }>;
 
-export default Meta;
-type Story = StoryObj<typeof Meta>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const BoldAndEmphasis: Story = {
   args: {
@@ -70,7 +77,6 @@ export const LinkAndUnderline: Story = {
       "This is a <a href='https://fujocoded.com'>link</a> and this is a <u>underlined</u> statement.",
   },
 };
-
 export const Code: Story = {
   args: {
     initialText: "This is a <code>code</code> statement.",

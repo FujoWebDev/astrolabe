@@ -3,7 +3,14 @@ import { is } from "unist-util-is";
 import { visit } from "unist-util-visit";
 
 import type { JSONContent } from "@tiptap/core";
-import type { Node, RootContent, PhrasingContent, Nodes } from "mdast";
+import type {
+  Node,
+  RootContent,
+  PhrasingContent,
+  Nodes,
+  BlockContent,
+  DefinitionContent,
+} from "mdast";
 
 export type ParagraphChild = PhrasingContent;
 export type RootChild = RootContent;
@@ -26,6 +33,31 @@ export const isRootChildNode = (node: Node): node is RootChild =>
 
 export const isParagraphChildNode = (node: Node): node is ParagraphChild =>
   phrasing(node);
+
+const blockContentTypes = new Set<BlockContent["type"]>([
+  "blockquote",
+  "code",
+  "heading",
+  "html",
+  "list",
+  "paragraph",
+  "table",
+  "thematicBreak",
+]);
+
+const definitionContentTypes = new Set<DefinitionContent["type"]>([
+  "definition",
+  "footnoteDefinition",
+]);
+
+export const isBlockOrDefinitionContent = (
+  node: RootChild
+): node is BlockContent | DefinitionContent => {
+  return (
+    blockContentTypes.has(node.type as BlockContent["type"]) ||
+    definitionContentTypes.has(node.type as DefinitionContent["type"])
+  );
+};
 
 const mergeableNodeTypes = new Set([
   "text",
