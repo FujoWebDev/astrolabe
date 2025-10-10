@@ -4,6 +4,7 @@ import { u } from "unist-builder";
 import {
   isParagraphChildNode,
   isRootChildNode,
+  isBlockOrDefinitionContent,
   compact,
   normaliseParagraphChildren,
 } from "./mdast-utils.js";
@@ -15,13 +16,17 @@ import type {
 } from "./mdast-utils.js";
 import type { ConverterPlugin, ConverterMarkPlugin } from "./plugin-utils.js";
 import type { JSONContent, DocumentType } from "@tiptap/core";
-import type { Root as MdastRoot } from "mdast";
+import type { Root as MdastRoot, Heading } from "mdast";
 
 export type ProseMirrorMark = NonNullable<JSONContent["marks"]>[number];
 export type ProseMirrorNode = JSONContent;
 export type ProseMirrorDocument = DocumentType;
 
-export type { ConverterPlugin, ConverterMarkPlugin } from "./plugin-utils.js";
+export type {
+  ConverterPlugin,
+  ConverterMarkPlugin,
+  ConverterContext,
+} from "./plugin-utils.js";
 
 const isDocument = (root: unknown): root is DocumentType =>
   typeof root === "object" &&
@@ -29,24 +34,33 @@ const isDocument = (root: unknown): root is DocumentType =>
   "type" in root &&
   root.type === "doc";
 
+const hasContent = (root: unknown): root is { content?: JSONContent[] } =>
+  typeof root === "object" && root !== null && "content" in root;
+
 export const convert = (
   root: unknown,
   options?: {
-    plugins?: (ConverterPlugin | ConverterMarkPlugin)[];
+    plugins?: readonly (ConverterPlugin | ConverterMarkPlugin)[];
+    acceptPartial?: boolean;
   }
 ): MdastRoot => {
-  if (!isDocument(root)) {
-    throw new Error("Root type is not doc");
-  }
-
   const plugins = options?.plugins ?? [];
 
-  // We're forgiving if the root has no children
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!root.content) {
-    return u("root", []);
+  let content: JSONContent[];
+
+  if (options?.acceptPartial) {
+    if (!hasContent(root)) {
+      return u("root", []);
+    }
+    content = root.content ?? [];
+  } else {
+    if (!isDocument(root)) {
+      throw new Error("Root type is not doc");
+    }
+    // We're forgiving if the root has no children
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    content = root.content ?? [];
   }
-  const content = root.content;
 
   const convertedChildren: MdastRootChild[] = [];
   for (let index = 0; index < content.length; index++) {
@@ -62,6 +76,11 @@ export const convert = (
   return candidateRoot;
 };
 
+/**
+ * Converts a ProseMirror block-level node to an mdast node.
+ * Handles paragraphs, code blocks, images, headings, blockquotes, lists, and horizontal rules.
+ * Uses plugins for unknown node types.
+ */
 const convertBlockNode = (
   node: JSONContent,
   previousSibling: JSONContent | undefined,
@@ -111,6 +130,102 @@ const convertBlockNode = (
 
       return u("image", { url: src, title: title ?? null, alt: alt ?? null });
     }
+    case "heading": {
+      const depth =
+        typeof node.attrs?.level === "number" ? node.attrs.level : 1;
+      const paragraphChildren: ParagraphChild[] = [];
+      const inlineContent = node.content ?? [];
+      for (let index = 0; index < inlineContent.length; index++) {
+        const contentNode = inlineContent[index];
+        paragraphChildren.push(
+          ...convertInlineNode(
+            contentNode,
+            inlineContent[index - 1],
+            inlineContent[index + 1],
+            plugins
+          )
+        );
+      }
+
+      return u(
+        "heading",
+        { depth: depth as Heading["depth"] },
+        paragraphChildren
+      );
+    }
+    case "blockquote": {
+      const convertedChildren: MdastRootChild[] = [];
+      const blockContent = node.content ?? [];
+      for (let index = 0; index < blockContent.length; index++) {
+        const child = blockContent[index];
+        convertedChildren.push(
+          convertBlockNode(
+            child,
+            blockContent[index - 1],
+            blockContent[index + 1],
+            plugins
+          )
+        );
+      }
+
+      return u(
+        "blockquote",
+        convertedChildren.filter(isBlockOrDefinitionContent)
+      );
+    }
+    case "bulletList": {
+      const listItems = node.content ?? [];
+
+      return u("list", { ordered: false, spread: false }, [
+        ...listItems.map((item) => {
+          const itemChildren: MdastRootChild[] = [];
+          const itemContent = item.content ?? [];
+          for (let index = 0; index < itemContent.length; index++) {
+            const child = itemContent[index];
+            itemChildren.push(
+              convertBlockNode(
+                child,
+                itemContent[index - 1],
+                itemContent[index + 1],
+                plugins
+              )
+            );
+          }
+
+          return u("listItem", itemChildren.filter(isBlockOrDefinitionContent));
+        }),
+      ]);
+    }
+    case "orderedList": {
+      const listItems = node.content ?? [];
+      const start =
+        typeof node.attrs?.start === "number" && !Number.isNaN(node.attrs.start)
+          ? node.attrs.start
+          : undefined;
+
+      return u("list", { ordered: true, spread: false, start }, [
+        ...listItems.map((item) => {
+          const itemChildren: MdastRootChild[] = [];
+          const itemContent = item.content ?? [];
+          for (let index = 0; index < itemContent.length; index++) {
+            const child = itemContent[index];
+            itemChildren.push(
+              convertBlockNode(
+                child,
+                itemContent[index - 1],
+                itemContent[index + 1],
+                plugins
+              )
+            );
+          }
+
+          return u("listItem", itemChildren.filter(isBlockOrDefinitionContent));
+        }),
+      ]);
+    }
+    case "horizontalRule": {
+      return u("thematicBreak");
+    }
     default: {
       const converted = applyPluginsNodes(node, plugins);
       if (!converted) {
@@ -132,6 +247,10 @@ const convertBlockNode = (
   }
 };
 
+/**
+ * Converts a ProseMirror inline node to an array of mdast paragraph children.
+ * Handles text nodes, hard breaks, and delegates to plugins for other inline types.
+ */
 const convertInlineNode = (
   node: JSONContent,
   previousSibling: JSONContent | undefined,
@@ -140,6 +259,10 @@ const convertInlineNode = (
 ): ParagraphChild[] => {
   if (node.type === "text") {
     return convertTextNode(node, previousSibling, nextSibling, plugins);
+  }
+
+  if (node.type === "hardBreak") {
+    return [u("break")];
   }
 
   const converted = applyPluginsNodes(node, plugins);
@@ -162,6 +285,11 @@ const convertInlineNode = (
   );
 };
 
+/**
+ * Converts a ProseMirror text node with marks to mdast nodes.
+ * Handles bold, italic, code, underline, and link marks.
+ * Uses plugins for unknown mark types.
+ */
 const convertTextNode = (
   node: JSONContent,
   previousSibling: JSONContent | undefined,
