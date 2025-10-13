@@ -26,8 +26,7 @@
     "tsdown": "^0.15.6",
     "turbo": "^2.5.8",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4",
-    "yalc": "1.0.0-pre.53"
+    "vitest": "^3.2.4"
   },
   "packageManager": "pnpm@10.0.0",
   "pnpm": {

@@ -1,0 +1,81 @@
+{
+  "uri": "at://did:plc:r2vpg2iszskbkegoldmqa322/app.bsky.feed.post/3m2svesohjs2c",
+  "cid": "bafyreiduqr72h6o64pwjgy7mw7fu347m23jvdo46thgj4ggnk5eec7ret4",
+  "value": {
+    "text": "Someone asked how it works, so here's the writeup 👇\n\nAs mentioned, if you want to help us get tools like these in fandom's hands, you should support @fujocoded.bsky.social on Patreon www.patreon.com/c/fujocoded\n\nFull post: www.tumblr.com/essential-ra...",
+    "$type": "app.bsky.feed.post",
+    "embed": {
+      "$type": "app.bsky.embed.recordWithMedia",
+      "media": {
+        "$type": "app.bsky.embed.images",
+        "images": [
+          {
+            "alt": "Someone asked me how this work and \"who is trusting who\" with this type of authorization flow. Here's how it works:\n\nThe user is logged in to your website, using their PDS, which tl;dr is their personal data store in the ATproto network. Most people create theirs by making a Bluesky account, but there's other providers too. You can self-host one super easily, or move it across providers if you stop liking the one you have. \n\nHowever you create or host it, the PDS logs in to your website through a OAuth flow. This is mostly the same as the one for any \"login with X\" services, and it only involves your site and the PDS itself.\n\nOnce their PDS is logged into your site, you know the visitor's unique identifier in the ATproto network. Then you use the Bluesky AppView (API) to see what the mutual relationship is between the logged in user and whoever you want (most likely you/the site owner). \n\nIf you want no third parties in the middle, you can also skip the Bluesky API and directly get the lists of Bluesky friends from your PDS and/or the one of the visitor. We just use the Bluesky AppView cause it's convenient, but there's really nothing stopping us from looking at the data directly.\n\nOnce you know their identity and your relationship, the hard part is done: if you follow them, you let them in; if not, they see the \"unauthorized\" page.\n\n...and that's it!\n\nIt's really just:\n\nI, site owner, need to know who you are in the network, please log in (only involves the site + the visitor's PDS/data storage)\nOk, now I know what your network identifier is, let me get a record of the people I follow in my own PDS/data storage (only involves the user's PDS, although you can use other APIs to help you)\nYou're in the list, see the page\nYou're not in the list, bye bye\n",
+            "image": {
+              "$type": "blob",
+              "ref": {
+                "$link": "bafkreib3k77xejwouzkrewf65j53g2wzvcfozpqn2l43nbhxi62z2jf2vi"
+              },
+              "mimeType": "image/jpeg",
+              "size": 379677
+            },
+            "aspectRatio": {
+              "width": 693,
+              "height": 1088
+            }
+          }
+        ]
+      },
+      "record": {
+        "$type": "app.bsky.embed.record",
+        "record": {
+          "cid": "bafyreiggjdfuny33myuojpp2e3pyq6v4sx3aqrx3bh6s4ugdsqg4perspm",
+          "uri": "at://did:plc:r2vpg2iszskbkegoldmqa322/app.bsky.feed.post/3m2sr75baak2r"
+        }
+      }
+    },
+    "langs": [
+      "en"
+    ],
+    "facets": [
+      {
+        "$type": "app.bsky.richtext.facet",
+        "index": {
+          "byteEnd": 174,
+          "byteStart": 152
+        },
+        "features": [
+          {
+            "did": "did:plc:737bslnnf7vyaktosjlrshmd",
+            "$type": "app.bsky.richtext.facet#mention"
+          }
+        ]
+      },
+      {
+        "index": {
+          "byteEnd": 213,
+          "byteStart": 186
+        },
+        "features": [
+          {
+            "uri": "https://www.patreon.com/c/fujocoded",
+            "$type": "app.bsky.richtext.facet#link"
+          }
+        ]
+      },
+      {
+        "index": {
+          "byteEnd": 256,
+          "byteStart": 226
+        },
+        "features": [
+          {
+            "uri": "https://www.tumblr.com/essential-randomness/796993314937257984/code-is-here?source=share",
+            "$type": "app.bsky.richtext.facet#link"
+          }
+        ]
+      }
+    ],
+    "createdAt": "2025-10-10T05:03:10.567Z"
+  }
+}

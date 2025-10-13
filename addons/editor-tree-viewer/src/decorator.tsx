@@ -14,6 +14,7 @@ import {
 } from "./constants.js";
 import type { EditorTreeViewEvents } from "./types.js";
 import StarterKit from "@tiptap/starter-kit";
+// import { BubbleMenu } from "@tiptap/react/menus";
 export { type EditorTreeViewConfig } from "./types.js";
 
 export const withEditorTreeViewer = makeDecorator({
@@ -97,13 +98,11 @@ export const withEditorTreeViewer = makeDecorator({
 
     return (
       <>
-        {getStory(context) as React.ReactNode}
         <EditorContext.Provider value={{ editor }}>
-          {/* {!!editor?.isEditable && args.buttons.length > 0 && (
+          {getStory(context) as React.ReactNode}
+          {/* {!!editor?.isEditable && (
             <BubbleMenu>
-              {args.buttons.map((Button, index) => (
-                <Button key={index} editor={editor} />
-              ))}
+              <button>Add Link</button>
             </BubbleMenu>
           )} */}
           <EditorContent
