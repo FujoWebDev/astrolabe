@@ -1,0 +1,40 @@
+{
+  "name": "@fujocoded/astdapters-leaflet-starter",
+  "version": "0.0.1",
+  "module": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "peerDependencies": {
+    "@fujocoded/astdapters-mdast-starter": "workspace:*"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.16.9",
+    "mdast-util-to-markdown": "^2.1.2"
+  },
+  "devDependencies": {
+    "@fujocoded/astdapters-mdast-starter": "workspace:*",
+    "@fujocoded/astrolabe-editor-tree-viewer": "workspace:*",
+    "@tiptap/core": "catalog:",
+    "@tiptap/react": "catalog:",
+    "@tiptap/starter-kit": "catalog:",
+    "@types/mdast": "catalog:mdast",
+    "mdast-util-to-string": "^4.0.0",
+    "unist-util-visit": "catalog:mdast"
+  }
+}
