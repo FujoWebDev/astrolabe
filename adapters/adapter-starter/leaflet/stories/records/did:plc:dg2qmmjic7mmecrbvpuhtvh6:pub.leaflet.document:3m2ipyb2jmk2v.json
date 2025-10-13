@@ -1,0 +1,434 @@
+{
+  "uri": "at://did:plc:dg2qmmjic7mmecrbvpuhtvh6/pub.leaflet.document/3m2ipyb2jmk2v",
+  "cid": "bafyreibzw553i3wryqufcm2i7tjsm3m2yyvfj5i4who3utypjfxsbwb5li",
+  "value": {
+    "$type": "pub.leaflet.document",
+    "pages": [
+      {
+        "$type": "pub.leaflet.pages.linearDocument",
+        "blocks": [
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "I tried writing music recommendations on bsky but I realized that the word count limit was working against me AND I couldn't get link previews for the artists' channels."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Anyway."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "These are some of the artists I've discovered and have been following (this might put my tastes on blast but idc):"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.header",
+              "level": 2,
+              "facets": [],
+              "plaintext": "Patterns"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Lovely lovely music, some of my faves:"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "url": "https://www.youtube.com/embed/_R6fJxtSVqc?rel=0",
+              "$type": "pub.leaflet.blocks.iframe",
+              "height": 300
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "url": "https://www.youtube.com/embed/WMzvPz3VzvA?rel=0",
+              "$type": "pub.leaflet.blocks.iframe",
+              "height": 300
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": ""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.header",
+              "level": 2,
+              "facets": [],
+              "plaintext": "aquoferne"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Their music lives in my head rent-free... my faves:"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "url": "https://www.youtube.com/embed/HSRFpcMiO6A?rel=0",
+              "$type": "pub.leaflet.blocks.iframe",
+              "height": 300
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "url": "https://www.youtube.com/embed/6Eun07eTaqY?rel=0",
+              "$type": "pub.leaflet.blocks.iframe",
+              "height": 300
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": ""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.header",
+              "level": 3,
+              "facets": [],
+              "plaintext": "bonus collab that Patterns and aquoferne did together"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [
+                {
+                  "index": {
+                    "byteEnd": 104,
+                    "byteStart": 102
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#italic"
+                    }
+                  ]
+                }
+              ],
+              "plaintext": "Legitimately felt like I was living in a fever dream. I still haven't recovered from the collab, it's so gorgeous and it's a Honkai Star Rail fan song:"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "url": "https://www.youtube.com/embed/RAnmdRgqpD4?rel=0",
+              "$type": "pub.leaflet.blocks.iframe",
+              "height": 300
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": ""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.header",
+              "level": 2,
+              "facets": [],
+              "plaintext": "vally.exe"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "INCREDIBLE utaite!! Their voice is so pretty and haunts me (in a good way)."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "url": "https://www.youtube.com/embed/yXIypEB4hvE?rel=0",
+              "$type": "pub.leaflet.blocks.iframe",
+              "height": 300
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "url": "https://www.youtube.com/embed/WrSCEPMM3TE?rel=0",
+              "$type": "pub.leaflet.blocks.iframe",
+              "height": 300
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": ""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.header",
+              "level": 3,
+              "facets": [],
+              "plaintext": "another collab between vally.exe and Patterns because of course"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "I lied, I first heard of vally.exe through VOIDS and truly the best rabbithole to have fallen down in:"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "url": "https://www.youtube.com/embed/B0uSLgW9o7E?rel=0",
+              "$type": "pub.leaflet.blocks.iframe",
+              "height": 300
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": ""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "I'm so happy to be alive so I can listen to this kind of music. Art is good, art should be celebrated and supported."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Please please check out their bandcamps or soundclouds wherever you can and support them!! I'll throw some links down below:"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": ""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.header",
+              "level": 3,
+              "facets": [],
+              "plaintext": "Patterns"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "src": "https://prettypatternsinc.bandcamp.com",
+              "$type": "pub.leaflet.blocks.website",
+              "title": "Pretty Patterns",
+              "description": "Just a little guy doing little things",
+              "previewImage": {
+                "$type": "blob",
+                "ref": {
+                  "$link": "bafkreic4y7k5m6m57pbyxw5iz5mmyp73rxjtsbi4p576m2jf2kfczi7hri"
+                },
+                "mimeType": "image/png",
+                "size": 65752
+              }
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "url": "https://open.spotify.com/embed/artist/4qwvSfN4vvXmOfepMFSCeX?utm_source=oembed",
+              "$type": "pub.leaflet.blocks.iframe",
+              "height": 152
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": ""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [
+                {
+                  "index": {
+                    "byteEnd": 9,
+                    "byteStart": 0
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#bold"
+                    }
+                  ]
+                }
+              ],
+              "plaintext": "aquoferne"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "src": "https://aquoferne.bandcamp.com/",
+              "$type": "pub.leaflet.blocks.website",
+              "title": "aquoferne",
+              "description": "aquoferne. .",
+              "previewImage": {
+                "$type": "blob",
+                "ref": {
+                  "$link": "bafkreihg4cmtfxlbh6ere4wwcglhb537yjdnouqihxxzmledafydq2t4pa"
+                },
+                "mimeType": "image/png",
+                "size": 34841
+              }
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "src": "https://ko-fi.com/aquoferne",
+              "$type": "pub.leaflet.blocks.website",
+              "title": "Buy mari a Coffee",
+              "description": "Become a supporter of mari today!",
+              "previewImage": {
+                "$type": "blob",
+                "ref": {
+                  "$link": "bafkreifk4sno3canlt6pp6gahyfas73zn5hbojhqtqugv2wjh23exhrcsi"
+                },
+                "mimeType": "image/png",
+                "size": 16775
+              }
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": ""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [
+                {
+                  "index": {
+                    "byteEnd": 9,
+                    "byteStart": 0
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#bold"
+                    }
+                  ]
+                }
+              ],
+              "plaintext": "vally.exe"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "url": "https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Fusers%2F380147135&show_artwork=true",
+              "$type": "pub.leaflet.blocks.iframe",
+              "height": 450
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "src": "https://vallyutaite.carrd.co/",
+              "$type": "pub.leaflet.blocks.website",
+              "title": "vally.exe site",
+              "description": "",
+              "previewImage": {
+                "$type": "blob",
+                "ref": {
+                  "$link": "bafkreif4qmxye22uiswttllbw4r4fgkxhsquh3corjls2eoeota7olqddi"
+                },
+                "mimeType": "image/png",
+                "size": 7205
+              }
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": ""
+            }
+          }
+        ]
+      }
+    ],
+    "title": "music recs",
+    "author": "did:plc:dg2qmmjic7mmecrbvpuhtvh6",
+    "postRef": {
+      "cid": "bafyreifaxjyd4ban5jtneajxklejtx4zc7l6lya5olt2l3ypjr6enxscye",
+      "uri": "at://did:plc:dg2qmmjic7mmecrbvpuhtvh6/app.bsky.feed.post/3m2ipyq4sac2v",
+      "commit": {
+        "cid": "bafyreib4ptezglrciqaz6p62yifc5lqlmq5dd6ykxfbp4o5fdjmh3i6eva",
+        "rev": "3m2ipyqa7nj22"
+      },
+      "validationStatus": "valid"
+    },
+    "description": "interruption from your regular broadcast",
+    "publication": "at://did:plc:dg2qmmjic7mmecrbvpuhtvh6/pub.leaflet.publication/3lzi4oopbws2o",
+    "publishedAt": "2025-10-06T04:00:03.346Z"
+  }
+}

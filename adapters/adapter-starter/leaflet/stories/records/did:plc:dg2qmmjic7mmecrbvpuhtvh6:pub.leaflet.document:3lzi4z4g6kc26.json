@@ -1,0 +1,557 @@
+{
+  "uri": "at://did:plc:dg2qmmjic7mmecrbvpuhtvh6/pub.leaflet.document/3lzi4z4g6kc26",
+  "cid": "bafyreicbji7ahxgqhgsv52cuf3e3sqmsb2ucw6buoolrzo2j7637jg7avy",
+  "value": {
+    "$type": "pub.leaflet.document",
+    "pages": [
+      {
+        "$type": "pub.leaflet.pages.linearDocument",
+        "blocks": [
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Heylo!"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "My name is haetae (all lowercase). tae for short if you want to be friendly. I use he/him pronouns."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "I've been hard at work with the fanfic archive project on atproto. If you don't know what that is, here's what it is:"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "src": "https://github.com/haetae-bit/fanfic-atproto",
+              "$type": "pub.leaflet.blocks.website",
+              "title": "GitHub - haetae-bit/fanfic-atproto: experimenting with atproto and decentralized fanfics. tangled.sh mirror: https://tangled.sh/@haetae.tngl.sh/fanfic-atproto",
+              "description": "experimenting with atproto and decentralized fanfics. tangled.sh mirror: https://tangled.sh/@haetae.tngl.sh/fanfic-atproto - haetae-bit/fanfic-atproto",
+              "previewImage": {
+                "$type": "blob",
+                "ref": {
+                  "$link": "bafkreidvxizfpzv3vmbwvvbg5xzymijmhbibeypw5i64apg3zzp5tsoiiu"
+                },
+                "mimeType": "image/png",
+                "size": 25906
+              }
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Basically this came about as \"what if AO3 could be built on atproto\"?"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Never hacked on atproto, so I decided to jump in headfirst."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [
+                {
+                  "index": {
+                    "byteEnd": 71,
+                    "byteStart": 68
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#italic"
+                    }
+                  ]
+                }
+              ],
+              "plaintext": "Some of the hurdles I ran into was OAuth implementation and I could not wrap my head around it. I tried making it work with (at the time) experimental sessions API on Astro before but that didn't pan out, simply because I Sure As Fuck Didn't Know A Goddamn Thing(tm) and gave up."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [
+                {
+                  "index": {
+                    "byteEnd": 51,
+                    "byteStart": 30
+                  },
+                  "features": [
+                    {
+                      "uri": "https://github.com/FujoWebDev/fujocoded-plugins/tree/main/astro-authproto",
+                      "$type": "pub.leaflet.richtext.facet#link"
+                    }
+                  ]
+                }
+              ],
+              "plaintext": "Which is why I decided to try FujoCoded's authproto plugin this time around! (It's still got rough edges, but it's usable right now.)"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [
+                {
+                  "index": {
+                    "byteEnd": 124,
+                    "byteStart": 120
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#italic"
+                    }
+                  ]
+                }
+              ],
+              "plaintext": "This really enabled me to start the first real work for the fanfic archive. Adding and updating records to a user's PDS work (sort of)! But the problem is, as always, building a good user experience and user interface."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "What would a really good rich text editor look like? How can I land on an actually good editing experience but still stay focused on the vision?"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "There's already a plethora of options: Quill, Slate, TinyMCE, etc, but many times I've run into rough edges because rich text editors:"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.unorderedList",
+              "children": [
+                {
+                  "$type": "pub.leaflet.blocks.unorderedList#listItem",
+                  "content": {
+                    "$type": "pub.leaflet.blocks.text",
+                    "facets": [],
+                    "plaintext": "... are only designed for one UI framework in mind"
+                  },
+                  "children": [
+                    {
+                      "$type": "pub.leaflet.blocks.unorderedList#listItem",
+                      "content": {
+                        "$type": "pub.leaflet.blocks.text",
+                        "facets": [],
+                        "plaintext": "(often it's React or Vue, rarely found anything that worked in Svelte)"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "$type": "pub.leaflet.blocks.unorderedList#listItem",
+                  "content": {
+                    "$type": "pub.leaflet.blocks.text",
+                    "facets": [],
+                    "plaintext": "Documentation is nightmarish"
+                  },
+                  "children": []
+                },
+                {
+                  "$type": "pub.leaflet.blocks.unorderedList#listItem",
+                  "content": {
+                    "$type": "pub.leaflet.blocks.text",
+                    "facets": [],
+                    "plaintext": "Building on top of, or customizing the editor isn't intuitive, encouraged, or (more often the case) kind of verbose and feels bad"
+                  },
+                  "children": []
+                },
+                {
+                  "$type": "pub.leaflet.blocks.unorderedList#listItem",
+                  "content": {
+                    "$type": "pub.leaflet.blocks.text",
+                    "facets": [],
+                    "plaintext": "Have their own ancient language that I have to decipher, aka, opinionated JSON structures that declare the structure of a document"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [
+                {
+                  "index": {
+                    "byteEnd": 110,
+                    "byteStart": 107
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#italic"
+                    }
+                  ]
+                },
+                {
+                  "index": {
+                    "byteEnd": 189,
+                    "byteStart": 181
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#italic"
+                    }
+                  ]
+                },
+                {
+                  "index": {
+                    "byteEnd": 265,
+                    "byteStart": 262
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#italic"
+                    }
+                  ]
+                }
+              ],
+              "plaintext": "I'm lazy. I just want to shove the editor component in and hope it works, but that doesn't usually happen. And I need to figure out how to make the editing experience accessible to everyone--not just make it look good on mobile devices--but truly enable fans of all bodies to create and share freaky, weird, loving works of their own."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "That means the following is non-negotiable:"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.unorderedList",
+              "children": [
+                {
+                  "$type": "pub.leaflet.blocks.unorderedList#listItem",
+                  "content": {
+                    "$type": "pub.leaflet.blocks.text",
+                    "facets": [],
+                    "plaintext": "Keyboard navigation"
+                  },
+                  "children": []
+                },
+                {
+                  "$type": "pub.leaflet.blocks.unorderedList#listItem",
+                  "content": {
+                    "$type": "pub.leaflet.blocks.text",
+                    "facets": [],
+                    "plaintext": "Screen reader support"
+                  },
+                  "children": []
+                },
+                {
+                  "$type": "pub.leaflet.blocks.unorderedList#listItem",
+                  "content": {
+                    "$type": "pub.leaflet.blocks.text",
+                    "facets": [],
+                    "plaintext": "Large font size options"
+                  },
+                  "children": []
+                },
+                {
+                  "$type": "pub.leaflet.blocks.unorderedList#listItem",
+                  "content": {
+                    "$type": "pub.leaflet.blocks.text",
+                    "facets": [
+                      {
+                        "index": {
+                          "byteEnd": 19,
+                          "byteStart": 0
+                        },
+                        "features": [
+                          {
+                            "$type": "pub.leaflet.richtext.facet#bold"
+                          }
+                        ]
+                      }
+                    ],
+                    "plaintext": "Easy to use toolbar"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "There's probably way more stuff that I need to research, but even screen reader support should be a basic given but so often overlooked. This accessibility shit is hard!! It takes time to understand, and even then I feel like I've only really brushed the surface."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Anyway. I'm sure more people are excited about the backend stuff."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "For now, the flow of publishing a potential fan work goes like this:"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [
+                {
+                  "index": {
+                    "byteEnd": 6,
+                    "byteStart": 0
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#bold"
+                    }
+                  ]
+                },
+                {
+                  "index": {
+                    "byteEnd": 27,
+                    "byteStart": 10
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#bold"
+                    }
+                  ]
+                },
+                {
+                  "index": {
+                    "byteEnd": 62,
+                    "byteStart": 31
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#bold"
+                    }
+                  ]
+                }
+              ],
+              "plaintext": "Log in -> Create an account -> Write text in a special textbox"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "After writing text in a special textbox, you have two choices:"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.header",
+              "level": 3,
+              "facets": [],
+              "plaintext": "Option 1: DO NOT CHECK \"Publish to PDS\""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "It's a toggle you manually switch on before you hit \"Post\". Your fic gets stored in the archive's database that doesn't connect to the atproto. It's completely divorced from atproto entirely and lives on the archive. If the archive goes down, so too does your fic."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [
+                {
+                  "index": {
+                    "byteEnd": 43,
+                    "byteStart": 31
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#italic"
+                    }
+                  ]
+                },
+                {
+                  "index": {
+                    "byteEnd": 49,
+                    "byteStart": 43
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#bold"
+                    },
+                    {
+                      "$type": "pub.leaflet.richtext.facet#italic"
+                    }
+                  ]
+                }
+              ],
+              "plaintext": "Currently, as of this writing, all data is public on atproto. This option essentially sidesteps the privacy problem by refusing to write to atproto at all."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [
+                {
+                  "index": {
+                    "byteEnd": 73,
+                    "byteStart": 62
+                  },
+                  "features": [
+                    {
+                      "$type": "pub.leaflet.richtext.facet#italic"
+                    }
+                  ]
+                }
+              ],
+              "plaintext": "This is really the only way I know how to make sure your data technically stays private. I know there are people working to make private data happen on atproto, but I'm not nearly as smart to figure it out. (I barely figured out how to make new records!)"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.header",
+              "level": 3,
+              "facets": [],
+              "plaintext": "Option 2: Check \"Publish to PDS\""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "This means your fic is out in the world, ready to be consumed by others on atproto."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "More specifically, your fic is posted to your PDS. Other sites may try to \"hide\" or shadowban you, but other sites are free to display your fic as written without censoring you. At the end of the day, however, your fic still exists and can be viewed by anyone on atproto (as long as your PDS isn't owned by BlueSky, I suppose, but I digress)."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Your fic stays with you even if you decide the archive isn't right for it and you want to move to a different archive."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.header",
+              "level": 3,
+              "facets": [],
+              "plaintext": "Option 3: ???"
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "I'm considering stuff like having different types of chapters for fics. Maybe you could have a thread fic with all the chapters being BlueSky posts. Maybe you could even have a fic with Leaflet documents as chapters!?!?! 👀 The main problem is figuring out how to render rich text facets and that's, uh. Terrifying."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": ""
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "At the end of the day, I don't feel like these are the best solutions. This archive is still very much a WIP and the architecture is ??? strange. I consider myself somewhere on the scale of \"better than beginner, worse than a mid-level programmer\" since most of what I learned was self-taught and through sheer stubbornness. Hacking around on atproto has been exciting, frightening, but mostly a positive experience."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "It's been such an honor to get feedback, attention, and support on this project. Every day I fight back against the fear threatening to consume my life by building, hacking, drawing, writing, and aggressively yapping about things that bring me joy. I'm really happy to add this project to the mix."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Maybe there'll be another devlog? No promises though."
+            }
+          },
+          {
+            "$type": "pub.leaflet.pages.linearDocument#block",
+            "block": {
+              "$type": "pub.leaflet.blocks.text",
+              "facets": [],
+              "plaintext": "Okay yapping over. Find peace and love and joy wherever you can find them. Also fuck fascism!"
+            }
+          }
+        ]
+      }
+    ],
+    "title": "devlog 001",
+    "author": "did:plc:dg2qmmjic7mmecrbvpuhtvh6",
+    "postRef": {
+      "cid": "bafyreigdlppumcacapuchtf62l7zq3uai7ymtd3yk7rbhydhnfpapexxvq",
+      "uri": "at://did:plc:dg2qmmjic7mmecrbvpuhtvh6/app.bsky.feed.post/3lzi4zbzlr226",
+      "commit": {
+        "cid": "bafyreihq7jnozz2begiz3lcan5rb3zdu3ewpd7why226qv6h5bfuckkb6q",
+        "rev": "3lzi4zc4z5r2f"
+      },
+      "validationStatus": "valid"
+    },
+    "description": "for a yet unnamed fanfic archive project",
+    "publication": "at://did:plc:dg2qmmjic7mmecrbvpuhtvh6/pub.leaflet.publication/3lzi4oopbws2o",
+    "publishedAt": "2025-09-23T04:55:19.317Z"
+  }
+}
