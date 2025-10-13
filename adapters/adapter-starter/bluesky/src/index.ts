@@ -14,7 +14,6 @@ import {
 import type { Root } from "mdast";
 
 const defaultAgent = new Agent("https://public.api.bsky.app");
-// Bluesky happily accepts the public gateway, so we prime an agent up front.
 
 export interface MdastToBskyOptions {
   basePath?: string;
@@ -79,6 +78,8 @@ export const convert = (
   });
 };
 
+export { fromBlueskyPost } from "./from.js";
+export type { FromBlueskyOptions } from "./from.js";
 export type { ConverterPlugin, ConverterMarkPlugin, RemarkPlugin };
 export {
   DEFAULT_BLUESKY_PLUGINS,

@@ -12,8 +12,9 @@
     "@tiptap/core": "catalog:",
     "@tiptap/react": "catalog:",
     "@tiptap/starter-kit": "catalog:",
-    "storybook": "catalog:storybook",
+    "atproto-ui": "^0.3.1",
     "react": "catalog:react",
-    "react-dom": "catalog:react"
+    "react-dom": "catalog:react",
+    "storybook": "catalog:storybook"
   }
 }

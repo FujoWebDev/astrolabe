@@ -178,3 +178,6 @@ dist
 
 .vscode
 .turbo
+
+yalc.lock
+.yalc
