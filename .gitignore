@@ -181,3 +181,5 @@ dist
 
 yalc.lock
 .yalc
+
+storybook-static/
