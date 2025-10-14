@@ -85,7 +85,7 @@ export const Code: Story = {
 
 export const CodeBlock: Story = {
   args: {
-    initialText: "This is a <pre>code block</pre> statement.",
+    initialText: "<p>This is a</p><pre>code block</pre><p>statement.</p>",
   },
 };
 

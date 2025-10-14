@@ -269,25 +269,29 @@ describe("fromBlueskyPost()", () => {
     });
 
     expect(result.type).toBe("doc");
+    
+    // Should have multiple paragraphs (text contains \n\n)
+    expect(result.content.length).toBeGreaterThan(1);
     expect(result.content[0].type).toBe("paragraph");
-    
-    const content = result.content[0].content;
-    
-    // Should have text segments split by facets
-    expect(content.length).toBeGreaterThan(1);
-    
+
+    // Get all nodes from all paragraphs
+    const allNodes = result.content.flatMap((p: any) => p.content);
+
     // Find the mention segment
-    const mentionSegment = content.find(
-      (node: any) =>
-        node.marks?.some((mark: any) => mark.attrs?.href?.includes("did:plc:737bslnnf7vyaktosjlrshmd"))
+    const mentionSegment = allNodes.find((node: any) =>
+      node.marks?.some((mark: any) =>
+        mark.attrs?.href?.includes("did:plc:737bslnnf7vyaktosjlrshmd")
+      )
     );
     expect(mentionSegment).toBeDefined();
     expect(mentionSegment?.text).toBe("@fujocoded.bsky.social");
-    
+
     // Find link segments
-    const linkSegments = content.filter(
-      (node: any) =>
-        node.marks?.some((mark: any) => mark.type === "link" && mark.attrs?.href?.startsWith("http"))
+    const linkSegments = allNodes.filter((node: any) =>
+      node.marks?.some(
+        (mark: any) =>
+          mark.type === "link" && mark.attrs?.href?.startsWith("http")
+      )
     );
     expect(linkSegments.length).toBeGreaterThanOrEqual(2);
   });
@@ -362,6 +366,130 @@ describe("fromBlueskyPost()", () => {
     const result = fromBlueskyPost(record);
 
     const mentionNode = result.content[0].content[1];
-    expect(mentionNode.marks[0].attrs.href).toBe("#did:plc:example123");
+    expect(mentionNode.marks?.[0]?.attrs?.href).toBe("#did:plc:example123");
+  });
+
+  test("handles single newlines as hard breaks", () => {
+    const record = {
+      text: "Line one\nLine two\nLine three",
+      $type: "app.bsky.feed.post",
+    };
+
+    const result = fromBlueskyPost(record);
+
+    // Should have single paragraph
+    expect(result.content.length).toBe(1);
+    expect(result.content[0].type).toBe("paragraph");
+
+    const nodes = result.content[0].content;
+    // Should have: text, hardBreak, text, hardBreak, text
+    expect(nodes.length).toBe(5);
+    expect(nodes[0].type).toBe("text");
+    expect(nodes[0].text).toBe("Line one");
+    expect(nodes[1].type).toBe("hardBreak");
+    expect(nodes[2].type).toBe("text");
+    expect(nodes[2].text).toBe("Line two");
+    expect(nodes[3].type).toBe("hardBreak");
+    expect(nodes[4].type).toBe("text");
+    expect(nodes[4].text).toBe("Line three");
+  });
+
+  test("handles double newlines as paragraph breaks", () => {
+    const record = {
+      text: "Paragraph one\n\nParagraph two\n\nParagraph three",
+      $type: "app.bsky.feed.post",
+    };
+
+    const result = fromBlueskyPost(record);
+
+    // Should have three paragraphs
+    expect(result.content.length).toBe(3);
+    expect(result.content[0].type).toBe("paragraph");
+    expect(result.content[1].type).toBe("paragraph");
+    expect(result.content[2].type).toBe("paragraph");
+
+    expect(result.content[0].content[0].text).toBe("Paragraph one");
+    expect(result.content[1].content[0].text).toBe("Paragraph two");
+    expect(result.content[2].content[0].text).toBe("Paragraph three");
+  });
+
+  test("handles mixed single and double newlines", () => {
+    const record = {
+      text: "Line one\nLine two\n\nParagraph two line one\nParagraph two line two",
+      $type: "app.bsky.feed.post",
+    };
+
+    const result = fromBlueskyPost(record);
+
+    // Should have two paragraphs
+    expect(result.content.length).toBe(2);
+
+    // First paragraph should have hard break
+    const para1 = result.content[0].content;
+    expect(para1.length).toBe(3); // text, hardBreak, text
+    expect(para1[0].text).toBe("Line one");
+    expect(para1[1].type).toBe("hardBreak");
+    expect(para1[2].text).toBe("Line two");
+
+    // Second paragraph should have hard break
+    const para2 = result.content[1].content;
+    expect(para2.length).toBe(3); // text, hardBreak, text
+    expect(para2[0].text).toBe("Paragraph two line one");
+    expect(para2[1].type).toBe("hardBreak");
+    expect(para2[2].text).toBe("Paragraph two line two");
+  });
+
+  test("handles newlines with facets", () => {
+    const record = {
+      text: "Check out https://example.com for more\n\nAlso visit https://example.org",
+      $type: "app.bsky.feed.post",
+      facets: [
+        {
+          index: {
+            byteStart: 10,
+            byteEnd: 29,
+          },
+          features: [
+            {
+              $type: "app.bsky.richtext.facet#link",
+              uri: "https://example.com",
+            },
+          ],
+        },
+        {
+          index: {
+            byteStart: 51,
+            byteEnd: 70,
+          },
+          features: [
+            {
+              $type: "app.bsky.richtext.facet#link",
+              uri: "https://example.org",
+            },
+          ],
+        },
+      ],
+    };
+
+    const result = fromBlueskyPost(record);
+
+    // Should have two paragraphs
+    expect(result.content.length).toBe(2);
+
+    // First paragraph should have the first link
+    const para1Nodes = result.content[0].content;
+    const link1 = para1Nodes.find(
+      (n: any) => n.text === "https://example.com"
+    );
+    expect(link1).toBeDefined();
+    expect(link1?.marks?.[0]?.attrs?.href).toBe("https://example.com");
+
+    // Second paragraph should have the second link
+    const para2Nodes = result.content[1].content;
+    const link2 = para2Nodes.find(
+      (n: any) => n.text === "https://example.org"
+    );
+    expect(link2).toBeDefined();
+    expect(link2?.marks?.[0]?.attrs?.href).toBe("https://example.org");
   });
 });

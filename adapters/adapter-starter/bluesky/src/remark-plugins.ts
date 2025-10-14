@@ -109,10 +109,24 @@ export const remarkMonospaceCode: RemarkPlugin = (tree: Root) => {
 
       const escaped = toMonospaceEscaped(node.value);
 
-      (parent as Parent).children[index] = {
-        type: "text",
-        value: escaped,
-      } as Text;
+      // Code blocks (block-level) need to be wrapped in a paragraph
+      if (node.type === "code") {
+        (parent as Parent).children[index] = {
+          type: "paragraph",
+          children: [
+            {
+              type: "text",
+              value: escaped,
+            } as Text,
+          ],
+        };
+      } else {
+        // Inline code can be replaced directly
+        (parent as Parent).children[index] = {
+          type: "text",
+          value: escaped,
+        } as Text;
+      }
     }
   );
 };
