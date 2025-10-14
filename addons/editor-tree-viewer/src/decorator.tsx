@@ -99,7 +99,8 @@ export const withEditorTreeViewer = makeDecorator({
     return (
       <>
         <EditorContext.Provider value={{ editor }}>
-          {getStory(context) as React.ReactNode}
+          {context.parameters.storyPlacement !== "after" &&
+            (getStory(context) as React.ReactNode)}
           {/* {!!editor?.isEditable && (
             <BubbleMenu>
               <button>Add Link</button>
@@ -110,6 +111,8 @@ export const withEditorTreeViewer = makeDecorator({
             editor={editor}
             role="presentation"
           />
+          {context.parameters.storyPlacement === "after" &&
+            (getStory(context) as React.ReactNode)}
         </EditorContext.Provider>
       </>
     );

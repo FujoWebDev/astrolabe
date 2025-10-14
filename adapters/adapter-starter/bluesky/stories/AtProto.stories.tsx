@@ -1,12 +1,18 @@
 import { convert as toBskyRichtText } from "../src/index.js";
 import { type DocumentType } from "@tiptap/core";
-import { convert as toMdast } from "@fujocoded/astdapters-mdast-starter";
+import {
+  convert,
+  convert as toMdast,
+} from "@fujocoded/astdapters-mdast-starter";
 
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   withEditorTreeViewer,
   type EditorTreeViewConfig,
 } from "@fujocoded/astrolabe-editor-tree-viewer/decorator";
+import { useCurrentEditor } from "@tiptap/react";
+import React from "react";
+import { BlueskyPost } from "./components/BlueskyPost.js";
 
 const editorTreeViews: EditorTreeViewConfig[] = [
   {
@@ -49,9 +55,55 @@ const meta = {
     editorTreeViewer: {
       editorTreeViews,
     },
+    storyPlacement: "after",
   },
   decorators: [withEditorTreeViewer],
-  component: () => null,
+  render: () => {
+    const { editor } = useCurrentEditor();
+    const [editedRecord, setEditedRecord] = React.useState<
+      Record<string, unknown>
+    >({
+      value: {
+        text: "Type to see the Bluesky Rich Text",
+        $type: "app.bsky.feed.post",
+        createdAt: "2025-10-10T05:03:10.567Z",
+      },
+    });
+    React.useEffect(() => {
+      if (editor) {
+        const updateFromEditor = async () => {
+          const json = editor.getJSON();
+          if (json) {
+            const richText = await toBskyRichtText(
+              structuredClone(json) as DocumentType
+            );
+            // console.dir(richText);
+            setEditedRecord({
+              value: {
+                ...editedRecord.value,
+                text: richText.text.text,
+                facets: richText.text.facets,
+              },
+            });
+          }
+        };
+        editor.on("create", updateFromEditor);
+        editor.on("update", updateFromEditor);
+      }
+      return () => {
+        editor?.off("create");
+        editor?.off("update");
+      };
+    }, [editor]);
+
+    return (
+      <>
+        {editor && (
+          <BlueskyPost key={editedRecord.value?.text} record={editedRecord} />
+        )}
+      </>
+    );
+  },
 } satisfies Meta<{ initialText: string }>;
 
 export default meta;
@@ -85,13 +137,13 @@ export const Code: Story = {
 
 export const CodeBlock: Story = {
   args: {
-    initialText: "This is a <pre>code block</pre> statement.",
+    initialText: "<p>This is a</p><pre>code block</pre><p>statement.</p>",
   },
 };
 
 export const HeadingsAndLists: Story = {
   args: {
-    initialText: `<h1>My 5 Blorbos!</h1>
+    initialText: `<h1>My top 5 Blorbos!</h1>
 <h2>This list <strong>is</strong> subject to change</h2>
 <p>Top 3 (can't decide order):</p>
 <ul>

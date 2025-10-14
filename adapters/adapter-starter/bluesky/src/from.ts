@@ -1,17 +1,7 @@
+import { RichText } from "@atproto/api";
+
 export interface FromBlueskyOptions {
   resolveMentionUrl?: (did: string) => string;
-}
-
-interface Facet {
-  index: {
-    byteStart: number;
-    byteEnd: number;
-  };
-  features: Array<{
-    $type: string;
-    did?: string;
-    uri?: string;
-  }>;
 }
 
 interface TextNode {
@@ -45,21 +35,106 @@ export const fromBlueskyPost = (
     throw new Error("Invalid record: missing or invalid text field");
   }
 
-  const facets =
-    "facets" in recordValue
-      ? (recordValue.facets as Facet[] | undefined)
-      : undefined;
+  // Use RichText to handle facets properly
+  const richText = new RichText({
+    text: recordValue.text,
+    facets: "facets" in recordValue ? (recordValue.facets as any) : undefined,
+  });
+
+  // Convert entire text to nodes with facets and breaks, then split into paragraphs
+  const content = textToParagraphs(richText, options);
 
   return {
     type: "doc",
     attrs: {},
-    content: [
-      {
-        type: "paragraph",
-        content: serializeFacets(recordValue.text, facets, options),
-      },
-    ],
+    content,
   };
+};
+
+/**
+ * Converts Bluesky RichText into ProseMirror paragraph nodes.
+ * Handles double newlines as paragraph breaks and single newlines as hard breaks.
+ * Uses RichText.segments() to properly handle facets with multi-byte characters.
+ */
+const textToParagraphs = (
+  richText: RichText,
+  options: FromBlueskyOptions = {}
+) => {
+  const paragraphs: Array<{ type: string; content: (TextNode | { type: "hardBreak" })[] }> = [];
+  let currentParagraph: (TextNode | { type: "hardBreak" })[] = [];
+  
+  // Process each segment from RichText
+  for (const segment of richText.segments()) {
+    const segmentText = segment.text;
+    
+    // Build marks for this segment
+    const marks: TextNode["marks"] = [];
+    
+    if (segment.isLink()) {
+      marks.push({
+        type: "link",
+        attrs: {
+          href: segment.link?.uri ?? "",
+        },
+      });
+    } else if (segment.isMention()) {
+      marks.push({
+        type: "link",
+        attrs: {
+          href: options.resolveMentionUrl?.(segment.mention?.did ?? "") ?? `#${segment.mention?.did}`,
+        },
+      });
+    }
+    
+    // Split segment text on newlines
+    const parts = segmentText.split(/(\n+)/);
+    
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      
+      if (part.length === 0) continue;
+      
+      // Check if this part is newlines
+      if (/^\n+$/.test(part)) {
+        // Double or more newlines = paragraph break
+        if (part.length >= 2) {
+          // End current paragraph
+          if (currentParagraph.length > 0) {
+            paragraphs.push({
+              type: "paragraph",
+              content: currentParagraph,
+            });
+            currentParagraph = [];
+          }
+        } else {
+          // Single newline = hard break
+          currentParagraph.push({ type: "hardBreak" });
+        }
+      } else {
+        // Regular text
+        currentParagraph.push({
+          type: "text",
+          text: part,
+          ...(marks.length > 0 ? { marks } : {}),
+        });
+      }
+    }
+  }
+  
+  // Add the last paragraph if it has content
+  if (currentParagraph.length > 0) {
+    paragraphs.push({
+      type: "paragraph",
+      content: currentParagraph,
+    });
+  }
+  
+  // Return at least one empty paragraph if no content
+  if (paragraphs.length === 0) {
+    return [{ type: "paragraph", content: [] }];
+  }
+  
+  return paragraphs;
 };
 
 /**
