@@ -7,7 +7,7 @@
     "dev": "turbo run dev",
     "test": "turbo run test",
     "storybook": "turbo run storybook --filter=astrolabe-storybook",
-    "build-storybook": "turbo run build-storybook --filter=astrolabe-storybook",
+    "build-storybook": "turbo run build && turbo run build-storybook --filter=astrolabe-storybook",
     "yalc:publish": "pnpm -r exec yalc publish"
   },
   "browserslist": [
