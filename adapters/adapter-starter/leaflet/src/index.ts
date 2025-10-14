@@ -1,28 +1,38 @@
-import { RichText, Agent } from "@atproto/api";
 import {
   convert as toMdast,
   type ConverterMarkPlugin,
   type ConverterPlugin,
 } from "../../mdast/src/index.js";
 import { type DocumentType } from "@tiptap/core";
-import { mdastToText } from "./serializer.js";
+import { mdastToLeafletRichText } from "./to-rich-text.js";
 import {
   DEFAULT_LEAFLET_PLUGINS,
-  remarkBracketHeading,
   type RemarkPlugin,
 } from "./remark-plugins.js";
 import type { Root } from "mdast";
 
 export interface MdastToLeafletOptions {
-  basePath?: string;
-  bracketFirstHeading?: boolean;
-  mergeParagraphWithHeading?: boolean;
-  agent?: Agent;
   mdastPlugins?: RemarkPlugin[];
 }
 
+interface LeafletFacet {
+  index: {
+    byteStart: number;
+    byteEnd: number;
+  };
+  features: Array<{
+    $type: string;
+    uri?: string;
+  }>;
+}
+
+interface LeafletRichText {
+  text: string;
+  facets: LeafletFacet[];
+}
+
 interface LeafletConversionResult {
-  text: RichText;
+  text: LeafletRichText;
   images: never[];
 }
 
@@ -38,19 +48,9 @@ export const mdastToLeaflet = async (
     plugin(transformedMdast, options);
   }
 
-  if (options?.bracketFirstHeading) {
-    remarkBracketHeading({
-      mergeParagraph: options?.mergeParagraphWithHeading ?? true,
-    })(transformedMdast);
-  }
+  const richText = mdastToLeafletRichText(transformedMdast);
 
-  const plainText = mdastToText(transformedMdast);
-
-  const text = new RichText({
-    text: plainText,
-  });
-
-  return { text, images: [] };
+  return { text: richText, images: [] };
 };
 
 export interface LeafletConvertOptions {
@@ -70,17 +70,12 @@ export const convert = (
 
   return mdastToLeaflet(mdast, {
     ...serializerOptions,
-    bracketFirstHeading: serializerOptions.bracketFirstHeading ?? true,
   });
 };
 
 export { fromLeafletPost } from "./from.js";
 export type { FromLeafletOptions } from "./from.js";
 export type { ConverterPlugin, ConverterMarkPlugin, RemarkPlugin };
-export {
-  DEFAULT_LEAFLET_PLUGINS,
-  remarkExpandLinks as remarkBlueskyExpandLinks,
-  remarkMonospaceCode as remarkBlueskyMonospaceCode,
-  remarkBracketHeading as remarkBlueskyBracketHeading,
-} from "./remark-plugins.js";
+export { DEFAULT_LEAFLET_PLUGINS } from "./remark-plugins.js";
 export { mdastToText } from "./serializer.js";
+export { mdastToLeafletRichText } from "./to-rich-text.js";

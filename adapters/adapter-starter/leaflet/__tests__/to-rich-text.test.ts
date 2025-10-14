@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 
 import {
   convert,
-  type BlueskyConvertOptions,
+  type LeafletConvertOptions,
   type ConverterPlugin,
   type ConverterMarkPlugin,
 } from "../src/index.js";
@@ -29,7 +29,7 @@ const validate = (doc: ProseMirrorDocument) => {
   return doc;
 };
 
-type ConvertOptions = BlueskyConvertOptions & { validateDocument?: boolean };
+type ConvertOptions = LeafletConvertOptions & { validateDocument?: boolean };
 
 const convertDocument = async (
   doc: ProseMirrorDocument,
@@ -45,7 +45,7 @@ const convertDocument = async (
   });
 };
 
-describe("bluesky adapter convert()", () => {
+describe("leaflet adapter convert()", () => {
   test("converts a simple paragraph into text", async () => {
     const input: ProseMirrorDocument = {
       type: "doc",
@@ -65,30 +65,7 @@ describe("bluesky adapter convert()", () => {
     expect(images).toEqual([]);
   });
 
-  test("brackets the first level-one heading", async () => {
-    const input: ProseMirrorDocument = {
-      type: "doc",
-      attrs: {},
-      content: [
-        {
-          type: "heading",
-          attrs: { level: 1 },
-          content: [{ type: "text", text: "My 5 Blorbos!" }],
-        },
-        {
-          type: "paragraph",
-          attrs: {},
-          content: [{ type: "text", text: "Top 3 (can't decide order):" }],
-        },
-      ],
-    };
-
-    const { text } = await convertDocument(input);
-
-    expect(text.text).toBe("[My 5 Blorbos!] Top 3 (can't decide order):");
-  });
-
-  test("renders links as text with URL", async () => {
+  test("converts bold text to facets", async () => {
     const input: ProseMirrorDocument = {
       type: "doc",
       attrs: {},
@@ -97,16 +74,91 @@ describe("bluesky adapter convert()", () => {
           type: "paragraph",
           attrs: {},
           content: [
+            { type: "text", text: "This is " },
             {
               type: "text",
-              text: "FujoCoded",
+              text: "bold",
+              marks: [{ type: "bold" }],
+            },
+            { type: "text", text: " text" },
+          ],
+        },
+      ],
+    };
+
+    const { text } = await convertDocument(input);
+
+    expect(text.text).toBe("This is bold text");
+    expect(text.facets).toHaveLength(1);
+    expect(text.facets?.[0]).toBeDefined();
+    expect(text.facets?.[0]).toMatchObject({
+      index: {
+        byteStart: 8,
+        byteEnd: 12,
+      },
+      features: [
+        {
+          $type: "pub.leaflet.richtext.facet#bold",
+        },
+      ],
+    });
+  });
+
+  test("converts italic text to facets", async () => {
+    const input: ProseMirrorDocument = {
+      type: "doc",
+      attrs: {},
+      content: [
+        {
+          type: "paragraph",
+          attrs: {},
+          content: [
+            { type: "text", text: "This is " },
+            {
+              type: "text",
+              text: "italic",
+              marks: [{ type: "italic" }],
+            },
+            { type: "text", text: " text" },
+          ],
+        },
+      ],
+    };
+
+    const { text } = await convertDocument(input);
+
+    expect(text.text).toBe("This is italic text");
+    expect(text.facets).toHaveLength(1);
+    expect(text.facets?.[0]).toMatchObject({
+      index: {
+        byteStart: 8,
+        byteEnd: 14,
+      },
+      features: [
+        {
+          $type: "pub.leaflet.richtext.facet#italic",
+        },
+      ],
+    });
+  });
+
+  test("converts links to facets", async () => {
+    const input: ProseMirrorDocument = {
+      type: "doc",
+      attrs: {},
+      content: [
+        {
+          type: "paragraph",
+          attrs: {},
+          content: [
+            { type: "text", text: "Check out " },
+            {
+              type: "text",
+              text: "this link",
               marks: [
                 {
                   type: "link",
-                  attrs: {
-                    href: "https://fujocoded.com",
-                    title: "FujoCoded LLC",
-                  },
+                  attrs: { href: "https://example.com" },
                 },
               ],
             },
@@ -117,10 +169,23 @@ describe("bluesky adapter convert()", () => {
 
     const { text } = await convertDocument(input);
 
-    expect(text.text).toBe("FujoCoded (https://fujocoded.com)");
+    expect(text.text).toBe("Check out this link");
+    expect(text.facets).toHaveLength(1);
+    expect(text.facets?.[0]).toMatchObject({
+      index: {
+        byteStart: 10,
+        byteEnd: 19,
+      },
+      features: [
+        {
+          $type: "pub.leaflet.richtext.facet#link",
+          uri: "https://example.com",
+        },
+      ],
+    });
   });
 
-  test("converts inline code using monospace escape", async () => {
+  test("handles nested marks (bold + italic)", async () => {
     const input: ProseMirrorDocument = {
       type: "doc",
       attrs: {},
@@ -129,10 +194,11 @@ describe("bluesky adapter convert()", () => {
           type: "paragraph",
           attrs: {},
           content: [
+            { type: "text", text: "This is " },
             {
               type: "text",
-              text: "sum(a,b)",
-              marks: [{ type: "code" }],
+              text: "bold and italic",
+              marks: [{ type: "bold" }, { type: "italic" }],
             },
           ],
         },
@@ -141,10 +207,52 @@ describe("bluesky adapter convert()", () => {
 
     const { text } = await convertDocument(input);
 
-    expect(text.text).toBe("𝚜𝚞𝚖(𝚊,𝚋)");
+    expect(text.text).toBe("This is bold and italic");
+    expect(text.facets).toHaveLength(1);
+    expect(text.facets?.[0].features).toHaveLength(2);
+    expect(text.facets?.[0].features).toEqual(
+      expect.arrayContaining([
+        { $type: "pub.leaflet.richtext.facet#bold" },
+        { $type: "pub.leaflet.richtext.facet#italic" },
+      ])
+    );
   });
 
-  test("formats unordered lists with prefixes", async () => {
+  test("converts inline code to code facets", async () => {
+    const input: ProseMirrorDocument = {
+      type: "doc",
+      attrs: {},
+      content: [
+        {
+          type: "paragraph",
+          attrs: {},
+          content: [
+            { type: "text", text: "Use " },
+            {
+              type: "text",
+              text: "console.log()",
+              marks: [{ type: "code" }],
+            },
+            { type: "text", text: " for debugging" },
+          ],
+        },
+      ],
+    };
+
+    const { text } = await convertDocument(input);
+
+    expect(text.text).toBe("Use console.log() for debugging");
+    expect(text.facets).toHaveLength(1);
+    expect(text.facets?.[0]).toMatchObject({
+      features: [
+        {
+          $type: "pub.leaflet.richtext.facet#code",
+        },
+      ],
+    });
+  });
+
+  test("formats unordered lists with facets preserved", async () => {
     const input: ProseMirrorDocument = {
       type: "doc",
       attrs: {},
@@ -205,9 +313,17 @@ describe("bluesky adapter convert()", () => {
     expect(text.text).toBe(
       '- The littlest meow meow\n- Incredibly problematic villain\n- Puts the "old man" in old man yaoi'
     );
+
+    // Check that italic facet is preserved in list
+    const italicFacet = text.facets?.find((f) =>
+      f.features.some(
+        (feat) => feat.$type === "pub.leaflet.richtext.facet#italic"
+      )
+    );
+    expect(italicFacet).toBeDefined();
   });
 
-  test("drops unsupported html nodes by default", async () => {
+  test("drops unsupported html nodes (underline) by default", async () => {
     const input: ProseMirrorDocument = {
       type: "doc",
       attrs: {},
@@ -229,6 +345,14 @@ describe("bluesky adapter convert()", () => {
     const { text } = await convertDocument(input);
 
     expect(text.text).toBe("underlined");
+
+    // Underline should be converted to facet
+    const underlineFacet = text.facets?.find((f) =>
+      f.features.some(
+        (feat) => feat.$type === "pub.leaflet.richtext.facet#underline"
+      )
+    );
+    expect(underlineFacet).toBeDefined();
   });
 
   test("supports custom block node via plugin", async () => {
@@ -417,7 +541,7 @@ describe("bluesky adapter convert()", () => {
     const { text } = await convertDocument(input);
 
     expect(text.text).toBe(
-      '[My 5 Blorbos!]\n\nThis list is subject to change\n\nTop 3 (can\'t decide order):\n\n- The littlest meow meow\n- Incredibly problematic villain\n- Puts the "old man" in old man yaoi\n\nOthers:\n\n- Character who deserved better\n- Character who definitely deserved better'
+      'My 5 Blorbos!\n\nThis list is subject to change\n\nTop 3 (can\'t decide order):\n\n- The littlest meow meow\n- Incredibly problematic villain\n- Puts the "old man" in old man yaoi\n\nOthers:\n\n- Character who deserved better\n- Character who definitely deserved better'
     );
   });
 
