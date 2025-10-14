@@ -1,6 +1,7 @@
 {
   "name": "@fujocoded/astrolabe-inline-spoiler",
   "version": "0.0.1",
+  "main": "./dist/Mark.js",
   "module": "./dist/Mark.js",
   "type": "module",
   "exports": {

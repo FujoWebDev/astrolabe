@@ -1,6 +1,7 @@
 {
   "name": "@fujocoded/astdapters-leaflet-starter",
   "version": "0.0.1",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "type": "module",
   "scripts": {
