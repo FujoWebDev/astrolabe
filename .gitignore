@@ -183,3 +183,5 @@ yalc.lock
 .yalc
 
 storybook-static/
+
+.yalc-publish-all.js

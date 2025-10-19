@@ -8,7 +8,8 @@
     "test": "turbo run test",
     "storybook": "turbo run storybook --filter=astrolabe-storybook",
     "build-storybook": "turbo run build && turbo run build-storybook --filter=astrolabe-storybook",
-    "yalc:publish": "pnpm -r exec yalc publish"
+    "yalc:publish": "node .yalc-publish-all.js",
+    "yalc:push": "node .yalc-publish-all.js --push"
   },
   "browserslist": [
     "> 1%",
@@ -26,7 +27,8 @@
     "tsdown": "^0.15.6",
     "turbo": "^2.5.8",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "yalc": "1.0.0-pre.53"
   },
   "packageManager": "pnpm@10.0.0",
   "pnpm": {
