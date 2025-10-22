@@ -40,6 +40,22 @@ It consists of two main parts:
 > lexicons. With time, I'll be porting internal adapters I developed for APIs
 > like Tumblr, Twitter, Mastodon etc.
 
+## Check it in Action
+
+Seeing is believing! The best way to see what makes Astrolabe cool right now, is
+to see it at work on Storybook. In particular, check out:
+
+- [Link and
+  underline](https://astrolabe-editor.netlify.app/?path=/story/adapters-starter-bluesky--link-and-underline)
+  translation to Bluesky post
+- [Importing a Leaflet
+  record](https://astrolabe-editor.netlify.app/?path=/story/adapters-starter-leaflet-from--base-lexicon) and editing on the fly
+
+Make sure to open the "Editor Tree Viewer" panel to see what's happening under
+the hood!
+
+![Storybook preview for link and underline](./storybook.png)
+
 ## Why Astrolabe exists
 
 ### A Modern Text Editor
