@@ -10,7 +10,6 @@ import StarterKit from "@tiptap/starter-kit";
 import avatarClose from "./avatar-face.png";
 import Logo from "./Logo.js";
 
-console.log(avatarClose);
 export const BlueskyPost = ({
 	record,
 	additionalExtensions = [],

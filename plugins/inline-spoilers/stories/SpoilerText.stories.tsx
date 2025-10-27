@@ -1,40 +1,29 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { EditorProvider, type EditorProviderProps } from "@tiptap/react";
-import { BubbleMenu } from "@tiptap/react/menus";
-import StarterKit from "@tiptap/starter-kit";
+import { type EditorProviderProps } from "@tiptap/react";
 import { Button as InlineSpoilersButton } from "../src/button.tsx";
 import { Plugin as InlineSpoilersPlugin } from "../src/Mark.js";
 import "../src/inline-spoilers.css";
+import withEditorTreeViewer from "@fujocoded/astrolabe-editor-tree-viewer/decorator";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
 	title: "Astrolabe/SpoilerText",
 	//   component: Button,
 	parameters: {
-		// Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-		layout: "centered",
+		layout: "padded",
+		buttons: [InlineSpoilersButton],
+		storyPlacement: "after",
+		editorTreeViewer: {
+			editorTreeViews: [],
+		},
 	},
-	render: (args) => {
-		return (
-			<div style={{ backgroundColor: "red" }}>
-				<EditorProvider
-					extensions={[
-						StarterKit.configure({
-							orderedList: false,
-						}),
-						InlineSpoilersPlugin,
-					]}
-					content={`<p>${args.initialText}</p>`}
-					editable={args.editable ?? true}
-				>
-					<BubbleMenu editor={undefined}>
-						<InlineSpoilersButton />
-					</BubbleMenu>
-				</EditorProvider>
-			</div>
-		);
+	args: {
+		// @ts-expect-error - need to add this to the global args
+		plugins: [InlineSpoilersPlugin],
 	},
+	decorators: [withEditorTreeViewer],
+	component: () => null,
 } satisfies Meta<EditorProviderProps & { initialText: string }>;
 
 export default meta;

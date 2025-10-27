@@ -9,4 +9,20 @@ export default defineConfig([
     unbundle: true,
     external: ["@atproto/api", "@playwright/test"],
   },
+  {
+    name: "helpers",
+    entry: ["./helpers/useEditorToRecord.tsx"],
+		outDir: "dist/helpers",
+    dts: true,
+    clean: true,
+    unbundle: true,
+		external: [
+			"@atproto/api",
+			"@tiptap/react",
+			"@tiptap/core",
+			"react",
+			"react-dom",
+			"astrolabe-test-utils",
+		],
+  },
 ]);

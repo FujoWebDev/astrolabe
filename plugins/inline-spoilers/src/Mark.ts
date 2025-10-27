@@ -6,6 +6,7 @@ import {
 } from "@tiptap/core";
 import { PluginKey } from "@tiptap/pm/state";
 import { toggleAttributeOnClick } from "./utils";
+import "./inline-spoilers.css";
 
 export interface Options {
 	visible?: boolean;
