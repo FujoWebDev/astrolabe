@@ -8,4 +8,14 @@ export default defineConfig([
     clean: true,
     unbundle: true,
   },
+
+  {
+    name: "helpers",
+    entry: ["./helpers/useEditorToMdast.tsx"],
+    outDir: "dist/helpers",
+    dts: true,
+    clean: true,
+    unbundle: true,
+    external: ["@tiptap/react", "@tiptap/core", "react", "react-dom"],
+  },
 ]);
