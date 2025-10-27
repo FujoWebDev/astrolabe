@@ -18,10 +18,6 @@ export const toMdastNode: ConverterMarkPlugin = {
 	// See: https://github.com/hlysine/remark-inline-spoiler
 	handlesMark: (mark: ProseMirrorMark): boolean =>
 		mark.type === "inline-spoilers",
-	// convert: (_mark, node, currentNode) => ({
-	//   type: "spoilers",
-	//   children: currentNode,
-	// }),
 	convert: (_mark, _node, currentNode) => ({
 		type: "spoilers",
 		data: {

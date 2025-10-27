@@ -1,36 +1,52 @@
 {
-  "name": "@fujocoded/astrolabe-inline-spoiler",
-  "version": "0.0.1",
-  "main": "./dist/Mark.js",
-  "module": "./dist/Mark.js",
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/Mark.d.ts",
-      "default": "./dist/Mark.js"
-    },
-    "./css": {
-      "default": "./dist/inline-spoiler.css"
-    }
-  },
-  "files": [
-    "dist",
-    "package.json",
-    "README.md",
-    "LICENSE"
-  ],
-  "scripts": {
-    "build": "tsdown",
-    "dev": "tsdown --watch"
-  },
-  "devDependencies": {
-    "@tiptap/core": "catalog:",
-    "@tiptap/pm": "catalog:",
-    "@tiptap/react": "catalog:",
-    "react": "catalog:react",
-    "react-dom": "catalog:react"
-  },
-  "peerDependencies": {
-    "@tiptap/starter-kit": "catalog:"
-  }
+	"name": "@fujocoded/astrolabe-inline-spoiler",
+	"version": "0.0.1",
+	"main": "./dist/Mark.js",
+	"module": "./dist/Mark.js",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/Mark.d.ts",
+			"default": "./dist/Mark.js"
+		},
+		"./css": {
+			"default": "./dist/inline-spoiler.css"
+		},
+		"./remark-node": {
+			"default": "./dist/remark-spoilers.js"
+		},
+		"./adapter": {
+			"default": "./dist/adapter-spoilers.js"
+		}
+	},
+	"files": [
+		"dist",
+		"package.json",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsdown --watch --ignore-watch .turbo --ignore-watch dist"
+	},
+	"devDependencies": {
+		"@fujocoded/astdapters-bluesky-starter": "workspace:*",
+		"@fujocoded/astdapters-leaflet-starter": "workspace:*",
+		"@fujocoded/astdapters-mdast-starter": "workspace:*",
+		"@fujocoded/astrolabe-editor-tree-viewer": "workspace:*",
+		"astrolabe-test-utils": "workspace:*",
+		"@tiptap/core": "catalog:",
+		"@tiptap/pm": "catalog:",
+		"@tiptap/react": "catalog:",
+		"@types/mdast": "catalog:mdast",
+		"mdast-util-inline-spoiler": "^1.0.0",
+		"mdast-util-to-markdown": "^2.1.2",
+		"micromark-util-classify-character": "^2.0.1",
+		"react": "catalog:react",
+		"react-dom": "catalog:react",
+		"remark-inline-spoiler": "^1.0.1"
+	},
+	"peerDependencies": {
+		"@tiptap/starter-kit": "catalog:"
+	}
 }
