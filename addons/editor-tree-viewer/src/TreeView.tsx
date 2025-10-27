@@ -83,6 +83,22 @@ export const TreeView = (view: EditorTreeView) => {
     case "error": {
       return <div style={{ color: "red" }}>{view.content}</div>;
     }
+    case "loading": {
+      return (
+        <div
+          style={{
+            color: "#666",
+            fontStyle: "italic",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+          }}
+        >
+          {view.content ?? "Loading…"}
+        </div>
+      );
+    }
     default: {
       // @ts-expect-error It's an error because it should never happen
       throw new Error(`Unknown view: ${view.type} (${view.id})`);
