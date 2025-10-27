@@ -3,7 +3,7 @@
   padding: 10px;
   border-radius: 5px;
   margin: 10px;
-  min-height: 300px;
+  min-height: 150px;
 
   &[contenteditable="true"] {
     border: 1px solid #aaa;

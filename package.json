@@ -4,10 +4,10 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --filter=!@fujocoded/astrolabe-storybook",
     "test": "turbo run test",
-    "storybook": "turbo run storybook --filter=astrolabe-storybook",
-    "build-storybook": "turbo run build && turbo run build-storybook --filter=astrolabe-storybook",
+    "storybook": "turbo run build && turbo run storybook --filter=@fujocoded/astrolabe-storybook",
+    "build-storybook": "turbo run build && turbo run build-storybook --filter=@fujocoded/astrolabe-storybook",
     "yalc:publish": "node .yalc-publish-all.js",
     "yalc:push": "node .yalc-publish-all.js --push"
   },
