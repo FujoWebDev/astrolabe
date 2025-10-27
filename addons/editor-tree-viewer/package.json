@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "dev": "tsdown --watch"
+    "dev": "tsdown --watch --ignore-watch .turbo --ignore-watch dist"
   },
   "author": "FujoCoded LLC",
   "license": "MIT",

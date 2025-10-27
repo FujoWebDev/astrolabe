@@ -36,6 +36,10 @@ export type EditorTreeView =
       };
     }
   | {
+      type: "loading";
+      content?: string;
+    }
+  | {
       type: "error";
       content: string;
     };
