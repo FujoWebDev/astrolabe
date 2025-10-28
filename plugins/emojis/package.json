@@ -28,15 +28,18 @@
 		"@fujocoded/astdapters-leaflet-starter": "workspace:*",
 		"@fujocoded/astdapters-mdast-starter": "workspace:*",
 		"@fujocoded/astrolabe-editor-tree-viewer": "workspace:*",
-		"astrolabe-test-utils": "workspace:*",
 		"@tiptap/core": "catalog:",
 		"@tiptap/pm": "catalog:",
 		"@tiptap/react": "catalog:",
 		"@types/mdast": "catalog:mdast",
+		"astrolabe-test-utils": "workspace:*",
 		"react": "catalog:react",
 		"react-dom": "catalog:react"
 	},
 	"peerDependencies": {
 		"@tiptap/starter-kit": "catalog:"
+	},
+	"dependencies": {
+		"@tiptap/extension-emoji": "^3.8.0"
 	}
 }
