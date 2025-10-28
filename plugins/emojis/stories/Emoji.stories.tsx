@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { type EditorProviderProps } from "@tiptap/react";
 import { Plugin as EmojiPlugin } from "../src/Node.js";
-import "../src/emojis.css";
 import withEditorTreeViewer from "@fujocoded/astrolabe-editor-tree-viewer/decorator";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
@@ -18,7 +17,17 @@ const meta = {
 	},
 	args: {
 		// @ts-expect-error - need to add this to the global args
-		plugins: [EmojiPlugin],
+		plugins: [
+			EmojiPlugin.configure({
+				sets: ["at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og"]
+			})
+			// Load preferences from com.fujocoded.astrolabe.settings
+			// Might include settings for favorite emoji sets, animated gifs, memes, 
+			// or extra plugins to load if we're ever that fancy
+			// Astrolabe.configure({
+			// 	did: "at://did:plc:r2vpg2iszskbkegoldmqa322"
+			// })
+		],
 	},
 	decorators: [withEditorTreeViewer],
 	component: () => null,
@@ -30,14 +39,14 @@ type Story = StoryObj<typeof meta>;
 export const Editable: Story = {
 	args: {
 		initialText:
-			"Hello!",
+			`<p><span data-type="emoji" data-name="bobatan-og-bobadab" data-set="at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og" data-fallback="🦝🆒"></span></p><p>Want yours? Type :bobatan-og-bobadab: and see the emoji appear. Find (<a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the emojiset ATproto record</a> on pdsls.dev!</p>`,
 	},
 };
 
 export const ViewOnly: Story = {
 	args: {
 		initialText:
-			"Hello",
+			`Check out <a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the Record for this emoji</a> on pdsls.dev! <span data-type="emoji" data-name="bobatan-og-bobadab" data-set="at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og" ></span>!`,
 		editable: false,
 	},
 };

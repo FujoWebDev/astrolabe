@@ -1,7 +1,9 @@
-.astrolabe-editor [contenteditable="true"] span[data-type="inline-spoilers"] {
-  background-color: lightgray;
-  border: 1px dashed black;
+.astrolabe-editor span[data-type="emoji"] img {
+  height: 25px;
+  width: auto;
+  display: inline-block;
 }
+
 
 .astrolabe-editor [contenteditable="false"]
   span[data-type="inline-spoilers"][data-visible="false"] {
