@@ -45,7 +45,7 @@ export const Editable: Story = {
 				</span>
 			</p>
 			<p>
-				Want yours? Type :bobatan-og-bobadab: and see the emoji appear. Find <a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the emojiset ATproto record</a> on pdsls.dev!
+				Want yours? Type :bobadab: and see the emoji appear. Find <a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the emojiset ATproto record</a> on pdsls.dev!
 			</p>`,
 	},
 };

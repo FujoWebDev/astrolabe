@@ -45,7 +45,6 @@ const toTipTapEmoji = (emoji: Atmoji, emojiSet: AtUri) => {
 	emojiUrl.searchParams.set("did", emojiSet.host);
 	emojiUrl.searchParams.set("cid", emoji.image.image.ref.$link);
 
-	console.dir(emojiUrl.toString())
   return { // A unique name of the emoji which will be stored as attribute
     name: `${emojiSet.rkey}-${emoji.shortcode}`,
     // A list of unique shortcodes that are used by input rules to find the emoji
@@ -60,9 +59,6 @@ const toTipTapEmoji = (emoji: Atmoji, emojiSet: AtUri) => {
 }
 
 export const Plugin = Emoji.extend<EmojiOptions & Options>({
-	onCreate() {
-		console.log("Editor created")
-	},
 	async onBeforeCreate(event) {
 		for (const set of this.options.sets) {
 			const emojiSetAtUri = typeof set == "string" ? new AtUri(set) : set;
