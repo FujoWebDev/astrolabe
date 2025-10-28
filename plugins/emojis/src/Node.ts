@@ -6,9 +6,16 @@ import {
 } from "@tiptap/core";
 import { PluginKey } from "@tiptap/pm/state";
 import "./emojis.css";
+import Emoji, {type EmojiOptions, emojis } from '@tiptap/extension-emoji'
+import { AtUri } from "@atproto/syntax"
+
+// import "../src/emojis.css";
 
 export interface Options {
+	sets: (string | AtUri)[]
 }
+
+type Atmoji = unknown; //(typeof sampleSet)["emojis"][number];
 
 export const Key = new PluginKey("EmojisPlugin");
 
@@ -23,101 +30,62 @@ declare module "@tiptap/core" {
 	}
 }
 
-// // These regex detect the use of || as pseudo-markdown shortcut for applying inline spoilers
-// // i.e. ||text to be spoilered||, when typed in and pasted in respectively.
-// // Adapted from the regex used for the strikethough extension here:
-// // https://github.com/ueberdosis/tiptap/blob/781cdfa54ebd1ba4733f63bb9d5844a59703a7e8/packages/extension-strike/src/strike.ts#L31
-// export const inputRegex = /(?:^|\s)((?:\|\|)((?:[^|]+))(?:\|\|))$/;
-// export const pasteRegex = /(?:^|\s)((?:\|\|)((?:[^|]+))(?:\|\|))/g;
+const fetchEmojiSet = (emojiSet: AtUri) => {
+	const emojiUrl = new URL("/xrpc/com.atproto.repo.getRecord", "https://lionsmane.us-east.host.bsky.network");
+	emojiUrl.searchParams.set("repo", emojiSet.host);
+	emojiUrl.searchParams.set("collection", emojiSet.collection);
+	emojiUrl.searchParams.set("rkey", emojiSet.rkey);
 
-export const Plugin = Node.create<Options>({
-	name: PLUGIN_NAME,
-	priority: 1001,
+	return fetch(emojiUrl);
+	// return Promise.resolve(sampleSet);
+}
 
-	addAttributes() {
-		return {
-			// visible: {
-			// 	default: false,
-			// 	parseHTML: (element) => element.getAttribute("data-visible"),
-			// 	renderHTML: (attributes) => {
-			// 		return {
-			// 			"data-visible": attributes.visible,
-			// 		};
-			// 	},
-			// },
-		};
+const toTipTapEmoji = (emoji: Atmoji, emojiSet: AtUri) => {
+	const emojiUrl = new URL("/xrpc/com.atproto.sync.getBlob", "https://lionsmane.us-east.host.bsky.network");
+	emojiUrl.searchParams.set("did", emojiSet.host);
+	emojiUrl.searchParams.set("cid", emoji.image.image.ref.$link);
+
+	console.dir(emojiUrl.toString())
+  return { // A unique name of the emoji which will be stored as attribute
+    name: `${emojiSet.rkey}-${emoji.shortcode}`,
+    // A list of unique shortcodes that are used by input rules to find the emoji
+    shortcodes: [emoji.shortcode],
+    // A list of tags that can help for searching emojis
+    tags: [],
+    // A name that can help to group emojis
+    group: emojiSet.rkey,
+    // The image to be rendered
+    fallbackImage: emojiUrl.toString()
+  }
+}
+
+export const Plugin = Emoji.extend<EmojiOptions & Options>({
+	onCreate() {
+		console.log("Editor created")
+	},
+	async onBeforeCreate(event) {
+		for (const set of this.options.sets) {
+			const emojiSetAtUri = typeof set == "string" ? new AtUri(set) : set;
+			fetchEmojiSet(emojiSetAtUri).then(async response => {
+				if (response) {
+					const emojiSet = await response.json() as {"value": any};
+					for (const emoji of emojiSet.value.emojis) {
+						const tiptapEmoji = toTipTapEmoji(emoji, emojiSetAtUri)
+						this.storage.emojis.push(tiptapEmoji);
+					}
+				}
+			});
+		}
+
 	},
 
+	// @ts-expect-error typescript shut up
 	addOptions() {
-		return {
-		};
-	},
+		return { 
+      ...this.parent?.(),
+	  sets: [] as (string | AtUri)[]};
+	}
 
-	parseHTML() {
-		return [
-			{
-				// tag: `span[data-type=${this.name}]`,
-			},
-		];
-	},
-
-	renderHTML({ HTMLAttributes }) {
-		return [
-			// "span",
-			// mergeAttributes(HTMLAttributes, {
-			// 	"data-type": this.name,
-			// 	"aria-label": "text spoilers",
-			// 	tabindex: this.options.focusable ? 0 : undefined,
-			// }),
-			// // This 0 is used to mark where the content is to be inserted (https://tiptap.dev/guide/custom-extensions#render-html)
-			// 0,
-		];
-	},
-
-	addCommands() {
-		return {
-			// setInlineSpoilers:
-			// 	(attributes) =>
-			// 	({ commands }) => {
-			// 		return commands.setMark(this.name, attributes);
-			// 	},
-			// toggleInlineSpoilers:
-			// 	(attributes) =>
-			// 	({ commands }) => {
-			// 		return commands.toggleMark(this.name, attributes);
-			// 	},
-			// unsetInlineSpoilers:
-			// 	() =>
-			// 	({ commands }) => {
-			// 		return commands.unsetMark(this.name);
-			// 	},
-		};
-	},
-
-	addInputRules() {
-		return [
-			// markInputRule({
-			// 	find: inputRegex,
-			// 	type: this.type,
-			// }),
-		];
-	},
-
-	addPasteRules() {
-		return [
-			// markPasteRule({
-			// 	find: pasteRegex,
-			// 	type: this.type,
-			// }),
-		];
-	},
-
-	addProseMirrorPlugins() {
-		return [
-			// toggleAttributeOnClick({
-			// 	name: this.name,
-			// 	attribute: "data-visible",
-			// }),
-		];
-	},
+}).configure({
+	emojis: [...emojis]
 });
