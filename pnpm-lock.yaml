@@ -244,6 +244,9 @@ importers:
 
   plugins/emojis:
     dependencies:
+      '@tiptap/extension-emoji':
+        specifier: ^3.8.0
+        version: 3.8.0(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))(@tiptap/pm@3.6.3)(@tiptap/suggestion@3.8.0(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))(@tiptap/pm@3.6.3))(emojibase@16.0.0)
       '@tiptap/starter-kit':
         specifier: 'catalog:'
         version: 3.6.3
@@ -1096,6 +1099,13 @@ packages:
     peerDependencies:
       '@tiptap/extensions': ^3.6.3
 
+  '@tiptap/extension-emoji@3.8.0':
+    resolution: {integrity: sha512-/K98wA1AmDbvIHbytvC5FgE9oyEA8fc3qggwy2VpqFqGf3X73J66D9kLon55+bTZ58IPJIAvCP90NddJn8bx/g==}
+    peerDependencies:
+      '@tiptap/core': ^3.8.0
+      '@tiptap/pm': ^3.8.0
+      '@tiptap/suggestion': ^3.8.0
+
   '@tiptap/extension-floating-menu@3.6.3':
     resolution: {integrity: sha512-mE4MSkSOuFrvvKrI5CZFNRviJ8j1WfTJzXlXF8P8lqKtDAXveL2E2CuhSXAOoFuhgl1bHrLuZY46kveLZ4h8bg==}
     peerDependencies:
@@ -1197,6 +1207,12 @@ packages:
 
   '@tiptap/starter-kit@3.6.3':
     resolution: {integrity: sha512-GHQNUyBlhYjWzBLsyrnlQppeAnRCD9k45i4l93g2Re+WdqYrgfSPdbV5Ixhl+fDXVqs/s7sPqADFPbzKEwfkzA==}
+
+  '@tiptap/suggestion@3.8.0':
+    resolution: {integrity: sha512-vCrwBOD1LRu2XBWHJi4PWNFDx3yi7JLL7ZnxjIG0BZL3u4UPttUpNV5XyIiEuqwpEnC6uWpfJ+zwG6pZOa29Og==}
+    peerDependencies:
+      '@tiptap/core': ^3.8.0
+      '@tiptap/pm': ^3.8.0
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -1496,11 +1512,23 @@ packages:
   electron-to-chromium@1.5.229:
     resolution: {integrity: sha512-cwhDcZKGcT/rEthLRJ9eBlMDkh1sorgsuk+6dpsehV0g9CABsIqBxU4rLRjG+d/U6pYU1s37A4lSKrVc5lSQYg==}
 
+  emoji-regex@10.6.0:
+    resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
+
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
+
+  emojibase-data@15.3.2:
+    resolution: {integrity: sha512-TpDyTDDTdqWIJixV5sTA6OQ0P0JfIIeK2tFRR3q56G9LK65ylAZ7z3KyBXokpvTTJ+mLUXQXbLNyVkjvnTLE+A==}
+    peerDependencies:
+      emojibase: '*'
+
+  emojibase@16.0.0:
+    resolution: {integrity: sha512-Nw2m7JLIO4Ou2X/yZPRNscHQXVbbr6SErjkJ7EooG7MbR3yDZszCv9KTizsXFc7yZl0n3WF+qUKIC/Lw6H9xaQ==}
+    engines: {node: '>=18.12.0'}
 
   empathic@2.0.0:
     resolution: {integrity: sha512-i6UzDscO/XfAcNYD75CfICkmfLedpyPDdozrLMmQc5ORaQcdMoc21OnlEylMIqI7U8eniKrPMxxtj8k0vhmJhA==}
@@ -1649,6 +1677,9 @@ packages:
 
   is-decimal@1.0.4:
     resolution: {integrity: sha512-RGdriMmQQvZ2aqaQq3awNA6dCGtKpiDFcOzrTWrDAT2MiWrKQVPmxLGHl7Y2nNu6led0kEyoX0enY0qXYsv9zw==}
+
+  is-emoji-supported@0.0.5:
+    resolution: {integrity: sha512-WOlXUhDDHxYqcSmFZis+xWhhqXiK2SU0iYiqmth5Ip0FHLZQAt9rKL5ahnilE8/86WH8tZ3bmNNNC+bTzamqlw==}
 
   is-fullwidth-code-point@3.0.0:
     resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
@@ -3029,6 +3060,17 @@ snapshots:
     dependencies:
       '@tiptap/extensions': 3.6.3(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))(@tiptap/pm@3.6.3)
 
+  '@tiptap/extension-emoji@3.8.0(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))(@tiptap/pm@3.6.3)(@tiptap/suggestion@3.8.0(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))(@tiptap/pm@3.6.3))(emojibase@16.0.0)':
+    dependencies:
+      '@tiptap/core': 3.6.3(@tiptap/pm@3.6.3)
+      '@tiptap/pm': 3.6.3
+      '@tiptap/suggestion': 3.8.0(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))(@tiptap/pm@3.6.3)
+      emoji-regex: 10.6.0
+      emojibase-data: 15.3.2(emojibase@16.0.0)
+      is-emoji-supported: 0.0.5
+    transitivePeerDependencies:
+      - emojibase
+
   '@tiptap/extension-floating-menu@3.6.3(@floating-ui/dom@1.7.4)(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))(@tiptap/pm@3.6.3)':
     dependencies:
       '@floating-ui/dom': 1.7.4
@@ -3164,6 +3206,11 @@ snapshots:
       '@tiptap/extension-text': 3.6.3(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))
       '@tiptap/extension-underline': 3.6.3(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))
       '@tiptap/extensions': 3.6.3(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))(@tiptap/pm@3.6.3)
+      '@tiptap/pm': 3.6.3
+
+  '@tiptap/suggestion@3.8.0(@tiptap/core@3.6.3(@tiptap/pm@3.6.3))(@tiptap/pm@3.6.3)':
+    dependencies:
+      '@tiptap/core': 3.6.3(@tiptap/pm@3.6.3)
       '@tiptap/pm': 3.6.3
 
   '@tybys/wasm-util@0.10.1':
@@ -3443,9 +3490,17 @@ snapshots:
 
   electron-to-chromium@1.5.229: {}
 
+  emoji-regex@10.6.0: {}
+
   emoji-regex@8.0.0: {}
 
   emoji-regex@9.2.2: {}
+
+  emojibase-data@15.3.2(emojibase@16.0.0):
+    dependencies:
+      emojibase: 16.0.0
+
+  emojibase@16.0.0: {}
 
   empathic@2.0.0: {}
 
@@ -3591,6 +3646,8 @@ snapshots:
       hasown: 2.0.2
 
   is-decimal@1.0.4: {}
+
+  is-emoji-supported@0.0.5: {}
 
   is-fullwidth-code-point@3.0.0: {}
 
