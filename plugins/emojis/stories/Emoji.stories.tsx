@@ -39,14 +39,24 @@ type Story = StoryObj<typeof meta>;
 export const Editable: Story = {
 	args: {
 		initialText:
-			`<p><span data-type="emoji" data-name="bobatan-og-bobadab" data-set="at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og" data-fallback="🦝🆒"></span></p><p>Want yours? Type :bobatan-og-bobadab: and see the emoji appear. Find (<a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the emojiset ATproto record</a> on pdsls.dev!</p>`,
+			`<p>
+				<span data-type="emoji" data-name="bobatan-og-bobadab" data-set="at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og" data-fallback="🦝🆒">
+					<img src="https://lionsmane.us-east.host.bsky.network/xrpc/com.atproto.sync.getBlob?did=did%3Aplc%3Ar2vpg2iszskbkegoldmqa322&amp;cid=bafkreia32ap5wocahbhgpqdh4vmtnjvwyy7573xfivslos6agt4357sxeq" alt="bobatan-og-bobadab emoji">
+				</span>
+			</p>
+			<p>
+				Want yours? Type :bobatan-og-bobadab: and see the emoji appear. Find <a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the emojiset ATproto record</a> on pdsls.dev!
+			</p>`,
 	},
 };
 
 export const ViewOnly: Story = {
 	args: {
 		initialText:
-			`Check out <a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the Record for this emoji</a> on pdsls.dev! <span data-type="emoji" data-name="bobatan-og-bobadab" data-set="at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og" ></span>!`,
+			`Check out <a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the Record for this emoji</a> on pdsls.dev 
+			<span data-type="emoji" data-name="bobatan-og-bobadab" data-set="at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og" >
+				<img src="https://lionsmane.us-east.host.bsky.network/xrpc/com.atproto.sync.getBlob?did=did%3Aplc%3Ar2vpg2iszskbkegoldmqa322&amp;cid=bafkreia32ap5wocahbhgpqdh4vmtnjvwyy7573xfivslos6agt4357sxeq" alt="bobatan-og-bobadab emoji">
+			</span>!`,
 		editable: false,
 	},
 };

@@ -78,6 +78,41 @@ export const Plugin = Emoji.extend<EmojiOptions & Options>({
 		}
 
 	},
+	addAttributes() {
+		return {
+			...this.parent!(),
+			fallbackImage: {
+				default: null,
+				parseHTML: element => element.querySelector("img")?.src
+			},
+			fallbackAlt: {
+				default: null,
+				parseHTML: element => element.querySelector("img")?.alt
+			}
+		}
+	},
+
+	renderHTML(props) {
+		const renderedByParent = this.parent?.(props);
+		// If the parent would render a string at the second slot, but there is a fallback image
+		// attribute, then render the fallback image attribute.
+		// TODO: this is a hack that assumes we know the type of the parent
+		// TODO: should figure out how to make sure to defer the load until all is loaded
+		if (typeof renderedByParent[2] === "string" && props.HTMLAttributes.fallbackImage) {
+			renderedByParent[2] =[
+            'img',
+            {
+              src: props.HTMLAttributes.fallbackImage,
+              draggable: 'false',
+              loading: 'lazy',
+              align: 'absmiddle',
+              alt: props.HTMLAttributes.fallbackAlt ?? `Emoji`,
+            },
+          ]
+
+		}
+		return renderedByParent;
+	},
 
 	// @ts-expect-error typescript shut up
 	addOptions() {
