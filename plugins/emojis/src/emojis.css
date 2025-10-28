@@ -1,0 +1,14 @@
+.astrolabe-editor [contenteditable="true"] span[data-type="inline-spoilers"] {
+  background-color: lightgray;
+  border: 1px dashed black;
+}
+
+.astrolabe-editor [contenteditable="false"]
+  span[data-type="inline-spoilers"][data-visible="false"] {
+  background-color: black;
+}
+
+.astrolabe-editor [contenteditable="false"]
+  span[data-type="inline-spoilers"][data-visible="true"] {
+  border: 1px dashed black;
+}
