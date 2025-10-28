@@ -16,12 +16,6 @@ src="https://img.shields.io/badge/TipTap-3.6.2-green" /></a>
 
 </div>
 
-> [!WARNING]
->
-> This project is mid-refactor/cleanup from a bunch of personal experiments and
-> old code accumulated throughout the years. Expect some weirdness and
-> less-than-ideal code here and there.
-
 Astrolabe is a block-based Rich Text Editor which aims to provide a simple,
 extensible, and modern text editing experience to be reused across projects and
 provide a bridge across platforms.
@@ -34,11 +28,11 @@ It consists of two main parts:
   editor and the API of modern social platforms, using
   [Remark/Mdast](https://github.com/remarkjs/remark) as a translation layer.
 
-> [!NOTE]
+> [!WARNING]
 >
-> The adapters currently in this repo are focused on markdown + ATproto
-> lexicons. With time, I'll be porting internal adapters I developed for APIs
-> like Tumblr, Twitter, Mastodon etc.
+> This project is mid-refactor/cleanup from a bunch of personal experiments and
+> old code accumulated throughout the years. Expect some weirdness and
+> less-than-ideal code here and there.
 
 ## Check it in Action
 
@@ -101,6 +95,12 @@ independently translate text to and from:
 - Tumblr/Twitter/Mastodon/Bluesky Playwright actions (in private repo)
 
 ## Examples (with adapters)
+
+> [!NOTE]
+>
+> The adapters currently in this repo are focused on markdown + ATproto
+> lexicons. With time, I'll be porting internal adapters I developed for APIs
+> like Tumblr, Twitter, Mastodon etc.
 
 ### Editor to Markdown
 
