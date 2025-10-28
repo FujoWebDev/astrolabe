@@ -41,11 +41,13 @@ export const Editable: Story = {
 		initialText:
 			`<p>
 				<span data-type="emoji" data-name="bobatan-og-bobadab" data-set="at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og" data-fallback="🦝🆒">
-					<img src="https://lionsmane.us-east.host.bsky.network/xrpc/com.atproto.sync.getBlob?did=did%3Aplc%3Ar2vpg2iszskbkegoldmqa322&amp;cid=bafkreia32ap5wocahbhgpqdh4vmtnjvwyy7573xfivslos6agt4357sxeq" alt="bobatan-og-bobadab emoji">
+					<img src="https://lionsmane.us-east.host.bsky.network/xrpc/com.atproto.sync.getBlob?did=did%3Aplc%3Ar2vpg2iszskbkegoldmqa322&cid=bafkreifrofbgtrifwocua34nfyerifj27fkzsglhk4vnbsjezwyuifjoqu" alt="bobatan-og-bobadab emoji">
 				</span>
 			</p>
 			<p>
-				Want yours? Type :bobadab: and see the emoji appear. Find <a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the emojiset ATproto record</a> on pdsls.dev!
+				Want yours? Just type <code>:bobadab:</code>, <code>:bobajustright:</code> or <code>:bobacorn:</code> below 👇 Find <a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the full ATproto record for this emojiset</a> on pdsls.dev!
+			</p>
+			<p>
 			</p>`,
 	},
 };
@@ -53,10 +55,10 @@ export const Editable: Story = {
 export const ViewOnly: Story = {
 	args: {
 		initialText:
-			`Check out <a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the Record for this emoji</a> on pdsls.dev 
-			<span data-type="emoji" data-name="bobatan-og-bobadab" data-set="at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og" >
-				<img src="https://lionsmane.us-east.host.bsky.network/xrpc/com.atproto.sync.getBlob?did=did%3Aplc%3Ar2vpg2iszskbkegoldmqa322&amp;cid=bafkreia32ap5wocahbhgpqdh4vmtnjvwyy7573xfivslos6agt4357sxeq" alt="bobatan-og-bobadab emoji">
-			</span>!`,
+			`Check out <a href="https://pdsls.dev/at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og">the ATproto Record for this emojiset</a> on pdsls.dev 
+			<span data-type="emoji" data-name="bobatan-og-bobacorn" data-set="at://did:plc:r2vpg2iszskbkegoldmqa322/com.fujocoded.astrolabe.emojiset/bobatan-og" >
+				<img src="https://lionsmane.us-east.host.bsky.network/xrpc/com.atproto.sync.getBlob?did=did%3Aplc%3Ar2vpg2iszskbkegoldmqa322&cid=bafkreicku5fnyj3kuuxqhjzm7ae56ijxz4nxhhdrlgrmtm75afe2k4hxeq" alt="bobatan-og-bobadab emoji">
+			</span>`,
 		editable: false,
 	},
 };
