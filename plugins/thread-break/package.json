@@ -1,0 +1,52 @@
+{
+  "name": "@fujocoded/astrolabe-thread-break",
+  "version": "0.0.1",
+  "main": "./dist/Node.js",
+  "module": "./dist/Node.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/Node.d.ts",
+      "default": "./dist/Node.js"
+    },
+    "./css": {
+      "default": "./dist/thread-break.css"
+    },
+    "./popover": {
+      "types": "./dist/popover.d.ts",
+      "default": "./dist/popover.js"
+    },
+    "./adapter": {
+      "types": "./dist/adapter/thread-break.d.ts",
+      "default": "./dist/adapter/thread-break.js"
+    }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch --ignore-watch .turbo --ignore-watch dist"
+  },
+  "devDependencies": {
+    "@fujocoded/astdapters-bluesky-starter": "workspace:*",
+    "@fujocoded/astdapters-leaflet-starter": "workspace:*",
+    "@fujocoded/astdapters-mdast-starter": "workspace:*",
+    "@fujocoded/astrolabe-editor-tree-viewer": "workspace:*",
+    "mdast-util-to-markdown": "^2.1.2",
+    "astrolabe-test-utils": "workspace:*",
+    "@tiptap/core": "catalog:",
+    "@tiptap/pm": "catalog:",
+    "@tiptap/react": "catalog:",
+    "isomorphic-dompurify": "^2.15.0",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "react-aria-components": "^1.5.0"
+  },
+  "peerDependencies": {
+    "@tiptap/starter-kit": "catalog:"
+  }
+}
