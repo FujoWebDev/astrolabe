@@ -1,0 +1,10 @@
+.astrolabe-editor [data-astrolb-type="thread-break"] {
+  border: none;
+  position: relative;
+  border-bottom: 5px dashed rgb(71, 137, 251);
+}
+
+.node-thread-break fieldset {
+  display: flex;
+  max-width: fit-content;
+}

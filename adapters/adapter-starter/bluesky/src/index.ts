@@ -5,7 +5,6 @@ import {
   type ConverterMarkPlugin,
   type ConverterPlugin,
   type TreeTransformPlugin,
-  type ConversionResult,
 } from "../../mdast/src/index.js";
 import { type DocumentType } from "@tiptap/core";
 import { mdastToText } from "./serializer.js";
@@ -90,7 +89,7 @@ export const convert = async (
   }
 
   // Use full pipeline with tree transforms
-  const result: ConversionResult = convertWithPlugins(
+  const result = convertWithPlugins(
     root,
     (input, context) => toMdast(input, context) as Root,
     allPlugins
@@ -98,13 +97,11 @@ export const convert = async (
 
   // Convert each tree to Bluesky format
   const converted = await Promise.all(
-    result.trees.map(async (mdast, index) => ({
+    result.map(async (mdast) => ({
       ...(await mdastToBsky(mdast, {
         ...serializerOptions,
         bracketFirstHeading: serializerOptions.bracketFirstHeading ?? true,
       })),
-      threadIndex: index,
-      threadCount: result.metadata.threadCount as number | undefined,
     }))
   );
 
