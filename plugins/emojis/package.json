@@ -41,6 +41,7 @@
 	},
 	"dependencies": {
 		"@atproto/api": "^0.16.9",
+		"@atproto/identity": "^0.4.9",
 		"@atproto/syntax": "^0.4.1",
 		"@tiptap/extension-emoji": "^3.8.0"
 	}

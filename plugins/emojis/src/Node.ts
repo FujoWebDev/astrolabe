@@ -8,6 +8,7 @@ import { PluginKey } from "@tiptap/pm/state";
 import "./emojis.css";
 import Emoji, {type EmojiOptions, emojis } from '@tiptap/extension-emoji'
 import { AtUri } from "@atproto/syntax"
+import { IdResolver } from "@atproto/identity";
 
 // import "../src/emojis.css";
 
@@ -30,8 +31,16 @@ declare module "@tiptap/core" {
 	}
 }
 
-const fetchEmojiSet = (emojiSet: AtUri) => {
-	const emojiUrl = new URL("/xrpc/com.atproto.repo.getRecord", "https://lionsmane.us-east.host.bsky.network");
+const getPdsUrl = async (did: string) => {
+	const ID_RESOLVER = new IdResolver();
+	const atproto = await ID_RESOLVER.did.resolveAtprotoData(did);
+	const pdsUrl = atproto.pds;
+	return pdsUrl;
+}
+
+const fetchEmojiSet = async (emojiSet: AtUri) => {
+	const pds = await getPdsUrl(emojiSet.host);
+	const emojiUrl = new URL("/xrpc/com.atproto.repo.getRecord", pds);
 	emojiUrl.searchParams.set("repo", emojiSet.host);
 	emojiUrl.searchParams.set("collection", emojiSet.collection);
 	emojiUrl.searchParams.set("rkey", emojiSet.rkey);
@@ -40,8 +49,9 @@ const fetchEmojiSet = (emojiSet: AtUri) => {
 	// return Promise.resolve(sampleSet);
 }
 
-const toTipTapEmoji = (emoji: Atmoji, emojiSet: AtUri) => {
-	const emojiUrl = new URL("/xrpc/com.atproto.sync.getBlob", "https://lionsmane.us-east.host.bsky.network");
+const toTipTapEmoji = async (emoji: Atmoji, emojiSet: AtUri) => {
+	const pds = await getPdsUrl(emojiSet.host);
+	const emojiUrl = new URL("/xrpc/com.atproto.sync.getBlob", pds);
 	emojiUrl.searchParams.set("did", emojiSet.host);
 	emojiUrl.searchParams.set("cid", emoji.image.image.ref.$link);
 
@@ -66,7 +76,7 @@ export const Plugin = Emoji.extend<EmojiOptions & Options>({
 				if (response) {
 					const emojiSet = await response.json() as {"value": any};
 					for (const emoji of emojiSet.value.emojis) {
-						const tiptapEmoji = toTipTapEmoji(emoji, emojiSetAtUri)
+						const tiptapEmoji = await toTipTapEmoji(emoji, emojiSetAtUri)
 						this.storage.emojis.push(tiptapEmoji);
 					}
 				}
