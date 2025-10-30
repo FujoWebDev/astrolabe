@@ -1,34 +1,33 @@
 {
-	"name": "astrolabe-test-utils",
-	"private": true,
-	"version": "0.0.1",
-	"main": "./dist/index.js",
-	"module": "./dist/index.js",
-	"type": "module",
-	"scripts": {
-		"build": "tsdown",
-		"dev": "tsdown --watch --ignore-watch .turbo --ignore-watch dist",
-		"test": "vitest run"
-	},
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./dist/index.js"
-		}
-	},
-	"files": [
-		"dist",
-		"package.json",
-		"README.md",
-		"LICENSE"
-	],
-	"devDependencies": {
-		"@tiptap/core": "catalog:",
-		"@tiptap/react": "catalog:",
-		"@tiptap/starter-kit": "catalog:",
-		"@atproto/api": "^0.16.9"
-	},
-	"peerDependencies": {
-		"@fujocoded/astdapters-bluesky-starter": "workspace:*"
-	}
+  "name": "astrolabe-test-utils",
+  "private": true,
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch --ignore-watch .turbo --ignore-watch dist"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@tiptap/core": "catalog:",
+    "@tiptap/react": "catalog:",
+    "@tiptap/starter-kit": "catalog:",
+    "@atproto/api": "^0.16.9"
+  },
+  "peerDependencies": {
+    "@fujocoded/astdapters-bluesky-starter": "workspace:*"
+  }
 }
