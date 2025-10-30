@@ -1,4 +1,5 @@
 import { RichText } from "@atproto/api";
+import type { FacetLink, FacetMention, Facet } from "@atproto/api";
 
 export interface FromBlueskyOptions {
   resolveMentionUrl?: (did: string) => string;
@@ -35,65 +36,73 @@ export const fromBlueskyPost = (
     throw new Error("Invalid record: missing or invalid text field");
   }
 
-  // Use RichText to handle facets properly
-  const richText = new RichText({
-    text: recordValue.text,
-    facets: "facets" in recordValue ? (recordValue.facets as any) : undefined,
-  });
-
-  // Convert entire text to nodes with facets and breaks, then split into paragraphs
-  const content = textToParagraphs(richText, options);
-
   return {
     type: "doc",
     attrs: {},
-    content,
+    content: textToParagraphs(
+      recordValue.text,
+      recordValue.facets as RichText["facets"],
+      options
+    ),
   };
 };
 
 /**
- * Converts Bluesky RichText into ProseMirror paragraph nodes.
+ * Converts Bluesky text and facets into ProseMirror paragraph nodes.
  * Handles double newlines as paragraph breaks and single newlines as hard breaks.
- * Uses RichText.segments() to properly handle facets with multi-byte characters.
  */
 const textToParagraphs = (
-  richText: RichText,
+  text: string,
+  facets: RichText["facets"] = [],
   options: FromBlueskyOptions = {}
 ) => {
-  const paragraphs: Array<{ type: string; content: (TextNode | { type: "hardBreak" })[] }> = [];
+  const paragraphs: Array<{
+    type: string;
+    content: (TextNode | { type: "hardBreak" })[];
+  }> = [];
   let currentParagraph: (TextNode | { type: "hardBreak" })[] = [];
-  
+
   // Process each segment from RichText
-  for (const segment of richText.segments()) {
+  for (const segment of serializeFacets(text, facets, options)) {
     const segmentText = segment.text;
-    
+
     // Build marks for this segment
     const marks: TextNode["marks"] = [];
-    
-    if (segment.isLink()) {
+
+    if (segment.marks?.some((mark) => mark.type === "link")) {
       marks.push({
         type: "link",
         attrs: {
-          href: segment.link?.uri ?? "",
+          href:
+            segment.marks?.find((mark) => mark.type === "link")?.attrs?.href ??
+            "",
         },
       });
-    } else if (segment.isMention()) {
+    } else if (segment.marks?.some((mark) => mark.type === "mention")) {
       marks.push({
         type: "link",
         attrs: {
-          href: options.resolveMentionUrl?.(segment.mention?.did ?? "") ?? `#${segment.mention?.did}`,
+          href:
+            options.resolveMentionUrl?.(
+              segment.marks?.find((mark) => mark.type === "mention")?.attrs
+                ?.href as string
+            ) ??
+            `#${
+              segment.marks?.find((mark) => mark.type === "mention")?.attrs
+                ?.href
+            }`,
         },
       });
     }
-    
+
     // Split segment text on newlines
     const parts = segmentText.split(/(\n+)/);
-    
+
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
-      
+
       if (part.length === 0) continue;
-      
+
       // Check if this part is newlines
       if (/^\n+$/.test(part)) {
         // Double or more newlines = paragraph break
@@ -120,7 +129,7 @@ const textToParagraphs = (
       }
     }
   }
-  
+
   // Add the last paragraph if it has content
   if (currentParagraph.length > 0) {
     paragraphs.push({
@@ -128,12 +137,12 @@ const textToParagraphs = (
       content: currentParagraph,
     });
   }
-  
+
   // Return at least one empty paragraph if no content
   if (paragraphs.length === 0) {
     return [{ type: "paragraph", content: [] }];
   }
-  
+
   return paragraphs;
 };
 
@@ -143,7 +152,7 @@ const textToParagraphs = (
  */
 const serializeFacets = (
   originalText: string,
-  facets: Facet[] = [],
+  facets: RichText["facets"] = [],
   options: FromBlueskyOptions = {}
 ): TextNode[] => {
   if (!facets || facets.length === 0) {
@@ -180,20 +189,22 @@ const serializeFacets = (
     for (const feature of facet.features) {
       switch (feature.$type) {
         case "app.bsky.richtext.facet#mention": {
+          const mention = feature as FacetMention;
           marks.push({
             type: "link",
             attrs: {
               href:
-                options.resolveMentionUrl?.(feature.did!) ?? `#${feature.did}`,
+                options.resolveMentionUrl?.(mention.did!) ?? `#${mention.did}`,
             },
           });
           break;
         }
         case "app.bsky.richtext.facet#link": {
+          const link = feature as FacetLink;
           marks.push({
             type: "link",
             attrs: {
-              href: feature.uri,
+              href: link.uri,
             },
           });
           break;

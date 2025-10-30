@@ -1,8 +1,11 @@
 import { RichText, Agent } from "@atproto/api";
 import {
   convert as toMdast,
+  convertWithPlugins,
   type ConverterMarkPlugin,
   type ConverterPlugin,
+  type TreeTransformPlugin,
+  type ConversionResult,
 } from "../../mdast/src/index.js";
 import { type DocumentType } from "@tiptap/core";
 import { mdastToText } from "./serializer.js";
@@ -59,28 +62,64 @@ export const mdastToBsky = async (
 
 export interface BlueskyConvertOptions {
   jsonDocPlugins?: readonly (ConverterPlugin | ConverterMarkPlugin)[];
+  treePlugins?: readonly TreeTransformPlugin[];
   serializerOptions?: MdastToBskyOptions;
 }
 
-export const convert = (
+export const convert = async (
   root: DocumentType,
   options?: BlueskyConvertOptions
-) => {
-  const mdast = toMdast(root, {
-    plugins: options?.jsonDocPlugins ?? [],
-  }) as Root;
+): Promise<BlueskyConversionResult | BlueskyConversionResult[]> => {
+  const allPlugins = [
+    ...(options?.treePlugins ?? []),
+    ...(options?.jsonDocPlugins ?? []),
+  ];
 
   const serializerOptions = options?.serializerOptions ?? {};
 
-  return mdastToBsky(mdast, {
-    ...serializerOptions,
-    bracketFirstHeading: serializerOptions.bracketFirstHeading ?? true,
-  });
+  // If no tree plugins, use simple conversion
+  if (!allPlugins.some((p) => p.pluginType === "tree-transform")) {
+    const mdast = toMdast(root, {
+      plugins: options?.jsonDocPlugins ?? [],
+    }) as Root;
+
+    return mdastToBsky(mdast, {
+      ...serializerOptions,
+      bracketFirstHeading: serializerOptions.bracketFirstHeading ?? true,
+    });
+  }
+
+  // Use full pipeline with tree transforms
+  const result: ConversionResult = convertWithPlugins(
+    root,
+    (input, context) => toMdast(input, context) as Root,
+    allPlugins
+  );
+
+  // Convert each tree to Bluesky format
+  const converted = await Promise.all(
+    result.trees.map(async (mdast, index) => ({
+      ...(await mdastToBsky(mdast, {
+        ...serializerOptions,
+        bracketFirstHeading: serializerOptions.bracketFirstHeading ?? true,
+      })),
+      threadIndex: index,
+      threadCount: result.metadata.threadCount as number | undefined,
+    }))
+  );
+
+  // Return single result if only one tree, array if multiple (thread splitting)
+  return converted.length === 1 ? converted[0] : converted;
 };
 
 export { fromBlueskyPost } from "./from.js";
 export type { FromBlueskyOptions } from "./from.js";
-export type { ConverterPlugin, ConverterMarkPlugin, RemarkPlugin };
+export type {
+  ConverterPlugin,
+  ConverterMarkPlugin,
+  TreeTransformPlugin,
+  RemarkPlugin,
+};
 export {
   DEFAULT_BLUESKY_PLUGINS,
   remarkExpandLinks as remarkBlueskyExpandLinks,

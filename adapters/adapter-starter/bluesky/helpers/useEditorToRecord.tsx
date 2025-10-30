@@ -4,25 +4,36 @@ import {
   convert as toBlueskyRichtText,
   type ConverterMarkPlugin,
   type ConverterPlugin,
+  type TreeTransformPlugin,
 } from "../src/index.js";
 import { type DocumentType } from "@tiptap/core";
 import type { AppBskyFeedPost } from "@atproto/api";
 
+const RECORD_BASE = {
+  text: "loading...",
+  facets: [],
+  $type: "app.bsky.feed.post",
+  createdAt: new Date().toISOString(),
+} satisfies AppBskyFeedPost.Record;
+
 export const useEditorToRecord = ({
-  initialRecord,
+  initialRecords,
   jsonDocPlugins,
+  treePlugins,
 }: {
-  initialRecord?: AppBskyFeedPost.Record;
+  initialRecords?: readonly AppBskyFeedPost.Record[];
   jsonDocPlugins?: readonly (ConverterPlugin | ConverterMarkPlugin)[];
+  treePlugins?: readonly TreeTransformPlugin[];
 }) => {
   const { editor } = useCurrentEditor();
-  const [record, setRecord] = React.useState<AppBskyFeedPost.Record>(
-    initialRecord ?? {
-      text: "loading...",
-      facets: [],
-      $type: "app.bsky.feed.post",
-      createdAt: new Date().toISOString(),
-    }
+  const [records, setRecords] = React.useState<AppBskyFeedPost.Record[]>(
+    initialRecords
+      ? [...initialRecords].map((record) => ({
+          ...RECORD_BASE,
+          text: record.text,
+          facets: record.facets,
+        }))
+      : [{ ...RECORD_BASE }]
   );
 
   React.useEffect(() => {
@@ -32,27 +43,32 @@ export const useEditorToRecord = ({
     const convertAndSetResult = async () => {
       const editorJson = editor.getJSON();
       if (editorJson) {
-        const blueskyRecord = await toBlueskyRichtText(
+        const result = await toBlueskyRichtText(
           structuredClone(editorJson) as DocumentType,
           {
             jsonDocPlugins: jsonDocPlugins,
+            treePlugins: treePlugins,
           }
         );
 
-        setRecord((prev) => ({
-          ...prev,
-          text: blueskyRecord.text.text,
-          facets: blueskyRecord.text.facets,
-        }));
+        const resultsArray = Array.isArray(result) ? result : [result];
+        setRecords(() =>
+          resultsArray.map((record) => ({
+            ...RECORD_BASE,
+            text: record.text.text,
+            facets: record.text.facets,
+          }))
+        );
       }
     };
+
     editor?.on("create", convertAndSetResult);
     editor?.on("update", convertAndSetResult);
     return () => {
       editor?.off("create", convertAndSetResult);
       editor?.off("update", convertAndSetResult);
     };
-  }, [editor, jsonDocPlugins]);
+  }, [editor, jsonDocPlugins, treePlugins]);
 
-  return record;
+  return records;
 };
