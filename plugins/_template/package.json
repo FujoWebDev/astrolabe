@@ -1,0 +1,42 @@
+{
+	"name": "@fujocoded/astrolabe-plugin-name",
+	"version": "0.0.1",
+	"main": "./dist/Node.js",
+	"module": "./dist/Node.js",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/Node.d.ts",
+			"default": "./dist/Node.js"
+		},
+		"./css": {
+			"default": "./dist/plugin-name.css"
+		}
+	},
+	"files": [
+		"dist",
+		"package.json",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsdown --watch --ignore-watch .turbo --ignore-watch dist"
+	},
+	"devDependencies": {
+		"@fujocoded/astdapters-bluesky-starter": "workspace:*",
+		"@fujocoded/astdapters-leaflet-starter": "workspace:*",
+		"@fujocoded/astdapters-mdast-starter": "workspace:*",
+		"@fujocoded/astrolabe-editor-tree-viewer": "workspace:*",
+		"astrolabe-test-utils": "workspace:*",
+		"@tiptap/core": "catalog:",
+		"@tiptap/pm": "catalog:",
+		"@tiptap/react": "catalog:",
+		"@types/mdast": "catalog:mdast",
+		"react": "catalog:react",
+		"react-dom": "catalog:react"
+	},
+	"peerDependencies": {
+
+    }
+}
