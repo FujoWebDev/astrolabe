@@ -6,6 +6,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev --filter=!@fujocoded/astrolabe-storybook",
     "test": "turbo run test",
+    "lexicon:emit": "prototypey gen-emit ./lexicons ./plugins/**/lexicon.ts",
     "storybook": "turbo run build && turbo run storybook --filter=@fujocoded/astrolabe-storybook",
     "build-storybook": "turbo run build && turbo run build-storybook --filter=@fujocoded/astrolabe-storybook",
     "yalc:publish": "node .yalc-publish-all.js",
@@ -35,5 +36,8 @@
     "onlyBuiltDependencies": [
       "esbuild"
     ]
+  },
+  "dependencies": {
+    "prototypey": "^0.3.3"
   }
 }
