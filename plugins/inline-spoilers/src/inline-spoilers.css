@@ -6,6 +6,11 @@
 .astrolabe-editor [contenteditable="false"]
   span[data-type="inline-spoilers"][data-visible="false"] {
   background-color: black;
+  color: transparent;
+}
+.astrolabe-editor [contenteditable="false"]
+  span[data-type="inline-spoilers"][data-visible="false"]::selection {
+  color:transparent
 }
 
 .astrolabe-editor [contenteditable="false"]
