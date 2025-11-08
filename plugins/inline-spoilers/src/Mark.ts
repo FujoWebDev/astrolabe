@@ -41,7 +41,7 @@ export const Plugin = Mark.create<Options>({
 		return {
 			visible: {
 				default: false,
-				parseHTML: (element) => element.getAttribute("data-visible"),
+				parseHTML: (element) => (element.getAttribute("data-visible") === 'true'),
 				renderHTML: (attributes) => {
 					return {
 						"data-visible": attributes.visible,
