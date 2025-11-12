@@ -73,8 +73,9 @@ export const Plugin = Mark.create<Options>({
 			"span",
 			mergeAttributes(HTMLAttributes, {
 				"data-type": this.name,
+				"role": "button",
 				"aria-label": "text spoilers",
-				tabindex: this.options.focusable ? 0 : undefined,
+				"tabindex": this.editor.options.editable ? undefined : 0,
 			}),
 			// This 0 is used to mark where the content is to be inserted (https://tiptap.dev/guide/custom-extensions#render-html)
 			0,
