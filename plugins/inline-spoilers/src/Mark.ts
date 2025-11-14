@@ -5,7 +5,10 @@ import {
 	mergeAttributes,
 } from "@tiptap/core";
 import { PluginKey } from "@tiptap/pm/state";
-import { toggleAttributeOnClick } from "./utils";
+import { 
+	toggleAttributeOnClick,
+	toggleAttributeOnFocusKey 
+} from "./utils";
 import "./inline-spoilers.css";
 
 export interface Options {
@@ -129,6 +132,10 @@ export const Plugin = Mark.create<Options>({
 	addProseMirrorPlugins() {
 		return [
 			toggleAttributeOnClick({
+				name: this.name,
+				attribute: "data-visible",
+			}),
+			toggleAttributeOnFocusKey({
 				name: this.name,
 				attribute: "data-visible",
 			}),
