@@ -41,5 +41,15 @@ export const ViewOnly: Story = {
 		initialText:
 			"Some <span data-type='inline-spoilers' data-visible='false'>spoilered</span> text",
 		editable: false,
+    plugins: [InlineSpoilersPlugin.configure({ focusable: true })]
+	},
+};
+
+export const MultiSpoilerViewOnly: Story = {
+	args: {
+		initialText:
+			"Some <span data-type='inline-spoilers' data-visible='false'>spoilered</span> text with extra <span data-type='inline-spoilers' data-visible='false'>spoilers</span>.",
+		editable: false,
+    plugins: [InlineSpoilersPlugin.configure({ focusable: true })]
 	},
 };

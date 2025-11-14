@@ -57,3 +57,55 @@ export const toggleAttributeOnClick = ({
     },
   });
 };
+
+export const toggleAttributeOnFocusKey = ({
+  name,
+  attribute,
+}: {
+  name: string;
+  attribute: string;
+}) => {
+  return new Plugin({
+    key: new PluginKey(`update${name}AttributeOnFocusKey`),
+    props: {
+      handleDOMEvents: {
+        keydown(view, event) {
+          if (view.editable) {
+            return false;
+          }
+
+          const keyName = event.key
+          if (keyName !== "Enter" && keyName !== " ") {
+            return false;
+          }
+          console.log(event)
+          console.log(keyName)
+
+          const element = event.target as HTMLElement;
+          const elementOrParent = getElementOrAncestorWithAttribute(
+            element,
+            attribute
+          );
+          if (!elementOrParent) {
+            console.log(
+              "neither target nor parent has html attribute",
+              attribute
+            );
+            return false;
+          }
+          const currentValue = elementOrParent.getAttribute(attribute);
+          if (!currentValue) {
+            console.log("elementOrParent attribute has no currentValue");
+            return false;
+          }
+          const newValue = currentValue === "false" ? "true" : "false";
+          console.log(
+            `toggling ${name} attribute ${attribute} from ${currentValue} to ${newValue}`
+          );
+          elementOrParent.setAttribute(attribute, newValue);
+          return true;
+        }
+      }
+    },
+  });
+};
