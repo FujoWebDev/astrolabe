@@ -1,19 +1,26 @@
-.astrolabe-editor [contenteditable="true"] span[data-type="inline-spoilers"] {
+.astrolabe-editor [contenteditable="true"] 
+	button[data-type="inline-spoilers"] {
+	all: unset;
   background-color: lightgray;
   border: 1px dashed black;
 }
 
 .astrolabe-editor [contenteditable="false"]
-  span[data-type="inline-spoilers"][data-visible="false"] {
-  background-color: black;
-  color: transparent;
-}
-.astrolabe-editor [contenteditable="false"]
-  span[data-type="inline-spoilers"][data-visible="false"]::selection {
-  color:transparent
+  button[data-type="inline-spoilers"] {
+	all: unset;
+	outline: revert;
+	outline-offset: 2px;
 }
 
 .astrolabe-editor [contenteditable="false"]
-  span[data-type="inline-spoilers"][data-visible="true"] {
+  button[data-type="inline-spoilers"][aria-expanded="false"] {
+  background-color: oklch(0 0 0);
+}
+.astrolabe-editor [contenteditable="false"]
+  button[data-type="inline-spoilers"][aria-expanded="false"] span {
+  visibility: hidden;
+}
+.astrolabe-editor [contenteditable="false"]
+  button[data-type="inline-spoilers"][aria-expanded="true"] {
   border: 1px dashed black;
 }

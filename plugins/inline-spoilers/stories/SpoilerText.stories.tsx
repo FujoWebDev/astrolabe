@@ -9,7 +9,7 @@ import withEditorTreeViewer from "@fujocoded/astrolabe-editor-tree-viewer/decora
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
 	title: "Astrolabe/SpoilerText",
-	//   component: Button,
+	//	 component: Button,
 	parameters: {
 		layout: "padded",
 		buttons: [InlineSpoilersButton],
@@ -32,24 +32,22 @@ type Story = StoryObj<typeof meta>;
 export const Editable: Story = {
 	args: {
 		initialText:
-			"Some <span data-type='inline-spoilers' data-visible='false'>spoilered</span> text",
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span>spoilered</span></button> text",
 	},
 };
 
 export const ViewOnly: Story = {
 	args: {
 		initialText:
-			"Some <span data-type='inline-spoilers' data-visible='false'>spoilered</span> text",
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span>spoilered</span></button> text",
 		editable: false,
-    plugins: [InlineSpoilersPlugin.configure({ focusable: true })]
 	},
 };
 
 export const MultiSpoilerViewOnly: Story = {
 	args: {
 		initialText:
-			"Some <span data-type='inline-spoilers' data-visible='false'>spoilered</span> text with extra <span data-type='inline-spoilers' data-visible='false'>spoilers</span>.",
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span>very secret spoilered</span></button> text with extra <button data-type='inline-spoilers' aria-expanded='false'><span>spoilers</span></button>.",
 		editable: false,
-    plugins: [InlineSpoilersPlugin.configure({ focusable: true })]
 	},
 };

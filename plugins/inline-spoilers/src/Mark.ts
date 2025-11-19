@@ -4,6 +4,8 @@ import {
 	markPasteRule,
 	mergeAttributes,
 } from "@tiptap/core";
+import {ReactMarkViewRenderer } from '@tiptap/react';
+
 import { PluginKey } from "@tiptap/pm/state";
 import { 
 	toggleAttributeOnClick,
@@ -13,7 +15,6 @@ import "./inline-spoilers.css";
 
 export interface Options {
 	visible?: boolean;
-	focusable?: boolean;
 }
 
 export const Key = new PluginKey("InlineSpoilersPlugin");
@@ -44,10 +45,10 @@ export const Plugin = Mark.create<Options>({
 		return {
 			visible: {
 				default: false,
-				parseHTML: (element) => (element.getAttribute("data-visible") === 'true'),
+				parseHTML: (element) => (element.getAttribute("aria-expanded") === 'true'),
 				renderHTML: (attributes) => {
 					return {
-						"data-visible": attributes.visible,
+						"aria-expanded": attributes.visible,
 					};
 				},
 			},
@@ -55,33 +56,35 @@ export const Plugin = Mark.create<Options>({
 	},
 
 	addOptions() {
-		return {
-			// Editing functions break if you add tabindex=0,
-			// which we want in the view only state to allow revealing spoilers via keyboard navigation,
-			// but we can't directly access this.editor in renderHTML so it needs to be set via configuration based on the editor props.
-			focusable: false,
-		};
+		return { };
 	},
 
 	parseHTML() {
 		return [
 			{
-				tag: `span[data-type=${this.name}]`,
+				tag: `button[data-type=${this.name}]`,
 			},
 		];
 	},
 
 	renderHTML({ HTMLAttributes }) {
 		return [
-			"span",
+			"button",
 			mergeAttributes(HTMLAttributes, {
 				"data-type": this.name,
-				"role": "button",
-				"aria-label": "text spoilers",
+				// "title" is used instead of "aria-label" because this way, when the
+				// spoiler is revealed, it just says it outright instead of repeating
+				// the "aria-label" value
+				"title": "Text Spoilers",
 				"tabindex": this.editor.options.editable ? undefined : 0,
+				"disabled": this.editor.options.editable ? 0 : undefined,
 			}),
-			// This 0 is used to mark where the content is to be inserted (https://tiptap.dev/guide/custom-extensions#render-html)
-			0,
+			[
+				"span", 
+				{},
+				// This 0 is used to mark where the content is to be inserted (https://tiptap.dev/guide/custom-extensions#render-html)
+				0,
+			]
 		];
 	},
 
@@ -133,11 +136,11 @@ export const Plugin = Mark.create<Options>({
 		return [
 			toggleAttributeOnClick({
 				name: this.name,
-				attribute: "data-visible",
+				attribute: "aria-expanded",
 			}),
 			toggleAttributeOnFocusKey({
 				name: this.name,
-				attribute: "data-visible",
+				attribute: "aria-expanded",
 			}),
 		];
 	},
