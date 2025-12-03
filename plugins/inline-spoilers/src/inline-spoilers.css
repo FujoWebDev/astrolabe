@@ -5,6 +5,18 @@
 	border: 1px dashed black;
 }
 
+.astrolabe-editor [contenteditable="true"]
+	button[data-type="inline-spoilers"]
+	span.sr-only {
+	display: none;
+}
+
+.astrolabe-editor [contenteditable="true"]
+	button[data-type="inline-spoilers"]
+	span.content {
+	display: contents;
+}
+
 .astrolabe-editor [contenteditable="false"]
 	button[data-type="inline-spoilers"] {
 	all: unset;
@@ -13,14 +25,43 @@
 }
 
 .astrolabe-editor [contenteditable="false"]
+	button[data-type="inline-spoilers"][aria-expanded="true"] {
+	border: 1px dashed black;
+}
+
+.astrolabe-editor [contenteditable="false"]
 	button[data-type="inline-spoilers"][aria-expanded="false"] {
 	background-color: oklch(0 0 0);
 }
+
 .astrolabe-editor [contenteditable="false"]
-	button[data-type="inline-spoilers"][aria-expanded="false"] span {
-	visibility: hidden;
+	button[data-type="inline-spoilers"][aria-expanded="true"] 
+	span.sr-only {
+	display: none;
 }
+
 .astrolabe-editor [contenteditable="false"]
-	button[data-type="inline-spoilers"][aria-expanded="true"] {
-	border: 1px dashed black;
+	button[data-type="inline-spoilers"][aria-expanded="false"] 
+	span.sr-only {
+
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0,0,0,0);
+	border: 0;
+}
+
+.astrolabe-editor [contenteditable="false"]
+	button[data-type="inline-spoilers"][aria-expanded="true"] 
+	span.content {
+	display: contents;
+}
+
+.astrolabe-editor [contenteditable="false"]
+	button[data-type="inline-spoilers"][aria-expanded="false"] 
+	span.content {
+	visibility: hidden;
 }
