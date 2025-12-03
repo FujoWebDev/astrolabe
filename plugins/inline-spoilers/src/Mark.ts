@@ -68,24 +68,37 @@ export const Plugin = Mark.create<Options>({
 	},
 
 	renderHTML({ HTMLAttributes }) {
-		return [
+		let returnHTML = [
 			"button",
 			mergeAttributes(HTMLAttributes, {
 				"data-type": this.name,
 				// "title" is used instead of "aria-label" because this way, when the
 				// spoiler is revealed, it just says it outright instead of repeating
 				// the "aria-label" value
-				"title": "Text Spoilers",
+				//"title": "Text Spoilers",
 				"tabindex": this.editor.options.editable ? undefined : 0,
 				"disabled": this.editor.options.editable ? 0 : undefined,
 			}),
+		];
+		// only return special screenreader span if not editable
+		if (!this.editor.options.editable) {
+			returnHTML.push(
+				[
+					"span",
+					{"class": "sr-only"},
+					"text spoilers",
+				],
+			);
+		}
+		returnHTML.push(
 			[
 				"span", 
-				{},
+				{"class": "content"},
 				// This 0 is used to mark where the content is to be inserted (https://tiptap.dev/guide/custom-extensions#render-html)
 				0,
 			]
-		];
+		);
+		return returnHTML;
 	},
 
 	addCommands() {
