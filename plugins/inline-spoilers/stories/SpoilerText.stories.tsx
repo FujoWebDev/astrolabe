@@ -51,3 +51,12 @@ export const MultiSpoilerViewOnly: Story = {
 		editable: false,
 	},
 };
+
+// Want to edit the parseHTML to fail gracefully if there is no span with class
+// 'content' 
+export const TODOFallback: Story = {
+	args: {
+		initialText:
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span>spoilered</span></button> text",
+	},
+};
