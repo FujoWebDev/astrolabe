@@ -74,7 +74,7 @@ export const Plugin = Mark.create<Options>({
 			mergeAttributes(HTMLAttributes, {
 				"data-type": this.name,
 				"tabindex": this.editor.options.editable ? undefined : 0,
-				"disabled": this.editor.options.editable ? 0 : undefined,
+				"disabled": this.editor.options.editable ? true : undefined,
 			}),
 		];
 		// only return special screenreader span if not editable
