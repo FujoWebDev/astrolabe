@@ -89,7 +89,7 @@ type Story = StoryObj<typeof meta>;
 export const Bluesky: Story = {
 	args: {
 		initialText:
-			"Some <button data-type='inline-spoilers' data-visible='false'><span>spoilered</span></button> text",
+			"Some <button data-type='inline-spoilers' data-visible='false'><span class='content'>spoilered</span></button> text",
 	},
 	render: () => {
 		const blueskyRecord = useEditorToRecord({ jsonDocPlugins: [toRot13Text] });
@@ -106,7 +106,7 @@ export const Bluesky: Story = {
 export const Markdown: Story = {
 	args: {
 		initialText:
-			"Some <button data-type='inline-spoilers' data-visible='false'><span>spoilered</span></button> text",
+			"Some <button data-type='inline-spoilers' data-visible='false'><span class='content'>spoilered</span></button> text",
 	},
 	render: () => {
 		const mdast = useEditorToMdast([toMdastNode]);
@@ -127,7 +127,7 @@ export const Markdown: Story = {
 export const MarkdownNested: Story = {
 	args: {
 		initialText:
-			"Some <button data-type='inline-spoilers' data-visible='false'><span>spoi<strong>ler</strong>ed</span></button> text",
+			"Some <button data-type='inline-spoilers' data-visible='false'><span class='content'>spoi<strong>ler</strong>ed</span></button> text",
 	},
 	render: () => {
 		const mdast = useEditorToMdast([toMdastNode]);

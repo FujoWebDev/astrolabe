@@ -4,108 +4,108 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 // to catch the event as it bubbles to parent, so we check the ancestors recursively
 // until we find the attribute, hit the outer wrapper of the editor, or there is no parent.
 const getElementOrAncestorWithAttribute = (
-  element: HTMLElement | null,
-  attribute: string
+	element: HTMLElement | null,
+	attribute: string
 ): HTMLElement | null => {
-  if (!element || element.classList.contains("ProseMirror")) {
-    return null;
-  }
-  if (element.hasAttribute(attribute)) {
-    return element;
-  }
-  return getElementOrAncestorWithAttribute(element.parentElement, attribute);
+	if (!element || element.classList.contains("ProseMirror")) {
+		return null;
+	}
+	if (element.hasAttribute(attribute)) {
+		return element;
+	}
+	return getElementOrAncestorWithAttribute(element.parentElement, attribute);
 };
 
 export const toggleAttributeOnClick = ({
-  name,
-  attribute,
+	name,
+	attribute,
 }: {
-  name: string;
-  attribute: string;
+	name: string;
+	attribute: string;
 }) => {
-  return new Plugin({
-    key: new PluginKey(`update${name}AttributeOnClick`),
-    props: {
-      handleClickOn(view, _pos, _node, _nodePos, event) {
-        if (view.editable) {
-          return false;
-        }
-        const element = event.target as HTMLElement;
-        const elementOrParent = getElementOrAncestorWithAttribute(
-          element,
-          attribute
-        );
-        if (!elementOrParent) {
-          console.log(
-            "neither target nor parent has html attribute",
-            attribute
-          );
-          return false;
-        }
-        const currentValue = elementOrParent.getAttribute(attribute);
-        if (!currentValue) {
-          console.log("elementOrParent attribute has no currentValue");
-          return false;
-        }
-        const newValue = currentValue === "false" ? "true" : "false";
-        console.log(
-          `toggling ${name} attribute ${attribute} from ${currentValue} to ${newValue}`
-        );
-        elementOrParent.setAttribute(attribute, newValue);
-        return true;
-      },
-    },
-  });
+	return new Plugin({
+		key: new PluginKey(`update${name}AttributeOnClick`),
+		props: {
+			handleClickOn(view, _pos, _node, _nodePos, event) {
+				if (view.editable) {
+					return false;
+				}
+				const element = event.target as HTMLElement;
+				const elementOrParent = getElementOrAncestorWithAttribute(
+					element,
+					attribute
+				);
+				if (!elementOrParent) {
+					console.log(
+						"neither target nor parent has html attribute",
+						attribute
+					);
+					return false;
+				}
+				const currentValue = elementOrParent.getAttribute(attribute);
+				if (!currentValue) {
+					console.log("elementOrParent attribute has no currentValue");
+					return false;
+				}
+				const newValue = currentValue === "false" ? "true" : "false";
+				console.log(
+					`toggling ${name} attribute ${attribute} from ${currentValue} to ${newValue}`
+				);
+				elementOrParent.setAttribute(attribute, newValue);
+				return true;
+			},
+		},
+	});
 };
 
 export const toggleAttributeOnFocusKey = ({
-  name,
-  attribute,
+	name,
+	attribute,
 }: {
-  name: string;
-  attribute: string;
+	name: string;
+	attribute: string;
 }) => {
-  return new Plugin({
-    key: new PluginKey(`update${name}AttributeOnFocusKey`),
-    props: {
-      handleDOMEvents: {
-        keydown(view, event) {
-          if (view.editable) {
-            return false;
-          }
+	return new Plugin({
+		key: new PluginKey(`update${name}AttributeOnFocusKey`),
+		props: {
+			handleDOMEvents: {
+				keydown(view, event) {
+					if (view.editable) {
+						return false;
+					}
 
-          const keyName = event.key
-          if (keyName !== "Enter" && keyName !== " ") {
-            return false;
-          }
-          console.log(event)
-          console.log(keyName)
+					const keyName = event.key
+					if (keyName !== "Enter" && keyName !== " ") {
+						return false;
+					}
+					//console.log(event)
+					//console.log(keyName)
 
-          const element = event.target as HTMLElement;
-          const elementOrParent = getElementOrAncestorWithAttribute(
-            element,
-            attribute
-          );
-          if (!elementOrParent) {
-            console.log(
-              "neither target nor parent has html attribute",
-              attribute
-            );
-            return false;
-          }
-          const currentValue = elementOrParent.getAttribute(attribute);
-          if (!currentValue) {
-            console.log("elementOrParent attribute has no currentValue");
-            return false;
-          }
-          const newValue = currentValue === "false" ? "true" : "false";
-          console.log(
-            `toggling ${name} attribute ${attribute} from ${currentValue} to ${newValue}`
-          );
-          elementOrParent.setAttribute(attribute, newValue);
-          return true;
-        }
-      }
-    },
-  });
+					const element = event.target as HTMLElement;
+					const elementOrParent = getElementOrAncestorWithAttribute(
+						element,
+						attribute
+					);
+					if (!elementOrParent) {
+						console.log(
+							"neither target nor parent has html attribute",
+							attribute
+						);
+						return false;
+					}
+					const currentValue = elementOrParent.getAttribute(attribute);
+					if (!currentValue) {
+						console.log("elementOrParent attribute has no currentValue");
+						return false;
+					}
+					const newValue = currentValue === "false" ? "true" : "false";
+					console.log(
+						`toggling ${name} attribute ${attribute} from ${currentValue} to ${newValue}`
+					);
+					elementOrParent.setAttribute(attribute, newValue);
+					return true;
+				}
+			}
+		},
+	});
 };
