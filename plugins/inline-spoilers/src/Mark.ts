@@ -63,6 +63,7 @@ export const Plugin = Mark.create<Options>({
 		return [
 			{
 				tag: `button[data-type=${this.name}]`,
+				contentElement: `span.content`,
 			},
 		];
 	},
