@@ -32,14 +32,14 @@ type Story = StoryObj<typeof meta>;
 export const Editable: Story = {
 	args: {
 		initialText:
-			"Some <button data-type='inline-spoilers' aria-expanded='false'><span>spoilered</span></button> text",
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span>text spoilers</span><span class='content'>spoilered</span></button> text",
 	},
 };
 
 export const ViewOnly: Story = {
 	args: {
 		initialText:
-			"Some <button data-type='inline-spoilers' aria-expanded='false'><span>spoilered</span></button> text",
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span class='content'>spoilered</span></button> text",
 		editable: false,
 	},
 };
@@ -47,7 +47,7 @@ export const ViewOnly: Story = {
 export const MultiSpoilerViewOnly: Story = {
 	args: {
 		initialText:
-			"Some <button data-type='inline-spoilers' aria-expanded='false'><span>very secret spoilered</span></button> text with extra <button data-type='inline-spoilers' aria-expanded='false'><span>spoilers</span></button>.",
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span class='content'>very secret spoilered</span></button> text with extra <button data-type='inline-spoilers' aria-expanded='false'><span class='content'>spoilers</span></button>.",
 		editable: false,
 	},
 };
