@@ -69,21 +69,17 @@ export const Plugin = Mark.create<Options>({
 	},
 
 	renderHTML({ HTMLAttributes }) {
-		let returnHTML = [
+		let spoilerNodes = [
 			"button",
 			mergeAttributes(HTMLAttributes, {
 				"data-type": this.name,
-				// "title" is used instead of "aria-label" because this way, when the
-				// spoiler is revealed, it just says it outright instead of repeating
-				// the "aria-label" value
-				//"title": "Text Spoilers",
 				"tabindex": this.editor.options.editable ? undefined : 0,
 				"disabled": this.editor.options.editable ? 0 : undefined,
 			}),
 		];
 		// only return special screenreader span if not editable
 		if (!this.editor.options.editable) {
-			returnHTML.push(
+			spoilerNodes.push(
 				[
 					"span",
 					{"class": "sr-only"},
@@ -91,7 +87,7 @@ export const Plugin = Mark.create<Options>({
 				],
 			);
 		}
-		returnHTML.push(
+		spoilerNodes.push(
 			[
 				"span", 
 				{"class": "content"},
@@ -99,7 +95,7 @@ export const Plugin = Mark.create<Options>({
 				0,
 			]
 		);
-		return returnHTML;
+		return spoilerNodes;
 	},
 
 	addCommands() {
