@@ -78,8 +78,6 @@ export const toggleAttributeOnFocusKey = ({
 					if (keyName !== "Enter" && keyName !== " ") {
 						return false;
 					}
-					//console.log(event)
-					//console.log(keyName)
 
 					const element = event.target as HTMLElement;
 					const elementOrParent = getElementOrAncestorWithAttribute(
