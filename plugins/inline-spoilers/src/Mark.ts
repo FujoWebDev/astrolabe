@@ -4,13 +4,17 @@ import {
 	markPasteRule,
 	mergeAttributes,
 } from "@tiptap/core";
+import {ReactMarkViewRenderer } from '@tiptap/react';
+
 import { PluginKey } from "@tiptap/pm/state";
-import { toggleAttributeOnClick } from "./utils";
+import { 
+	toggleAttributeOnClick,
+	toggleAttributeOnFocusKey 
+} from "./utils";
 import "./inline-spoilers.css";
 
 export interface Options {
 	visible?: boolean;
-	focusable?: boolean;
 }
 
 export const Key = new PluginKey("InlineSpoilersPlugin");
@@ -41,10 +45,10 @@ export const Plugin = Mark.create<Options>({
 		return {
 			visible: {
 				default: false,
-				parseHTML: (element) => (element.getAttribute("data-visible") === 'true'),
+				parseHTML: (element) => (element.getAttribute("aria-expanded") === 'true'),
 				renderHTML: (attributes) => {
 					return {
-						"data-visible": attributes.visible,
+						"aria-expanded": attributes.visible,
 					};
 				},
 			},
@@ -52,33 +56,46 @@ export const Plugin = Mark.create<Options>({
 	},
 
 	addOptions() {
-		return {
-			// Editing functions break if you add tabindex=0,
-			// which we want in the view only state to allow revealing spoilers via keyboard navigation,
-			// but we can't directly access this.editor in renderHTML so it needs to be set via configuration based on the editor props.
-			focusable: false,
-		};
+		return { };
 	},
 
 	parseHTML() {
 		return [
 			{
-				tag: `span[data-type=${this.name}]`,
+				tag: `button[data-type=${this.name}]`,
+				contentElement: `span.content`,
 			},
 		];
 	},
 
 	renderHTML({ HTMLAttributes }) {
-		return [
-			"span",
+		let spoilerNodes = [
+			"button",
 			mergeAttributes(HTMLAttributes, {
 				"data-type": this.name,
-				"aria-label": "text spoilers",
-				tabindex: this.options.focusable ? 0 : undefined,
+				"tabindex": this.editor.options.editable ? undefined : 0,
+				"disabled": this.editor.options.editable ? true : undefined,
 			}),
-			// This 0 is used to mark where the content is to be inserted (https://tiptap.dev/guide/custom-extensions#render-html)
-			0,
 		];
+		// only return special screenreader span if not editable
+		if (!this.editor.options.editable) {
+			spoilerNodes.push(
+				[
+					"span",
+					{"class": "sr-only"},
+					"text spoilers",
+				],
+			);
+		}
+		spoilerNodes.push(
+			[
+				"span", 
+				{"class": "content"},
+				// This 0 is used to mark where the content is to be inserted (https://tiptap.dev/guide/custom-extensions#render-html)
+				0,
+			]
+		);
+		return spoilerNodes;
 	},
 
 	addCommands() {
@@ -129,7 +146,11 @@ export const Plugin = Mark.create<Options>({
 		return [
 			toggleAttributeOnClick({
 				name: this.name,
-				attribute: "data-visible",
+				attribute: "aria-expanded",
+			}),
+			toggleAttributeOnFocusKey({
+				name: this.name,
+				attribute: "aria-expanded",
 			}),
 		];
 	},

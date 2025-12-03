@@ -3,14 +3,3 @@
   width: auto;
   display: inline-block;
 }
-
-
-.astrolabe-editor [contenteditable="false"]
-  span[data-type="inline-spoilers"][data-visible="false"] {
-  background-color: black;
-}
-
-.astrolabe-editor [contenteditable="false"]
-  span[data-type="inline-spoilers"][data-visible="true"] {
-  border: 1px dashed black;
-}

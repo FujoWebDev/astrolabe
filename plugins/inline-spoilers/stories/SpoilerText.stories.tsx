@@ -9,7 +9,7 @@ import withEditorTreeViewer from "@fujocoded/astrolabe-editor-tree-viewer/decora
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
 	title: "Astrolabe/SpoilerText",
-	//   component: Button,
+	//	 component: Button,
 	parameters: {
 		layout: "padded",
 		buttons: [InlineSpoilersButton],
@@ -32,14 +32,31 @@ type Story = StoryObj<typeof meta>;
 export const Editable: Story = {
 	args: {
 		initialText:
-			"Some <span data-type='inline-spoilers' data-visible='false'>spoilered</span> text",
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span>text spoilers</span><span class='content'>spoilered</span></button> text",
 	},
 };
 
 export const ViewOnly: Story = {
 	args: {
 		initialText:
-			"Some <span data-type='inline-spoilers' data-visible='false'>spoilered</span> text",
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span class='content'>spoilered</span></button> text",
 		editable: false,
+	},
+};
+
+export const MultiSpoilerViewOnly: Story = {
+	args: {
+		initialText:
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span class='content'>very secret spoilered</span></button> text with extra <button data-type='inline-spoilers' aria-expanded='false'><span class='content'>spoilers</span></button>.",
+		editable: false,
+	},
+};
+
+// Want to edit the parseHTML to fail gracefully if there is no span with class
+// 'content' 
+export const TODOFallback: Story = {
+	args: {
+		initialText:
+			"Some <button data-type='inline-spoilers' aria-expanded='false'><span>spoilered</span></button> text",
 	},
 };
