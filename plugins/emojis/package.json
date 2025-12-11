@@ -40,10 +40,10 @@
 		"@tiptap/starter-kit": "catalog:"
 	},
 	"dependencies": {
-		"@atproto/api": "^0.16.9",
+		"@atproto/api": "^0.17.7",
 		"@atproto/identity": "^0.4.9",
 		"@atproto/syntax": "^0.4.1",
-		"@tiptap/extension-emoji": "^3.8.0",
+		"@tiptap/extension-emoji": "^3.10.1",
 		"prototypey": "^0.3.3"
 	}
 }

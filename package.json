@@ -6,6 +6,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev --filter=!@fujocoded/astrolabe-storybook",
     "test": "turbo run test",
+    "test:watch": "turbo run test -- --watch",
     "lexicon:emit": "prototypey gen-emit ./lexicons ./plugins/**/lexicon.ts",
     "storybook": "turbo run build && turbo run storybook --filter=@fujocoded/astrolabe-storybook",
     "build-storybook": "turbo run build && turbo run build-storybook --filter=@fujocoded/astrolabe-storybook",
@@ -19,19 +20,19 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@storybook/addon-docs": "^10.0.0-beta.9",
-    "@storybook/addon-vitest": "^10.0.0-beta.9",
+    "@storybook/addon-docs": "^10.0.2",
+    "@storybook/addon-vitest": "^10.0.2",
     "@storybook/react-vite": "catalog:storybook",
-    "@types/node": "^24.6.1",
+    "@types/node": "^24.9.2",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
-    "tsdown": "^0.15.6",
-    "turbo": "^2.5.8",
+    "tsdown": "^0.15.12",
+    "turbo": "^2.6.0",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4",
+    "vitest": "^4.0.6",
     "yalc": "1.0.0-pre.53"
   },
-  "packageManager": "pnpm@10.0.0",
+  "packageManager": "pnpm@10.20.0",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"

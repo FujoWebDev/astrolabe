@@ -25,8 +25,8 @@
     "@fujocoded/astdapters-mdast-starter": "workspace:*"
   },
   "dependencies": {
-    "@atproto/api": "^0.16.9",
-    "mdast-util-to-markdown": "^2.1.2"
+    "@atproto/api": "^0.17.7",
+    "mdast-util-to-markdown": "catalog:mdast"
   },
   "devDependencies": {
     "@fujocoded/astdapters-mdast-starter": "workspace:*",
@@ -35,7 +35,7 @@
     "@tiptap/react": "catalog:",
     "@tiptap/starter-kit": "catalog:",
     "@types/mdast": "catalog:mdast",
-    "mdast-util-to-string": "^4.0.0",
+    "mdast-util-to-string": "catalog:mdast",
     "unist-util-visit": "catalog:mdast"
   }
 }
