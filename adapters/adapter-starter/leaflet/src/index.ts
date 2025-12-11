@@ -1,5 +1,5 @@
 import {
-  convert as toMdast,
+  toMdast,
   type ConverterMarkPlugin,
   type ConverterPlugin,
 } from "../../mdast/src/index.js";

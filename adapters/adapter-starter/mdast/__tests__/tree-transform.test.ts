@@ -1,15 +1,14 @@
 import { describe, expect, test } from "vitest";
 
 import {
-  convertWithPlugins,
+  convert,
   type TreeTransformPlugin,
   type ProseMirrorDocument,
 } from "../src/index.js";
-import type { Paragraph, Root } from "mdast";
-import { convert } from "../src/index.js";
+import type { Paragraph } from "mdast";
 
-describe("convertWithPlugins", () => {
-  test("duplicates input tree when pre-phase tree transform plugin returns two trees", () => {
+describe("convert with tree transforms", () => {
+  test("duplicates input tree when pre-phase tree transform plugin returns two trees", async () => {
     const splitPlugin: TreeTransformPlugin = {
       pluginType: "tree-transform",
       phase: "pre",
@@ -30,14 +29,10 @@ describe("convertWithPlugins", () => {
       ],
     };
 
-    const result = convertWithPlugins(
-      input,
-      (doc, context) => convert(doc, context) as Root,
-      [splitPlugin]
-    );
+    const { trees } = await convert(input, { plugins: [splitPlugin] });
 
-    expect(result).toHaveLength(2);
-    expect(result[0]).toStrictEqual({
+    expect(trees).toHaveLength(2);
+    expect(trees[0]).toStrictEqual({
       type: "root",
       children: [
         {
@@ -46,10 +41,10 @@ describe("convertWithPlugins", () => {
         },
       ],
     });
-    expect(result[1]).toStrictEqual(result[0]);
+    expect(trees[1]).toStrictEqual(trees[0]);
   });
 
-  test("appends new paragraph when post-phase tree transform plugin modifies tree structure", () => {
+  test("appends new paragraph when post-phase tree transform plugin modifies tree structure", async () => {
     const modifyPlugin: TreeTransformPlugin = {
       pluginType: "tree-transform",
       phase: "post",
@@ -78,14 +73,10 @@ describe("convertWithPlugins", () => {
       ],
     };
 
-    const result = convertWithPlugins(
-      input,
-      (doc, context) => convert(doc, context) as Root,
-      [modifyPlugin]
-    );
+    const { trees } = await convert(input, { plugins: [modifyPlugin] });
 
-    expect(result).toHaveLength(1);
-    expect(result[0]).toStrictEqual({
+    expect(trees).toHaveLength(1);
+    expect(trees[0]).toStrictEqual({
       type: "root",
       children: [
         {
@@ -100,7 +91,7 @@ describe("convertWithPlugins", () => {
     });
   });
 
-  test("applies pre-phase and post-phase tree transform plugins in correct order", () => {
+  test("applies pre-phase and post-phase tree transform plugins in correct order", async () => {
     const firstPlugin: TreeTransformPlugin = {
       pluginType: "tree-transform",
       phase: "pre",
@@ -137,14 +128,12 @@ describe("convertWithPlugins", () => {
       ],
     };
 
-    const result = convertWithPlugins(
-      input,
-      (doc, context) => convert(doc, context) as Root,
-      [firstPlugin, secondPlugin]
-    );
+    const { trees } = await convert(input, {
+      plugins: [firstPlugin, secondPlugin],
+    });
 
-    expect(result).toHaveLength(2);
-    expect(result[0]).toStrictEqual({
+    expect(trees).toHaveLength(2);
+    expect(trees[0]).toStrictEqual({
       type: "root",
       children: [
         {
@@ -156,7 +145,7 @@ describe("convertWithPlugins", () => {
         },
       ],
     });
-    expect(result[1]).toStrictEqual({
+    expect(trees[1]).toStrictEqual({
       type: "root",
       children: [
         {
@@ -170,7 +159,7 @@ describe("convertWithPlugins", () => {
     });
   });
 
-  test("converts document normally when empty plugin array is provided", () => {
+  test("converts document normally when empty plugin array is provided", async () => {
     const input: ProseMirrorDocument = {
       type: "doc",
       attrs: {},
@@ -183,14 +172,10 @@ describe("convertWithPlugins", () => {
       ],
     };
 
-    const result = convertWithPlugins(
-      input,
-      (doc, context) => convert(doc, context) as Root,
-      []
-    );
+    const { trees } = await convert(input, { plugins: [] });
 
-    expect(result).toHaveLength(1);
-    expect(result[0]).toStrictEqual({
+    expect(trees).toHaveLength(1);
+    expect(trees[0]).toStrictEqual({
       type: "root",
       children: [
         {
@@ -201,7 +186,7 @@ describe("convertWithPlugins", () => {
     });
   });
 
-  test("preserves bold marks when duplicating tree with pre-phase tree transform plugin", () => {
+  test("preserves bold marks when duplicating tree with pre-phase tree transform plugin", async () => {
     const splitPlugin: TreeTransformPlugin = {
       pluginType: "tree-transform",
       phase: "pre",
@@ -226,14 +211,10 @@ describe("convertWithPlugins", () => {
       ],
     };
 
-    const result = convertWithPlugins(
-      input,
-      (doc, context) => convert(doc, context) as Root,
-      [splitPlugin]
-    );
+    const { trees } = await convert(input, { plugins: [splitPlugin] });
 
-    expect(result).toHaveLength(2);
-    expect(result[0]).toStrictEqual({
+    expect(trees).toHaveLength(2);
+    expect(trees[0]).toStrictEqual({
       type: "root",
       children: [
         {
@@ -249,6 +230,6 @@ describe("convertWithPlugins", () => {
         },
       ],
     });
-    expect(result[1]).toStrictEqual(result[0]);
+    expect(trees[1]).toStrictEqual(trees[0]);
   });
 });

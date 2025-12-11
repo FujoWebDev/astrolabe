@@ -16,6 +16,6 @@ export default defineConfig([
     dts: true,
     clean: true,
     unbundle: true,
-    external: ["@tiptap/react", "@tiptap/core", "react", "react-dom"],
+    external: ["@tiptap/react", "@tiptap/core", "react", "react-dom", "../src/index"],
   },
 ]);
