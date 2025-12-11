@@ -27,9 +27,9 @@
   ],
   "dependencies": {
     "mdast-util-phrasing": "^4.1.0",
-    "mdast-util-to-string": "^4.0.0",
+    "mdast-util-to-string": "catalog:mdast",
     "unist-builder": "^4.0.0",
-    "unist-util-is": "^6.0.0",
+    "unist-util-is": "^6.0.1",
     "unist-util-visit": "catalog:mdast",
     "unist-util-visit-parents": "catalog:mdast"
   },
@@ -40,7 +40,7 @@
     "@tiptap/react": "catalog:",
     "@tiptap/starter-kit": "catalog:",
     "@types/mdast": "catalog:mdast",
-    "mdast-util-to-markdown": "^2.1.2",
+    "mdast-util-to-markdown": "catalog:mdast",
     "storybook": "catalog:storybook"
   }
 }

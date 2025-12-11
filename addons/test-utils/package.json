@@ -22,10 +22,10 @@
     "LICENSE"
   ],
   "devDependencies": {
+    "@atproto/api": "^0.17.7",
     "@tiptap/core": "catalog:",
     "@tiptap/react": "catalog:",
-    "@tiptap/starter-kit": "catalog:",
-    "@atproto/api": "^0.16.9"
+    "@tiptap/starter-kit": "catalog:"
   },
   "peerDependencies": {
     "@fujocoded/astdapters-bluesky-starter": "workspace:*"
