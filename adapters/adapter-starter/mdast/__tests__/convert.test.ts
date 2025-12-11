@@ -3,7 +3,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { describe, expect, test } from "vitest";
 
 import {
-  convert,
+  toMdast,
   type ConverterPlugin,
   type ConverterMarkPlugin,
   type ProseMirrorDocument,
@@ -36,14 +36,14 @@ const validateAndConvert = (doc: ProseMirrorDocument) => {
       cause: error,
     });
   }
-  return convert(doc, emptyPlugins);
+  return toMdast(doc, emptyPlugins);
 };
 
 const emptyPlugins: { plugins: ConverterPlugin[] } = {
   plugins: [],
 };
 
-describe("mdast adapter convert()", () => {
+describe("mdast adapter toMdast()", () => {
   test("converts a simple paragraph with plain text", () => {
     const input: ProseMirrorDocument = {
       type: "doc",
@@ -298,7 +298,7 @@ describe("mdast adapter convert()", () => {
       content: [codeBlock("console.log('hi')", "js") as any],
     };
 
-    const ast = convert(input, emptyPlugins);
+    const ast = toMdast(input, emptyPlugins);
 
     expect(ast).toStrictEqual({
       type: "root",
@@ -319,7 +319,7 @@ describe("mdast adapter convert()", () => {
       ],
     };
 
-    const ast = convert(input, emptyPlugins);
+    const ast = toMdast(input, emptyPlugins);
 
     expect(ast).toStrictEqual({
       type: "root",
@@ -355,7 +355,7 @@ describe("mdast adapter convert()", () => {
       ],
     };
 
-    const ast = convert(input, emptyPlugins);
+    const ast = toMdast(input, emptyPlugins);
 
     expect(ast).toStrictEqual({
       type: "root",
@@ -391,7 +391,7 @@ describe("mdast adapter convert()", () => {
         },
       ],
     };
-    const ast = convert(input, { plugins: [plugin] });
+    const ast = toMdast(input, { plugins: [plugin] });
 
     expect(ast).toStrictEqual({
       type: "root",
@@ -423,7 +423,7 @@ describe("mdast adapter convert()", () => {
       ],
     };
 
-    const ast = convert(input, { plugins: [plugin] });
+    const ast = toMdast(input, { plugins: [plugin] });
     expect(ast).toStrictEqual({
       type: "root",
       children: [

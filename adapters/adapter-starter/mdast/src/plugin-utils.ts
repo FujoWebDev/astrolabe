@@ -2,25 +2,31 @@ import type { JSONContent } from "@tiptap/core";
 import type { Nodes as MdastNodes, Root } from "mdast";
 import type { ProseMirrorMark } from "./index.js";
 
-export interface ConverterContext {
-  plugins: readonly (
-    | ConverterPlugin
-    | ConverterMarkPlugin
-    | TreeTransformPlugin
-  )[];
-}
+/**
+ * Adapter that input metadata will augment this interface
+ */
+export interface PluginMetadataInput {}
 
-export interface TreeTransformContext {
+/**
+ * Adapter that output metadata will augment this interface
+ */
+export interface PluginMetadataOutput {}
+
+export interface PluginContext {
   plugins: readonly (
     | ConverterPlugin
     | ConverterMarkPlugin
     | TreeTransformPlugin
   )[];
+  meta: {
+    input?: PluginMetadataInput;
+    output: PluginMetadataOutput;
+  };
 }
 
 export interface ConverterPlugin {
   pluginType: "converter-node";
-  convert: (node: JSONContent, context: ConverterContext) => MdastNodes;
+  convert: (node: JSONContent, context: PluginContext) => MdastNodes;
   handlesNode: (node: JSONContent) => boolean;
 }
 
@@ -30,7 +36,7 @@ export interface ConverterMarkPlugin {
     mark: ProseMirrorMark,
     node: JSONContent,
     currentNode: MdastNodes,
-    context: ConverterContext
+    context: PluginContext
   ) => MdastNodes;
   handlesMark: (mark: ProseMirrorMark) => boolean;
 }
@@ -52,15 +58,19 @@ export type TreeTransformPlugin = {
       phase: "pre";
       transform: (
         tree: JSONContent,
-        context: TreeTransformContext
-      ) => JSONContent | JSONContent[] | null;
+        context: PluginContext
+      ) =>
+        | JSONContent
+        | JSONContent[]
+        | null
+        | Promise<JSONContent | JSONContent[] | null>;
     }
   | {
       phase: "post";
       transform: (
         trees: Root[],
-        context: TreeTransformContext
-      ) => Root | Root[] | null;
+        context: PluginContext
+      ) => Root | Root[] | null | Promise<Root | Root[] | null>;
     }
 );
 
@@ -82,7 +92,7 @@ export const applyPluginsNodes = (
       continue;
     }
 
-    return plugin.convert(node, { plugins });
+    return plugin.convert(node, { plugins, meta: { output: {} } });
   }
 
   return undefined;
@@ -108,7 +118,10 @@ export const applyPluginsMarks = (
       continue;
     }
 
-    return plugin.convert(mark, node, currentNode, { plugins });
+    return plugin.convert(mark, node, currentNode, {
+      plugins,
+      meta: { output: {} },
+    });
   }
 
   return undefined;

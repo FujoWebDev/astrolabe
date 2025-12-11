@@ -1,11 +1,17 @@
-import { RichText, Agent } from "@atproto/api";
 import {
-  convert as toMdast,
-  convertWithPlugins,
+  RichText,
+  Agent,
+  AppBskyFeedPost,
+  BlobRef,
+  AppBskyEmbedImages,
+  AppBskyEmbedExternal,
+} from "@atproto/api";
+import {
+  convert as convertToMdast,
   type ConverterMarkPlugin,
   type ConverterPlugin,
   type TreeTransformPlugin,
-} from "../../mdast/src/index.js";
+} from "@fujocoded/astdapters-mdast-starter";
 import { type DocumentType } from "@tiptap/core";
 import { mdastToText } from "./serializer.js";
 import {
@@ -17,6 +23,33 @@ import type { Root } from "mdast";
 
 const defaultAgent = new Agent("https://public.api.bsky.app");
 
+export interface PendingImageEmbed {
+  id: string;
+  src: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+}
+
+export interface PendingExternalEmbed {
+  uri: string;
+  title: string;
+  description?: string;
+  thumb?: string;
+}
+
+export interface PendingEmbeds {
+  images?: PendingImageEmbed[];
+  external?: PendingExternalEmbed;
+  // TODO: videos, records, etc.
+}
+
+declare module "@fujocoded/astdapters-mdast-starter" {
+  interface PluginMetadataOutput {
+    embeds: PendingEmbeds[];
+  }
+}
+
 export interface MdastToBskyOptions {
   basePath?: string;
   bracketFirstHeading?: boolean;
@@ -25,16 +58,24 @@ export interface MdastToBskyOptions {
   mdastPlugins?: RemarkPlugin[];
 }
 
-interface BlueskyConversionResult {
-  text: RichText;
-  images: never[];
+// See: https://github.com/bluesky-social/atproto/blob/main/lexicons/app/bsky/feed/post.json
+export type BlueskyDraftResults = Array<{
+  record: {
+    text: RichText;
+  };
+  pendingEmbeds: PendingEmbeds;
+}>;
+
+export interface UploadedImage {
+  id: string;
+  blob: Parameters<typeof BlobRef.fromJsonRef>[0];
 }
 
 export const mdastToBsky = async (
   mdast: Root,
   options?: MdastToBskyOptions
-): Promise<BlueskyConversionResult> => {
-  const transformedMdast = { ...mdast };
+): Promise<{ text: RichText }> => {
+  const transformedMdast = structuredClone(mdast);
 
   const plugins = options?.mdastPlugins ?? DEFAULT_BLUESKY_PLUGINS;
 
@@ -56,7 +97,7 @@ export const mdastToBsky = async (
   const agent = options?.agent ?? defaultAgent;
   await text.detectFacets(agent);
 
-  return { text, images: [] };
+  return { text };
 };
 
 export interface BlueskyConvertOptions {
@@ -68,46 +109,106 @@ export interface BlueskyConvertOptions {
 export const convert = async (
   root: DocumentType,
   options?: BlueskyConvertOptions
-): Promise<BlueskyConversionResult | BlueskyConversionResult[]> => {
+): Promise<BlueskyDraftResults> => {
   const allPlugins = [
     ...(options?.treePlugins ?? []),
     ...(options?.jsonDocPlugins ?? []),
   ];
 
-  const serializerOptions = options?.serializerOptions ?? {};
+  const serializerOptions = options?.serializerOptions ?? {
+    bracketFirstHeading: true,
+  };
 
-  // If no tree plugins, use simple conversion
-  if (!allPlugins.some((p) => p.pluginType === "tree-transform")) {
-    const mdast = toMdast(root, {
-      plugins: options?.jsonDocPlugins ?? [],
-    }) as Root;
+  const { trees, context } = await convertToMdast(root, {
+    plugins: allPlugins,
+  });
 
-    return mdastToBsky(mdast, {
-      ...serializerOptions,
-      bracketFirstHeading: serializerOptions.bracketFirstHeading ?? true,
-    });
-  }
+  // Read embeds from context (post-transform plugins have run)
+  const embedsPerTree = context.meta.output?.embeds ?? [];
 
-  // Use full pipeline with tree transforms
-  const result = convertWithPlugins(
-    root,
-    (input, context) => toMdast(input, context) as Root,
-    allPlugins
-  );
-
-  // Convert each tree to Bluesky format
-  const converted = await Promise.all(
-    result.map(async (mdast) => ({
-      ...(await mdastToBsky(mdast, {
-        ...serializerOptions,
-        bracketFirstHeading: serializerOptions.bracketFirstHeading ?? true,
-      })),
+  const records = await Promise.all(
+    trees.map(async (mdast, i) => ({
+      record: await mdastToBsky(mdast, serializerOptions),
+      pendingEmbeds: embedsPerTree[i] ?? {},
     }))
   );
 
-  // Return single result if only one tree, array if multiple (thread splitting)
-  return converted.length === 1 ? converted[0] : converted;
+  return records;
 };
+
+export function finalizeRecords(
+  draft: BlueskyDraftResults,
+  uploadedImages: UploadedImage[]
+): AppBskyFeedPost.Record[] {
+  const blobMap = new Map(
+    uploadedImages.map((img) => [img.id, BlobRef.fromJsonRef(img.blob)])
+  );
+
+  return draft.map(({ record, pendingEmbeds }): AppBskyFeedPost.Record => {
+    // Determine embed type (priority: images > external)
+    // TODO: Support recordWithMedia for combining images + external
+    const images = pendingEmbeds.images ?? [];
+    if (images.length > 0) {
+      const imagesEmbed: AppBskyEmbedImages.Main & {
+        $type: "app.bsky.embed.images";
+      } = {
+        $type: "app.bsky.embed.images",
+        images: images.map((img): AppBskyEmbedImages.Image => {
+          const blob = blobMap.get(img.id);
+          if (!blob) {
+            throw new Error(`Missing blob for image ${img.id}`);
+          }
+          return {
+            alt: img.alt ?? "",
+            image: blob,
+            aspectRatio: {
+              width: img.width ?? 1,
+              height: img.height ?? 1,
+            },
+          };
+        }),
+      };
+      return {
+        $type: "app.bsky.feed.post",
+        text: record.text.text,
+        facets: record.text.facets,
+        createdAt: new Date().toISOString(),
+        embed: imagesEmbed,
+      };
+    }
+
+    if (pendingEmbeds.external) {
+      const thumb = pendingEmbeds.external.thumb
+        ? blobMap.get(pendingEmbeds.external.thumb)
+        : undefined;
+      const externalEmbed: AppBskyEmbedExternal.Main & {
+        $type: "app.bsky.embed.external";
+      } = {
+        $type: "app.bsky.embed.external",
+        external: {
+          uri: pendingEmbeds.external.uri,
+          title: pendingEmbeds.external.title,
+          description: pendingEmbeds.external.description ?? "",
+          thumb,
+        },
+      };
+      return {
+        $type: "app.bsky.feed.post",
+        text: record.text.text,
+        facets: record.text.facets,
+        createdAt: new Date().toISOString(),
+        embed: externalEmbed,
+      };
+    }
+
+    return {
+      $type: "app.bsky.feed.post",
+      text: record.text.text,
+      facets: record.text.facets,
+      createdAt: new Date().toISOString(),
+    };
+  });
+}
 
 export { fromBlueskyPost } from "./from.js";
 export type { FromBlueskyOptions } from "./from.js";
@@ -124,3 +225,4 @@ export {
   remarkBracketHeading as remarkBlueskyBracketHeading,
 } from "./remark-plugins.js";
 export { mdastToText } from "./serializer.js";
+export { extractFirstLinkToBlueskyEmbed } from "./external-links.js";

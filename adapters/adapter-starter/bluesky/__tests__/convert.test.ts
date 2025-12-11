@@ -59,10 +59,11 @@ describe("bluesky adapter convert()", () => {
       ],
     };
 
-    const { text, images } = await convertDocument(input);
+    const result = await convertDocument(input);
 
-    expect(text.text).toBe("Hello, fujin.");
-    expect(images).toEqual([]);
+    expect(result).toHaveLength(1);
+    expect(result[0].record.text.text).toBe("Hello, fujin.");
+    expect(result[0].pendingEmbeds).toEqual({});
   });
 
   test("brackets the first level-one heading", async () => {
@@ -83,9 +84,11 @@ describe("bluesky adapter convert()", () => {
       ],
     };
 
-    const { text } = await convertDocument(input);
+    const result = await convertDocument(input);
 
-    expect(text.text).toBe("[My 5 Blorbos!] Top 3 (can't decide order):");
+    expect(result).toHaveLength(1);
+    expect(result[0].record.text.text).toBe("[My 5 Blorbos!] Top 3 (can't decide order):");
+    expect(result[0].pendingEmbeds).toEqual({});
   });
 
   test("renders links as text with URL", async () => {
@@ -115,9 +118,11 @@ describe("bluesky adapter convert()", () => {
       ],
     };
 
-    const { text } = await convertDocument(input);
+    const result = await convertDocument(input);
 
-    expect(text.text).toBe("FujoCoded (https://fujocoded.com)");
+    expect(result).toHaveLength(1);
+    expect(result[0].record.text.text).toBe("FujoCoded (https://fujocoded.com)");
+    expect(result[0].pendingEmbeds).toEqual({});
   });
 
   test("converts inline code using monospace escape", async () => {
@@ -139,9 +144,11 @@ describe("bluesky adapter convert()", () => {
       ],
     };
 
-    const { text } = await convertDocument(input);
+    const result = await convertDocument(input);
 
-    expect(text.text).toBe("𝚜𝚞𝚖(𝚊,𝚋)");
+    expect(result).toHaveLength(1);
+    expect(result[0].record.text.text).toBe("𝚜𝚞𝚖(𝚊,𝚋)");
+    expect(result[0].pendingEmbeds).toEqual({});
   });
 
   test("formats unordered lists with prefixes", async () => {
@@ -200,11 +207,13 @@ describe("bluesky adapter convert()", () => {
       ],
     };
 
-    const { text } = await convertDocument(input);
+    const result = await convertDocument(input);
 
-    expect(text.text).toBe(
+    expect(result).toHaveLength(1);
+    expect(result[0].record.text.text).toBe(
       '- The littlest meow meow\n- Incredibly problematic villain\n- Puts the "old man" in old man yaoi'
     );
+    expect(result[0].pendingEmbeds).toEqual({});
   });
 
   test("drops unsupported html nodes by default", async () => {
@@ -226,9 +235,11 @@ describe("bluesky adapter convert()", () => {
       ],
     };
 
-    const { text } = await convertDocument(input);
+    const result = await convertDocument(input);
 
-    expect(text.text).toBe("underlined");
+    expect(result).toHaveLength(1);
+    expect(result[0].record.text.text).toBe("underlined");
+    expect(result[0].pendingEmbeds).toEqual({});
   });
 
   test("supports custom block node via plugin", async () => {
@@ -252,12 +263,14 @@ describe("bluesky adapter convert()", () => {
       ],
     };
 
-    const { text } = await convertDocument(input, {
+    const result = await convertDocument(input, {
       jsonDocPlugins: [customDividerPlugin],
       validateDocument: false,
     });
 
-    expect(text.text).toBe("~~~");
+    expect(result).toHaveLength(1);
+    expect(result[0].record.text.text).toBe("~~~");
+    expect(result[0].pendingEmbeds).toEqual({});
   });
 
   test("supports custom mark via plugin", async () => {
@@ -288,12 +301,14 @@ describe("bluesky adapter convert()", () => {
       ],
     };
 
-    const { text } = await convertDocument(input, {
+    const result = await convertDocument(input, {
       jsonDocPlugins: [spoilerPlugin],
       validateDocument: false,
     });
 
-    expect(text.text).toBe("||secret||");
+    expect(result).toHaveLength(1);
+    expect(result[0].record.text.text).toBe("||secret||");
+    expect(result[0].pendingEmbeds).toEqual({});
   });
 
   test("converts complex document with headings and lists", async () => {
@@ -414,11 +429,13 @@ describe("bluesky adapter convert()", () => {
       ],
     };
 
-    const { text } = await convertDocument(input);
+    const result = await convertDocument(input);
 
-    expect(text.text).toBe(
+    expect(result).toHaveLength(1);
+    expect(result[0].record.text.text).toBe(
       '[My 5 Blorbos!]\n\nThis list is subject to change\n\nTop 3 (can\'t decide order):\n\n- The littlest meow meow\n- Incredibly problematic villain\n- Puts the "old man" in old man yaoi\n\nOthers:\n\n- Character who deserved better\n- Character who definitely deserved better'
     );
+    expect(result[0].pendingEmbeds).toEqual({});
   });
 
   test("converts complex document with blockquotes and breaks", async () => {
@@ -485,10 +502,12 @@ describe("bluesky adapter convert()", () => {
       ],
     };
 
-    const { text } = await convertDocument(input);
+    const result = await convertDocument(input);
 
-    expect(text.text).toBe(
+    expect(result).toHaveLength(1);
+    expect(result[0].record.text.text).toBe(
       "A favorite quote:\n\nI see now that the circumstances of one's birth are irrelevant.\n\nIt is what you do with the gift of life\nthat determines who you are.\n\n— Mewtwo\nPokemon, The First Movie\n\n---\n\nFollow for more inspiring anime quotes 💖🌟"
     );
+    expect(result[0].pendingEmbeds).toEqual({});
   });
 });

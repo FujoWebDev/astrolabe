@@ -15,7 +15,7 @@
       "default": "./dist/index.js"
     },
     "./helpers": {
-      "types": "./dist/helpers/useEditorToMdast.d.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/helpers/useEditorToMdast.js"
     }
   },
