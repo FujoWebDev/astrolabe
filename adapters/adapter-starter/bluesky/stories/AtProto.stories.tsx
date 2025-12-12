@@ -14,7 +14,7 @@ const editorTreeViews: EditorTreeViewConfig[] = [
     id: "mdast-json",
     label: "mdast JSON",
     compute: async ({ editorJson }) => {
-      const mdastTree = toMdast(editorJson);
+      const mdastTree = editorJson ? await toMdast(editorJson) : {};
       return {
         type: "json",
         content: mdastTree as unknown as Record<string, unknown>,
@@ -25,14 +25,17 @@ const editorTreeViews: EditorTreeViewConfig[] = [
     id: "bluesky-rich-text",
     label: "Bluesky Rich Text",
     compute: async ({ editorJson }) => {
-      const richText = await toBskyRichtText(editorJson as DocumentType);
+      const draftResults = await toBskyRichtText(editorJson as DocumentType);
 
       return {
         type: "json",
         content: {
-          text: richText.text.text,
-          length: richText.text.text.length,
-          facets: richText.text.facets,
+          records: draftResults.map((draft) => ({
+            text: draft.record.text.text,
+            length: draft.record.text.text.length,
+            facets: draft.record.text.facets,
+            pendingEmbeds: draft.pendingEmbeds,
+          })),
         },
       };
     },

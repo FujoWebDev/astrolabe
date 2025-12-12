@@ -1,7 +1,7 @@
 import React from "react";
 
 import { toMarkdown } from "mdast-util-to-markdown";
-import { convert as toMdast } from "../src/index.js";
+import { toMdast } from "../src/index.js";
 
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { withEditorTreeViewer } from "@fujocoded/astrolabe-editor-tree-viewer/decorator";
@@ -13,7 +13,7 @@ const editorTreeViews: EditorTreeViewConfig[] = [
     id: "mdast-json",
     label: "mdast JSON",
     compute: async ({ editorJson }) => {
-      const mdastTree = toMdast(editorJson);
+      const mdastTree = editorJson ? toMdast(editorJson) : u("root", []);
 
       return {
         type: "json",
@@ -25,7 +25,13 @@ const editorTreeViews: EditorTreeViewConfig[] = [
     id: "markdown",
     label: "Markdown",
     compute: async ({ editorJson }) => {
-      const mdastTree = toMdast(editorJson);
+      if (!editorJson) {
+        return {
+          type: "markdown",
+          content: "",
+        };
+      }
+      const mdastTree = editorJson ? toMdast(editorJson) : {};
 
       return {
         type: "markdown",

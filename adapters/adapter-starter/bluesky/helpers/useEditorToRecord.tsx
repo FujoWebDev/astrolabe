@@ -2,6 +2,7 @@ import { useCurrentEditor } from "@tiptap/react";
 import React from "react";
 import {
   convert as toBlueskyRichtText,
+  finalizeRecords,
   type ConverterMarkPlugin,
   type ConverterPlugin,
   type TreeTransformPlugin,
@@ -43,7 +44,7 @@ export const useEditorToRecord = ({
     const convertAndSetResult = async () => {
       const editorJson = editor.getJSON();
       if (editorJson) {
-        const result = await toBlueskyRichtText(
+        const draftResults = await toBlueskyRichtText(
           structuredClone(editorJson) as DocumentType,
           {
             jsonDocPlugins: jsonDocPlugins,
@@ -51,12 +52,12 @@ export const useEditorToRecord = ({
           }
         );
 
-        const resultsArray = Array.isArray(result) ? result : [result];
+        const finalRecords = finalizeRecords(draftResults, []);
         setRecords(() =>
-          resultsArray.map((record) => ({
+          finalRecords.map((record) => ({
             ...RECORD_BASE,
-            text: record.text.text,
-            facets: record.text.facets,
+            text: record.text,
+            facets: record.facets,
           }))
         );
       }

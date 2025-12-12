@@ -5,7 +5,7 @@ import React from "react";
 import {
 	type ConverterMarkPlugin,
 	type ConverterPlugin,
-	convert as toMdast,
+	toMdast,
 } from "../src/index.js";
 
 export const useEditorToMdast = (
@@ -21,10 +21,10 @@ export const useEditorToMdast = (
 		if (!editor) {
 			return;
 		}
-		const convertAndSetResult = async () => {
+		const convertAndSetResult = () => {
 			const editorJson = editor.getJSON();
 			if (editorJson) {
-				const mdastRecord = await toMdast(
+				const mdastRecord = toMdast(
 					structuredClone(editorJson) as DocumentType,
 					{
 						plugins: jsonDocPlugins,
