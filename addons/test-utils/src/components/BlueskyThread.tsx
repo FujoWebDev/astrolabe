@@ -17,8 +17,6 @@ const BlueskyPostItem = ({
   record: AppBskyFeedPost.Record;
   additionalExtensions?: readonly Extension[];
 }) => {
-  console.log("record", record);
-  console.dir(record, { depth: null });
   // TODO: do not use fromBlueskyPost here, we need something that will render the
   // bluesky post directly.
   const editor = useEditor({

@@ -1,5 +1,5 @@
 import type { AppBskyFeedPost } from "@atproto/api";
-import { convert as toMdast } from "@fujocoded/astdapters-mdast-starter";
+import { toMdast } from "@fujocoded/astdapters-mdast-starter";
 import {
   type EditorTreeViewConfig,
   withEditorTreeViewer,
@@ -24,14 +24,17 @@ const editorTreeViews: EditorTreeViewConfig[] = [
         };
       }
       try {
-        const richText = await convert(
+        const results = await convert(
           structuredClone(editorJson) as DocumentType
         );
         return {
           type: "json",
           content: {
-            text: richText.text.text,
-            facets: richText.text.facets,
+            records: results.map((result) => ({
+              text: result.record.text.text,
+              facets: result.record.text.facets,
+              pendingEmbeds: result.pendingEmbeds,
+            })),
           },
         };
       } catch (error) {
@@ -61,10 +64,15 @@ const editorTreeViews: EditorTreeViewConfig[] = [
     id: "markdown",
     label: "Markdown",
     compute: async ({ editorJson }) => {
-      const mdastTree = toMdast(editorJson);
+      if (!editorJson) {
+        return {
+          type: "markdown",
+          content: "",
+        };
+      }
       return {
         type: "markdown",
-        content: toMarkdown(mdastTree, { emphasis: "_" }),
+        content: toMarkdown(toMdast(editorJson), { emphasis: "_" }),
       };
     },
   },

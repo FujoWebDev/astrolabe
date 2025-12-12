@@ -1,6 +1,6 @@
 import { convert as toLeafletRichtText } from "../src/index.js";
 import { type DocumentType } from "@tiptap/core";
-import { convert as toMdast } from "@fujocoded/astdapters-mdast-starter";
+import { toMdast } from "@fujocoded/astdapters-mdast-starter";
 
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
@@ -13,10 +13,15 @@ const editorTreeViews: EditorTreeViewConfig[] = [
     id: "mdast-json",
     label: "mdast JSON",
     compute: async ({ editorJson }) => {
-      const mdastTree = toMdast(editorJson);
+      if (!editorJson) {
+        return {
+          type: "json",
+          content: {},
+        };
+      }
       return {
         type: "json",
-        content: mdastTree as unknown as Record<string, unknown>,
+        content: toMdast(editorJson) as unknown as Record<string, unknown>,
       };
     },
   },
