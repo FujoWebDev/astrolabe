@@ -9,6 +9,9 @@ catalogs:
     '@tiptap/core':
       specifier: ^3.10.1
       version: 3.13.0
+    '@tiptap/extension-image':
+      specifier: ^3.10.1
+      version: 3.13.0
     '@tiptap/pm':
       specifier: ^3.10.1
       version: 3.13.0
@@ -310,6 +313,37 @@ importers:
         specifier: catalog:react
         version: 19.1.1(react@19.1.1)
 
+  plugins/hyperimage:
+    dependencies:
+      '@tiptap/core':
+        specifier: 'catalog:'
+        version: 3.13.0(@tiptap/pm@3.13.0)
+      '@tiptap/extension-image':
+        specifier: 'catalog:'
+        version: 3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))
+      '@tiptap/pm':
+        specifier: 'catalog:'
+        version: 3.13.0
+    devDependencies:
+      '@fujocoded/astrolabe-editor-tree-viewer':
+        specifier: workspace:*
+        version: link:../../addons/editor-tree-viewer
+      '@storybook/addon-vitest':
+        specifier: catalog:storybook
+        version: 10.1.6(@vitest/runner@4.0.15)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(storybook@10.1.6(@testing-library/dom@10.4.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(vitest@4.0.15(@types/node@24.10.3)(jiti@2.6.1)(jsdom@27.0.1))
+      '@tiptap/react':
+        specifier: 'catalog:'
+        version: 3.13.0(@floating-ui/dom@1.7.4)(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))(@tiptap/pm@3.13.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      astrolabe-test-utils:
+        specifier: workspace:*
+        version: link:../../addons/test-utils
+      react:
+        specifier: catalog:react
+        version: 19.1.1
+      react-dom:
+        specifier: catalog:react
+        version: 19.1.1(react@19.1.1)
+
   plugins/inline-spoilers:
     dependencies:
       '@tiptap/starter-kit':
@@ -416,6 +450,9 @@ importers:
       '@fujocoded/astrolabe-editor-tree-viewer':
         specifier: workspace:*
         version: link:../addons/editor-tree-viewer
+      '@fujocoded/astrolabe-hyperimage':
+        specifier: workspace:*
+        version: link:../plugins/hyperimage
       '@storybook/addon-vitest':
         specifier: catalog:storybook
         version: 10.1.6(@vitest/runner@4.0.15)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(storybook@10.1.6(@testing-library/dom@10.4.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(vitest@4.0.15(@types/node@24.10.3)(jiti@2.6.1)(jsdom@27.0.1))
@@ -1258,6 +1295,11 @@ packages:
     peerDependencies:
       '@tiptap/core': ^3.13.0
       '@tiptap/pm': ^3.13.0
+
+  '@tiptap/extension-image@3.13.0':
+    resolution: {integrity: sha512-223uzLUkIa1rkK7aQK3AcIXe6LbCtmnpVb7sY5OEp+LpSaSPyXwyrZ4A0EO1o98qXG68/0B2OqMntFtA9c5Fbw==}
+    peerDependencies:
+      '@tiptap/core': ^3.13.0
 
   '@tiptap/extension-italic@3.13.0':
     resolution: {integrity: sha512-XbVTgmzk1kgUMTirA6AGdLTcKHUvEJoh3R4qMdPtwwygEOe7sBuvKuLtF6AwUtpnOM+Y3tfWUTNEDWv9AcEdww==}
@@ -3479,6 +3521,10 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.13.0(@tiptap/pm@3.13.0)
       '@tiptap/pm': 3.13.0
+
+  '@tiptap/extension-image@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))':
+    dependencies:
+      '@tiptap/core': 3.13.0(@tiptap/pm@3.13.0)
 
   '@tiptap/extension-italic@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))':
     dependencies:

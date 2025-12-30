@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@fujocoded/astdapters-bluesky-starter": "workspace:*",
+		"@fujocoded/astrolabe-hyperimage": "workspace:*",
 		"@fujocoded/astdapters-leaflet-starter": "workspace:*",
 		"@fujocoded/astdapters-mdast-starter": "workspace:*",
 		"@fujocoded/astrolabe-editor-tree-viewer": "workspace:*",

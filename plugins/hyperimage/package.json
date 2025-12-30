@@ -1,0 +1,39 @@
+{
+	"name": "@fujocoded/astrolabe-hyperimage",
+	"version": "0.0.1",
+	"main": "./dist/Node.js",
+	"module": "./dist/Node.js",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/Node.d.ts",
+			"default": "./dist/Node.js"
+		},
+		"./css": {
+			"default": "./dist/hyperimage.css"
+		}
+	},
+	"files": [
+		"dist",
+		"package.json",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsdown --watch --ignore-watch .turbo --ignore-watch dist"
+	},
+	"devDependencies": {
+		"@fujocoded/astrolabe-editor-tree-viewer": "workspace:*",
+		"@storybook/addon-vitest": "catalog:storybook",
+		"@tiptap/react": "catalog:",
+		"astrolabe-test-utils": "workspace:*",
+		"react": "catalog:react",
+		"react-dom": "catalog:react"
+	},
+	"dependencies": {
+		"@tiptap/core": "catalog:",
+		"@tiptap/extension-image": "catalog:",
+		"@tiptap/pm": "catalog:"
+	}
+}
