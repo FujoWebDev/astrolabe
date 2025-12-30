@@ -1,0 +1,12 @@
+[data-astrolb-type="hyperimage"] {
+  margin-inline: 0;
+
+  .ProseMirror-focused &.ProseMirror-selectednode {
+    outline: 2px dashed #1d9bf0;
+    outline-offset: 3px;
+  }
+}
+
+[data-astrolb-type="hyperimage"] img {
+  max-width: 100%;
+}
