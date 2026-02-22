@@ -10,10 +10,11 @@ const fileToBase64 = (file: File): Promise<string> => {
   return promise;
 };
 
-const imageUrlToFile = async (imageUrl: string): Promise<File> => {
+const imageToFile = async (imageUrl: string): Promise<File> => {
   const response = await fetch(imageUrl);
   const blob = await response.blob();
-  return new File([blob], "loaded-image.png", { type: blob.type });
+  const filename = new URL(imageUrl).pathname.split("/").pop() || "image";
+  return new File([blob], filename, { type: blob.type });
 };
 
 const isAllowedMimeType = (mimeType: string): boolean => {
@@ -62,7 +63,7 @@ export const PasteDropHandler = (editor: Editor) => {
         if (!files?.length) return false;
 
         const imageFiles = Array.from(files).filter((file) =>
-          isAllowedMimeType(file.type)
+          isAllowedMimeType(file.type),
         );
         if (!imageFiles.length) {
           return false;
@@ -78,7 +79,7 @@ export const PasteDropHandler = (editor: Editor) => {
       handlePaste(_view, event) {
         const files = event.clipboardData?.files;
         const imageFiles = Array.from(files ?? []).filter((file) =>
-          isAllowedMimeType(file.type)
+          isAllowedMimeType(file.type),
         );
 
         if (!imageFiles.length) {
@@ -101,10 +102,10 @@ export const PasteDropHandler = (editor: Editor) => {
           // TODO: this will case problems if multiple images load at different times, and
           // potentially if the user changes their current position.
           images.forEach(async (image) => {
-            const file = await imageUrlToFile(image.src);
+            const file = await imageToFile(image.src);
             insertImage({ editor, file });
           });
-          return false;
+          return true;
         }
 
         // There was no html content, so we can insert the images directly from the file data
