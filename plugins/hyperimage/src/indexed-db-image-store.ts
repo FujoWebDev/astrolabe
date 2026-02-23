@@ -1,7 +1,7 @@
 import type { ImageStore, ImageMetadata, StoredImage } from "./image-store";
 
 const DB_NAME = "AstrolabeImageStorage";
-const DB_VERSION = 3;
+const DB_VERSION = 1;
 const STORE_NAME = "images";
 
 export class IndexedDBImageStore implements ImageStore {
@@ -35,44 +35,13 @@ export class IndexedDBImageStore implements ImageStore {
 
       request.onupgradeneeded = (event) => {
         const database = (event.target as IDBOpenDBRequest).result;
-        const oldVersion = event.oldVersion;
 
-        if (oldVersion < 1) {
-          const store = database.createObjectStore(STORE_NAME, {
-            keyPath: "id",
-          });
-          store.createIndex("timestamp", "timestamp", { unique: false });
-          store.createIndex("scopeId", "scopeId", { unique: false });
-          store.createIndex("lastUsed", "lastUsed", { unique: false });
-        }
-        if (oldVersion >= 1 && oldVersion < 2) {
-          const transaction = (event.target as IDBOpenDBRequest).transaction!;
-          const store = transaction.objectStore(STORE_NAME);
-          if (!store.indexNames.contains("scopeId")) {
-            store.createIndex("scopeId", "scopeId", { unique: false });
-          }
-        }
-        if (oldVersion >= 1 && oldVersion < 3) {
-          const transaction = (event.target as IDBOpenDBRequest).transaction!;
-          const store = transaction.objectStore(STORE_NAME);
-          if (!store.indexNames.contains("lastUsed")) {
-            store.createIndex("lastUsed", "lastUsed", { unique: false });
-          }
-          // Backfill: set lastUsed = timestamp for existing records
-          const cursorRequest = store.openCursor();
-          cursorRequest.onsuccess = (e) => {
-            const cursor = (e.target as IDBRequest<IDBCursorWithValue>).result;
-            if (cursor) {
-              if (cursor.value.lastUsed === undefined) {
-                cursor.update({
-                  ...cursor.value,
-                  lastUsed: cursor.value.timestamp,
-                });
-              }
-              cursor.continue();
-            }
-          };
-        }
+        const store = database.createObjectStore(STORE_NAME, {
+          keyPath: "id",
+        });
+        store.createIndex("timestamp", "timestamp", { unique: false });
+        store.createIndex("scopeId", "scopeId", { unique: false });
+        store.createIndex("lastUsed", "lastUsed", { unique: false });
       };
     });
   }

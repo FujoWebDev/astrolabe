@@ -31,6 +31,25 @@ export interface ProcessedImage {
   wasStored: boolean;
 }
 
+function loadBlobAsImage(blob: Blob): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(blob);
+
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load image"));
+    };
+
+    img.src = url;
+  });
+}
+
 async function resizeBlob(
   blob: Blob,
   maxWidth: number,
@@ -45,43 +64,30 @@ async function resizeBlob(
   const aspectRatio = height / width;
   const newHeight = Math.round(maxWidth * aspectRatio);
 
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Failed to get canvas context");
+  }
+
+  const img = await loadBlobAsImage(blob);
+
+  canvas.width = maxWidth;
+  canvas.height = newHeight;
+  ctx.drawImage(img, 0, 0, maxWidth, newHeight);
+
   return new Promise((resolve, reject) => {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      reject(new Error("Failed to get canvas context"));
-      return;
-    }
-
-    const img = new Image();
-    const url = URL.createObjectURL(blob);
-
-    img.onload = () => {
-      URL.revokeObjectURL(url);
-
-      canvas.width = maxWidth;
-      canvas.height = newHeight;
-      ctx.drawImage(img, 0, 0, maxWidth, newHeight);
-
-      canvas.toBlob(
-        (resizedBlob) => {
-          if (resizedBlob) {
-            resolve(resizedBlob);
-          } else {
-            reject(new Error("Failed to create resized blob"));
-          }
-        },
-        "image/jpeg",
-        quality,
-      );
-    };
-
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("Failed to load image for resizing"));
-    };
-
-    img.src = url;
+    canvas.toBlob(
+      (resizedBlob) => {
+        if (resizedBlob) {
+          resolve(resizedBlob);
+        } else {
+          reject(new Error("Failed to create resized blob"));
+        }
+      },
+      "image/jpeg",
+      quality,
+    );
   });
 }
 
@@ -117,33 +123,24 @@ export async function processImageForEditor(
     await getImageDimensions(file);
 
   const needsResize = file.size > maxSizeBytes || originalWidth > maxWidth;
+  const displayBlob = needsResize
+    ? await resizeBlob(file, maxWidth, quality).catch((error) => {
+        console.warn("Resize failed, using original:", error);
+        return file;
+      })
+    : file;
+  const wasResized = displayBlob !== file;
 
-  let displayBlob: Blob = file;
-  let wasResized = false;
-
-  if (needsResize) {
-    try {
-      displayBlob = await resizeBlob(file, maxWidth, quality);
-      wasResized = true;
-    } catch (error) {
-      console.warn("Resize failed, using original:", error);
-    }
-  }
+  const metadata: ImageMetadata = {
+    width: originalWidth,
+    height: originalHeight,
+    mimeType: file.type,
+    fileSize: file.size,
+    ...(file instanceof File && { fileName: file.name }),
+  };
 
   const wasStored = shouldStore(storagePolicy, wasResized, !!store);
-
   if (wasStored && store) {
-    const metadata: ImageMetadata = {
-      width: originalWidth,
-      height: originalHeight,
-      mimeType: file.type,
-      fileSize: file.size,
-    };
-
-    if (file instanceof File) {
-      metadata.fileName = file.name;
-    }
-
     await store.store(imageId, file, metadata, scopeId);
   }
 

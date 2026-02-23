@@ -39,12 +39,17 @@ export type HyperimageOptions = ImageOptions & {
   documentId?: string;
 };
 
-function setUpStorage(
-  editor: Editor,
-  scopeId: string,
-  trackedIds: Set<string>,
-  activeImageIds: string[],
-) {
+function setUpStorage({
+  editor,
+  scopeId,
+  trackedIds,
+  activeImageIds,
+}: {
+  editor: Editor;
+  scopeId: string;
+  trackedIds: Set<string>;
+  activeImageIds: string[];
+}) {
   removeOrphanedImages(defaultStore, scopeId, activeImageIds).catch((err) =>
     console.warn("Failed to reconcile storage:", err),
   );
@@ -147,12 +152,12 @@ export const Plugin = ImageExtension.extend<HyperimageOptions>({
       editor.setAttribute("data-astrolb-scope-id", this.storage.scopeId);
     }
 
-    setUpStorage(
-      this.editor,
-      this.storage.scopeId,
-      this.storage.trackedIds,
+    setUpStorage({
+      editor: this.editor,
+      scopeId: this.storage.scopeId,
+      trackedIds: this.storage.trackedIds,
       activeImageIds,
-    );
+    });
   },
 
   onTransaction({ transaction }) {
