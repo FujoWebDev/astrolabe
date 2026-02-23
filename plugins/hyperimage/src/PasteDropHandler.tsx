@@ -1,59 +1,61 @@
 import { type Editor } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
+import {
+  processImageForEditor,
+  defaultStore,
+  type ProcessorConfig,
+} from "./storage";
 
-const fileToBase64 = (file: File): Promise<string> => {
-  const { promise, resolve, reject } = Promise.withResolvers<string>();
-  const reader = new FileReader();
-  reader.onload = () => resolve(reader.result as string);
-  reader.onerror = () => reject(new Error(`Failed to read ${file.name}`));
-  reader.readAsDataURL(file);
-  return promise;
-};
-
-const imageToFile = async (imageUrl: string): Promise<File> => {
+async function imageUrlToFile(imageUrl: string): Promise<File> {
   const response = await fetch(imageUrl);
   const blob = await response.blob();
   const filename = new URL(imageUrl).pathname.split("/").pop() || "image";
   return new File([blob], filename, { type: blob.type });
-};
+}
 
-const isAllowedMimeType = (mimeType: string): boolean => {
+function isAllowedMimeType(mimeType: string): boolean {
   return mimeType.startsWith("image/");
-};
+}
 
-const insertImage = async ({
+async function insertImage({
   editor,
   file,
+  processorConfig,
 }: {
   editor: Editor;
   file: File;
-}): Promise<void> => {
-  const imageId = crypto.randomUUID();
-  const base64Data = await fileToBase64(file);
+  processorConfig?: Partial<ProcessorConfig>;
+}): Promise<void> {
+  const processed = await processImageForEditor(
+    file,
+    defaultStore,
+    processorConfig,
+  );
 
   editor
     .chain()
     .insertContent({
       type: "hyperimage",
       attrs: {
-        src: base64Data,
-        id: imageId,
+        src: processed.displaySrc,
+        ...(processed.wasStored && { id: processed.id }),
       },
     })
     .focus()
     .scrollIntoView()
     .run();
-};
+}
 
-/**
- * ProseMirror plugin that handles pasting and dropping images
- * Converts images to base64 and inserts them as hyperimage nodes
- *
- * Based on tiptap's file handler plugin:
- * https://github.com/ueberdosis/tiptap/blob/develop/packages/extension-file-handler/src/FileHandlePlugin.ts
- * https://tiptap.dev/docs/editor/extensions/functionality/filehandler
- */
-export const PasteDropHandler = (editor: Editor) => {
+export interface PasteDropHandlerOptions {
+  processorConfig?: Partial<ProcessorConfig>;
+}
+
+export function PasteDropHandler(
+  editor: Editor,
+  options: PasteDropHandlerOptions = {},
+) {
+  const { processorConfig } = options;
+
   return new Plugin({
     key: new PluginKey("hyperimage-pasteAndDrop"),
 
@@ -72,7 +74,9 @@ export const PasteDropHandler = (editor: Editor) => {
         event.preventDefault();
         event.stopPropagation();
 
-        imageFiles.forEach((file) => insertImage({ editor, file }));
+        imageFiles.forEach((file) =>
+          insertImage({ editor, file, processorConfig }),
+        );
         return true;
       },
 
@@ -93,28 +97,27 @@ export const PasteDropHandler = (editor: Editor) => {
           // gifs or webms as they are not copied correctly when moved as files
           // and will end up transformed into a PNG. This way, we can instead
           // keep the original image type and data.
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlContent, "text/html");
-          const images = doc.querySelectorAll("img");
-
-          // We're specifically "firing and forgetting": rather than block on the
-          // image being loaded, we will just add it once it is.
-          // TODO: this will case problems if multiple images load at different times, and
-          // potentially if the user changes their current position.
-          images.forEach(async (image) => {
-            const file = await imageToFile(image.src);
-            insertImage({ editor, file });
+          const parsedDoc = new DOMParser().parseFromString(
+            htmlContent,
+            "text/html",
+          );
+          // TODO: this may cause ordering issues with multiple images but it's
+          // good enough for now
+          parsedDoc.querySelectorAll("img").forEach(async (image) => {
+            const file = await imageUrlToFile(image.src);
+            insertImage({ editor, file, processorConfig });
           });
           return true;
         }
 
-        // There was no html content, so we can insert the images directly from the file data
         event.preventDefault();
         event.stopPropagation();
 
-        imageFiles.forEach((file) => insertImage({ editor, file }));
+        imageFiles.forEach((file) =>
+          insertImage({ editor, file, processorConfig }),
+        );
         return true;
       },
     },
   });
-};
+}

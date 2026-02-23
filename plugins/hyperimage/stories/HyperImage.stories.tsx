@@ -8,14 +8,16 @@ import {
   withEditorTreeViewer,
   type EditorTreeViewConfig,
 } from "@fujocoded/astrolabe-editor-tree-viewer/decorator";
+import { defaultStore, blobToDataURL } from "../src/storage";
+import { withStorageDebugPanel } from "./StorageDebugPanel";
 
 import Robbie from "./assets/robbie.small.png";
 import Sportacus from "./assets/sportacus.small.png";
 
-const urlToBlob = async (url: string): Promise<Blob> => {
+async function urlToBlob(url: string): Promise<Blob> {
   const response = await fetch(url);
   return response.blob();
-};
+}
 
 const editorTreeViews: EditorTreeViewConfig[] = [
   {
@@ -25,6 +27,30 @@ const editorTreeViews: EditorTreeViewConfig[] = [
       return {
         type: "json",
         content: editorJson as unknown as Record<string, unknown>,
+      };
+    },
+  },
+  {
+    id: "stored-images",
+    label: "Stored Originals",
+    compute: async () => {
+      const ids = await defaultStore.listIds();
+      const images: Record<string, { metadata: unknown; preview: string }> = {};
+
+      for (const id of ids) {
+        const stored = await defaultStore.get(id);
+        if (stored) {
+          const dataUrl = await blobToDataURL(stored.originalBlob);
+          images[id] = {
+            metadata: stored.metadata,
+            preview: dataUrl.slice(0, 100) + "...",
+          };
+        }
+      }
+
+      return {
+        type: "json",
+        content: { storedCount: ids.length, images } as Record<string, unknown>,
       };
     },
   },
@@ -94,14 +120,45 @@ export const PasteImage: Story = {
     dataTransfer.items.add(
       new File([await urlToBlob(Robbie)], "robbie.small.png", {
         type: "image/png",
-      })
+      }),
     );
 
     const editor = canvasElement.querySelector(
-      ".astrolabe-editor p:last-of-type"
+      ".astrolabe-editor p:last-of-type",
     );
     await userEvent.click(editor);
     await userEvent.keyboard("About to paste image...");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await userEvent.paste(dataTransfer);
+  },
+};
+
+export const PasteWithResize: Story = {
+  args: {
+    initialText: `<p>Paste an image - it will be resized to 100px width for display, but the original is preserved!</p><p></p>`,
+    plugins: [
+      HyperImage.configure({
+        imageOptions: { maxWidth: 100, maxSizeBytes: 0 },
+      }),
+    ],
+  },
+  parameters: {
+    storyPlacement: "after",
+  },
+  decorators: [withStorageDebugPanel],
+  play: async ({ canvasElement }) => {
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(
+      new File([await urlToBlob(Robbie)], "robbie.small.png", {
+        type: "image/png",
+      }),
+    );
+
+    const editor = canvasElement.querySelector(
+      ".astrolabe-editor p:last-of-type",
+    );
+    await userEvent.click(editor);
+    await userEvent.keyboard("Pasting resized image...");
     await new Promise((resolve) => setTimeout(resolve, 1000));
     await userEvent.paste(dataTransfer);
   },
