@@ -3,7 +3,7 @@ import { defineConfig } from "tsdown";
 export default defineConfig([
 	{
 		name: "Node",
-		entry: ["./src/Node.tsx"],
+		entry: ["./src/Node.tsx", "./src/storage/index.ts"],
 		dts: true,
 		clean: true,
 		unbundle: true,
