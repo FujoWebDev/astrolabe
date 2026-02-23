@@ -9,6 +9,10 @@
 			"types": "./dist/Node.d.ts",
 			"default": "./dist/Node.js"
 		},
+		"./storage": {
+			"types": "./dist/storage/index.d.ts",
+			"default": "./dist/storage/index.js"
+		},
 		"./css": {
 			"default": "./dist/hyperimage.css"
 		}
@@ -21,9 +25,11 @@
 	],
 	"scripts": {
 		"build": "tsdown",
-		"dev": "tsdown --watch --ignore-watch .turbo --ignore-watch dist"
+		"dev": "tsdown --watch --ignore-watch .turbo --ignore-watch dist",
+		"test": "vitest run"
 	},
 	"devDependencies": {
+		"fake-indexeddb": "^6.0.0",
 		"@fujocoded/astrolabe-editor-tree-viewer": "workspace:*",
 		"@storybook/addon-vitest": "catalog:storybook",
 		"@tiptap/react": "catalog:",
