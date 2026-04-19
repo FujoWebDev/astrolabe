@@ -50,6 +50,14 @@ export interface PasteDropHandlerOptions {
   processorConfig?: Partial<ProcessorConfig>;
 }
 
+/**
+ * ProseMirror plugin that handles pasting and dropping images
+ * Converts images to base64 and inserts them as hyperimage nodes
+ *
+ * Based on tiptap's file handler plugin:
+ * https://github.com/ueberdosis/tiptap/blob/develop/packages/extension-file-handler/src/FileHandlePlugin.ts
+ * https://tiptap.dev/docs/editor/extensions/functionality/filehandler
+ */
 export function PasteDropHandler(
   editor: Editor,
   options: PasteDropHandlerOptions = {},
@@ -97,19 +105,22 @@ export function PasteDropHandler(
           // gifs or webms as they are not copied correctly when moved as files
           // and will end up transformed into a PNG. This way, we can instead
           // keep the original image type and data.
-          const parsedDoc = new DOMParser().parseFromString(
-            htmlContent,
-            "text/html",
-          );
-          // TODO: this may cause ordering issues with multiple images but it's
-          // good enough for now
-          parsedDoc.querySelectorAll("img").forEach(async (image) => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlContent, "text/html");
+          const images = doc.querySelectorAll("img");
+
+          // We're specifically "firing and forgetting": rather than block on the
+          // image being loaded, we will just add it once it is.
+          // TODO: this will case problems if multiple images load at different times, and
+          // potentially if the user changes their current position.
+          images.forEach(async (image) => {
             const file = await imageUrlToFile(image.src);
             insertImage({ editor, file, processorConfig });
           });
           return true;
         }
 
+        // There was no html content, so we can insert the images directly from the file data
         event.preventDefault();
         event.stopPropagation();
 
