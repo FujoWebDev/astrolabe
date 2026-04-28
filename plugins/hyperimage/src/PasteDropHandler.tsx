@@ -2,7 +2,7 @@ import { type Editor } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import {
   processImageForEditor,
-  defaultStore,
+  type ImageBlobStore,
   type ProcessorConfig,
 } from "./storage";
 
@@ -20,17 +20,15 @@ function isAllowedMimeType(mimeType: string): boolean {
 async function insertImage({
   editor,
   file,
+  storage,
   processorConfig,
 }: {
   editor: Editor;
   file: File;
+  storage: ImageBlobStore;
   processorConfig?: Partial<ProcessorConfig>;
 }): Promise<void> {
-  const processed = await processImageForEditor(
-    file,
-    defaultStore,
-    processorConfig,
-  );
+  const processed = await processImageForEditor(file, storage, processorConfig);
 
   editor
     .chain()
@@ -38,7 +36,9 @@ async function insertImage({
       type: "hyperimage",
       attrs: {
         src: processed.displaySrc,
-        ...(processed.wasStored && { id: processed.id }),
+        id: processed.id,
+        isPreview: processed.wasResized,
+        originalMissing: processed.wasResized && !processed.wasStored,
       },
     })
     .focus()
@@ -47,6 +47,7 @@ async function insertImage({
 }
 
 export interface PasteDropHandlerOptions {
+  storage: ImageBlobStore;
   processorConfig?: Partial<ProcessorConfig>;
 }
 
@@ -60,9 +61,9 @@ export interface PasteDropHandlerOptions {
  */
 export function PasteDropHandler(
   editor: Editor,
-  options: PasteDropHandlerOptions = {},
+  options: PasteDropHandlerOptions,
 ) {
-  const { processorConfig } = options;
+  const { processorConfig, storage } = options;
 
   return new Plugin({
     key: new PluginKey("hyperimage-pasteAndDrop"),
@@ -83,7 +84,7 @@ export function PasteDropHandler(
         event.stopPropagation();
 
         imageFiles.forEach((file) =>
-          insertImage({ editor, file, processorConfig }),
+          insertImage({ editor, file, storage, processorConfig }),
         );
         return true;
       },
@@ -115,7 +116,7 @@ export function PasteDropHandler(
           // potentially if the user changes their current position.
           images.forEach(async (image) => {
             const file = await imageUrlToFile(image.src);
-            insertImage({ editor, file, processorConfig });
+            insertImage({ editor, file, storage, processorConfig });
           });
           return true;
         }
@@ -125,7 +126,7 @@ export function PasteDropHandler(
         event.stopPropagation();
 
         imageFiles.forEach((file) =>
-          insertImage({ editor, file, processorConfig }),
+          insertImage({ editor, file, storage, processorConfig }),
         );
         return true;
       },

@@ -1,9 +1,9 @@
 import { blobToDataURL, getImageDimensions } from "./image-utils";
 import {
-  type ImageStore,
-  type ImageMetadata,
   generateImageId,
-} from "./image-store";
+  type ImageBlobStore,
+  type ImageMetadata,
+} from "./blob-store";
 
 export type StoragePolicy = "always" | "when-resized" | "never";
 
@@ -110,7 +110,7 @@ function shouldStore(
 
 export async function processImageForEditor(
   file: File | Blob,
-  store?: ImageStore,
+  store?: ImageBlobStore,
   config: Partial<ProcessorConfig> = {},
 ): Promise<ProcessedImage> {
   const { maxWidth, maxSizeBytes, quality, storagePolicy, scopeId } = {
@@ -139,9 +139,9 @@ export async function processImageForEditor(
     ...(file instanceof File && { fileName: file.name }),
   };
 
-  const wasStored = shouldStore(storagePolicy, wasResized, !!store);
-  if (wasStored && store) {
-    await store.store(imageId, file, metadata, scopeId);
+  let wasStored = false;
+  if (shouldStore(storagePolicy, wasResized, !!store) && store) {
+    wasStored = await store.store(imageId, file, metadata, scopeId);
   }
 
   const displaySrc = await blobToDataURL(displayBlob);
@@ -157,7 +157,7 @@ export async function processImageForEditor(
 }
 
 export function createImageProcessor(
-  store?: ImageStore,
+  store?: ImageBlobStore,
   defaultConfig: Partial<ProcessorConfig> = {},
 ) {
   return {
@@ -172,4 +172,3 @@ export function createImageProcessor(
     },
   };
 }
-
