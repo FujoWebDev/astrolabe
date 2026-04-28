@@ -26,6 +26,7 @@ const schema = new Schema({
         id: { default: null },
         src: { default: null },
         isPreview: { default: false },
+        originalMissing: { default: false },
       },
       toDOM: () => ["img", 0],
       parseDOM: [{ tag: "img" }],
@@ -118,6 +119,85 @@ function createIntervalHarness() {
 }
 
 describe("HyperimageLifecycle", () => {
+  test("mount flags preview nodes whose originals are missing", async () => {
+    const baseStore = createInMemoryBlobStoreWithClock(() => 1_000);
+    await baseStore.store("kept", new Blob(["kept"]), metadata, "doc-1");
+    const editor = createEditor(
+      schema.node("doc", null, [
+        hyperimage("kept", { isPreview: true }),
+        hyperimage("missing", { isPreview: true }),
+      ]),
+    );
+
+    await new HyperimageLifecycle({
+      storage: baseStore,
+      scopeId: "doc-1",
+      nodeName: "hyperimage",
+      setInterval: (() => 1) as typeof globalThis.setInterval,
+      clearInterval: (() => {}) as typeof globalThis.clearInterval,
+      visibility: { addListener: () => () => {} },
+    }).attach(editor as any);
+
+    expect(editor.state.doc.child(0).attrs.originalMissing).toBe(false);
+    expect(editor.state.doc.child(1).attrs.originalMissing).toBe(true);
+  });
+
+  test("mount does not flag non-preview nodes whose originals are missing", async () => {
+    const store = createInMemoryBlobStoreWithClock(() => 1_000);
+    const editor = createEditor(
+      schema.node("doc", null, [hyperimage("missing", { isPreview: false })]),
+    );
+
+    await new HyperimageLifecycle({
+      storage: store,
+      scopeId: "doc-1",
+      nodeName: "hyperimage",
+      setInterval: (() => 1) as typeof globalThis.setInterval,
+      clearInterval: (() => {}) as typeof globalThis.clearInterval,
+      visibility: { addListener: () => () => {} },
+    }).attach(editor as any);
+
+    expect(editor.state.doc.child(0).attrs.originalMissing).toBe(false);
+  });
+
+  test("mount leaves originalMissing unchanged when storage listing is unavailable", async () => {
+    const reportError = vi.fn();
+    const store = {
+      async store() {
+        return false;
+      },
+      async get() {
+        return null;
+      },
+      async deleteMany() {
+        return;
+      },
+      async listByScope() {
+        throw new Error("unavailable");
+      },
+      async refreshLastUsed() {},
+      async deleteOlderThan() {
+        return { deleted: 0 };
+      },
+    } satisfies ImageBlobStore;
+    const editor = createEditor(
+      schema.node("doc", null, [hyperimage("unknown", { isPreview: true })]),
+    );
+
+    await new HyperimageLifecycle({
+      storage: store,
+      scopeId: "doc-1",
+      nodeName: "hyperimage",
+      setInterval: (() => 1) as typeof globalThis.setInterval,
+      clearInterval: (() => {}) as typeof globalThis.clearInterval,
+      visibility: { addListener: () => () => {} },
+      reportError,
+    }).attach(editor as any);
+
+    expect(editor.state.doc.child(0).attrs.originalMissing).toBe(false);
+    expect(reportError).toHaveBeenCalledWith(expect.any(Error), "reconcile");
+  });
+
   test("reconciles orphans, refreshes active ids, and sweeps TTL on mount", async () => {
     const baseStore = createInMemoryBlobStoreWithClock(() => 1_000);
     await baseStore.store("kept", new Blob(["kept"]), metadata, "doc-1");
@@ -160,6 +240,35 @@ describe("HyperimageLifecycle", () => {
     await intervals.callbacks[0]();
 
     expect(calls.refreshLastUsed).toEqual([["kept"], ["kept"]]);
+  });
+
+  test("heartbeat flags runtime loss and clears originalMissing when restored", async () => {
+    const baseStore = createInMemoryBlobStoreWithClock(() => 1_000);
+    await baseStore.store("restored", new Blob(["restored"]), metadata, "doc-1");
+    await baseStore.store("lost", new Blob(["lost"]), metadata, "doc-1");
+    const { store } = createRecordingStore(baseStore);
+    const intervals = createIntervalHarness();
+    const editor = createEditor(
+      schema.node("doc", null, [
+        hyperimage("restored", { isPreview: true, originalMissing: true }),
+        hyperimage("lost", { isPreview: true }),
+      ]),
+    );
+
+    await new HyperimageLifecycle({
+      storage: store,
+      scopeId: "doc-1",
+      nodeName: "hyperimage",
+      setInterval: intervals.setInterval,
+      clearInterval: intervals.clearInterval,
+      visibility: { addListener: () => () => {} },
+    }).attach(editor as any);
+    await baseStore.deleteMany(["lost"]);
+
+    await intervals.callbacks[0]();
+
+    expect(editor.state.doc.child(0).attrs.originalMissing).toBe(false);
+    expect(editor.state.doc.child(1).attrs.originalMissing).toBe(true);
   });
 
   test("visibility catch-up refreshes tracked ids", async () => {

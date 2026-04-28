@@ -58,8 +58,8 @@ function defaultReportError(err: unknown, where: string): void {
  *   storage so we do not leak originals for removed nodes.
  * - On a heartbeat (and on tab focus), it refreshes `lastUsed` for every
  *   tracked id so the TTL sweep does not reap originals while their nodes
- *   are still on screen. The heartbeat also clears `originalMissing` for any
- *   node whose original has come back (for example, another tab restored it).
+ *   are still on screen. The heartbeat also syncs `originalMissing` so previews
+ *   reflect originals disappearing or coming back while the editor is open.
  * - On editor destroy, it tears down the heartbeat and visibility listener.
  *
  * Invariant: `trackedIds` mirrors the set of image-node ids in the current
@@ -149,14 +149,16 @@ export class HyperimageLifecycle {
 
     if (this.editor && !this.editor.isDestroyed) {
       const storedIds = await this.safeListByScope("heartbeat");
-      if (this.editor && !this.editor.isDestroyed) {
-        this.clearMissingForRestored(this.editor, new Set(storedIds));
+      if (storedIds && this.editor && !this.editor.isDestroyed) {
+        this.syncMissingOriginals(this.editor, new Set(storedIds));
       }
     }
   }
 
   private async reconcile(editor: Editor, activeIds: string[]): Promise<void> {
     const storedIds = await this.safeListByScope("reconcile");
+    if (!storedIds) return;
+
     const activeSet = new Set(activeIds);
     const orphanIds = storedIds.filter((id) => !activeSet.has(id));
 
@@ -164,7 +166,7 @@ export class HyperimageLifecycle {
       await this.run("cleanup", () => this.storage.deleteMany(orphanIds));
     }
 
-    this.flagMissingOriginals(editor, new Set(storedIds));
+    this.syncMissingOriginals(editor, new Set(storedIds));
   }
 
   private collectIds(doc: PMNode): string[] {
@@ -177,18 +179,13 @@ export class HyperimageLifecycle {
     return ids;
   }
 
-  private flagMissingOriginals(editor: Editor, storedSet: Set<string>): void {
-    this.updateOriginalMissing(editor, storedSet, "flag");
-  }
-
-  private clearMissingForRestored(editor: Editor, storedSet: Set<string>): void {
-    this.updateOriginalMissing(editor, storedSet, "clear");
+  private syncMissingOriginals(editor: Editor, storedSet: Set<string>): void {
+    this.updateOriginalMissing(editor, storedSet);
   }
 
   private updateOriginalMissing(
     editor: Editor,
     storedSet: Set<string>,
-    mode: "flag" | "clear",
   ): void {
     if (editor.isDestroyed) return;
     let tr = editor.state.tr;
@@ -201,18 +198,10 @@ export class HyperimageLifecycle {
       if (!id || !node.attrs.isPreview) return;
 
       const shouldBeMissing = !storedSet.has(id);
-      if (mode === "flag" && shouldBeMissing && !node.attrs.originalMissing) {
+      if (node.attrs.originalMissing !== shouldBeMissing) {
         tr = tr.setNodeMarkup(pos, undefined, {
           ...node.attrs,
-          originalMissing: true,
-        });
-        changed = true;
-      }
-
-      if (mode === "clear" && !shouldBeMissing && node.attrs.originalMissing) {
-        tr = tr.setNodeMarkup(pos, undefined, {
-          ...node.attrs,
-          originalMissing: false,
+          originalMissing: shouldBeMissing,
         });
         changed = true;
       }
@@ -224,12 +213,12 @@ export class HyperimageLifecycle {
     }
   }
 
-  private async safeListByScope(where: string): Promise<string[]> {
+  private async safeListByScope(where: string): Promise<string[] | null> {
     try {
       return await this.storage.listByScope(this.scopeId);
     } catch (error) {
       this.reportError(error, where);
-      return [];
+      return null;
     }
   }
 
