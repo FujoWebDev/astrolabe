@@ -95,6 +95,13 @@ export const Plugin = ImageExtension.extend<HyperimageOptions>({
         parseHTML: () => false,
         renderHTML: () => ({}),
       },
+      loading: {
+        default: false,
+        parseHTML: (element: HTMLElement) =>
+          element.dataset.astrolbLoading === "true",
+        renderHTML: (attributes: { loading: boolean }) =>
+          attributes.loading ? { "data-astrolb-loading": "true" } : {},
+      },
     };
   },
 
@@ -102,6 +109,7 @@ export const Plugin = ImageExtension.extend<HyperimageOptions>({
     const {
       "data-astrolb-id": id,
       "data-astrolb-is-preview": isPreview,
+      "data-astrolb-loading": loading,
       ...imgAttributes
     } = HTMLAttributes;
 
@@ -112,6 +120,9 @@ export const Plugin = ImageExtension.extend<HyperimageOptions>({
         "data-astrolb-id": id,
         ...(isPreview && {
           "data-astrolb-is-preview": isPreview,
+        }),
+        ...(loading && {
+          "data-astrolb-loading": loading,
         }),
       },
       [
@@ -140,6 +151,7 @@ export const Plugin = ImageExtension.extend<HyperimageOptions>({
             id: element.dataset.astrolbId,
             isPreview: element.dataset.astrolbIsPreview === "true",
             originalMissing: false,
+            loading: element.dataset.astrolbLoading === "true",
             src: img.getAttribute("src"),
             alt: img.getAttribute("alt"),
             width: img.getAttribute("width"),

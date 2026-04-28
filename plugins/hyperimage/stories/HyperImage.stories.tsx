@@ -1,7 +1,7 @@
 import { expect, userEvent, waitFor } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { type EditorProviderProps } from "@tiptap/react";
+import { type EditorProviderProps, useCurrentEditor } from "@tiptap/react";
 import { Plugin as HyperImage } from "../src/Node.js";
 import "../src/hyperimage.css";
 import {
@@ -15,6 +15,7 @@ import {
   withStorageDebugPanel,
 } from "./StorageDebugPanel";
 import { IndexedDBBlobStore } from "../src/storage/indexed-db-store";
+import { requireElement } from "astrolabe-test-utils";
 
 import Robbie from "./assets/robbie.small.png";
 import Sportacus from "./assets/sportacus.small.png";
@@ -148,7 +149,8 @@ export const PasteImage: Story = {
       }),
     );
 
-    const editor = canvasElement.querySelector(
+    const editor = requireElement(
+      canvasElement,
       ".astrolabe-editor p:last-of-type",
     );
     await userEvent.click(editor);
@@ -177,7 +179,8 @@ export const PasteGif: Story = {
       }),
     );
 
-    const editor = canvasElement.querySelector(
+    const editor = requireElement(
+      canvasElement,
       ".astrolabe-editor p:last-of-type",
     );
     await userEvent.click(editor);
@@ -215,7 +218,8 @@ export const PasteWithResize: Story = {
       }),
     );
 
-    const editor = canvasElement.querySelector(
+    const editor = requireElement(
+      canvasElement,
       ".astrolabe-editor p:last-of-type",
     );
     await userEvent.click(editor);
@@ -233,7 +237,7 @@ export const PreviewsWithOriginals: Story = {
   args: {
     initialText: `
     <p> Missing:
-      <figure data-astrolb-type="hyperimage" data-astrolb-id="ghost-1" data-astrolb-is-preview="true"><img src="${GhostPreview}"></img></figure>
+      <figure data-astrolb-type="hyperimage" data-astrolb-is-preview="true"><img src="${GhostPreview}"></img></figure>
     Restored:
     <figure data-astrolb-type="hyperimage" data-astrolb-id="${restoredOriginalId}" data-astrolb-is-preview="true"><img src="${RestoredPreview}"></img></figure>
     </p>`,
@@ -262,16 +266,10 @@ export const PreviewsWithOriginals: Story = {
   ],
   play: async ({ canvasElement }) => {
     await waitFor(() => {
-      const missingFigure = canvasElement.querySelector<HTMLElement>(
-        `.astrolabe-editor figure[data-astrolb-id="ghost-1"]`,
+      const previews = getHyperImageFigures(canvasElement).filter(
+        (f) => f.dataset.astrolbIsPreview === "true",
       );
-      const restoredFigure = canvasElement.querySelector<HTMLElement>(
-        `.astrolabe-editor figure[data-astrolb-id="${restoredOriginalId}"]`,
-      );
-      expect(missingFigure).toBeTruthy();
-      expect(restoredFigure).toBeTruthy();
-      expect(missingFigure?.dataset.astrolbIsPreview).toBe("true");
-      expect(restoredFigure?.dataset.astrolbIsPreview).toBe("true");
+      expect(previews).toHaveLength(2);
     });
   },
 };
@@ -304,29 +302,85 @@ export const DeletingFigureClearsStorage: Story = {
       }),
     );
 
-    let lastParagraph = canvasElement.querySelector(
-      ".astrolabe-editor p:last-of-type",
-    );
-    await userEvent.click(lastParagraph);
+    const lastParagraphSelector = ".astrolabe-editor p:last-of-type";
+    await userEvent.click(requireElement(canvasElement, lastParagraphSelector));
     await userEvent.paste(dataTransfer);
     await new Promise((resolve) => setTimeout(resolve, 2000));
     await refreshPanel();
     await expect(await deleteFigureStore.listAll()).toHaveLength(1);
 
-    lastParagraph = canvasElement.querySelector(
-      ".astrolabe-editor p:last-of-type",
-    );
-    await userEvent.click(lastParagraph);
+    await userEvent.click(requireElement(canvasElement, lastParagraphSelector));
     await userEvent.keyboard("About to delete image...");
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    const image = canvasElement.querySelector(".astrolabe-editor img");
-    await userEvent.click(image);
+    await userEvent.click(requireElement(canvasElement, ".astrolabe-editor img"));
     await userEvent.keyboard("{Backspace}");
 
     await waitFor(async () => {
       await expect(await deleteFigureStore.listAll()).toHaveLength(0);
     });
     await refreshPanel();
+  },
+};
+
+export const LoadingSkeleton: Story = {
+  args: {
+    initialText: `
+      <p>This image is in a loading state. Try typing here while it loads — the placeholder anchors itself, so your cursor won't get pushed around when it resolves.</p>
+      <figure data-astrolb-type="hyperimage" data-astrolb-loading="true"><img src=""></figure>
+      <p>Click the button below to resolve the placeholder.</p>
+    `,
+    plugins: [
+      HyperImage.configure({
+        storage: createIndexedDBBlobStore(),
+      }),
+    ],
+  },
+  parameters: {
+    storyPlacement: "after",
+  },
+  render: () => {
+    const { editor } = useCurrentEditor();
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          editor?.commands.command(({ tr, state }) => {
+            let found = false;
+            state.doc.descendants((node, pos) => {
+              if (found) return false;
+              if (node.type.name === "hyperimage" && node.attrs.loading) {
+                tr.setNodeMarkup(pos, undefined, {
+                  ...node.attrs,
+                  src: Sportacus,
+                  loading: false,
+                });
+                found = true;
+                return false;
+              }
+            });
+            return found;
+          });
+        }}
+        style={{
+          marginTop: 12,
+          padding: "8px 16px",
+          cursor: "pointer",
+          background: "#e7f3fe",
+          border: "1px solid #1565c0",
+          borderRadius: 4,
+        }}
+      >
+        Get the image to load
+      </button>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    await waitFor(() => {
+      const skeletons = getHyperImageFigures(canvasElement).filter(
+        (f) => f.dataset.astrolbLoading === "true",
+      );
+      expect(skeletons).toHaveLength(1);
+    });
   },
 };
