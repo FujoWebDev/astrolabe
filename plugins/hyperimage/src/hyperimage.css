@@ -10,3 +10,31 @@
 [data-astrolb-type="hyperimage"] img {
   max-width: 100%;
 }
+
+[data-astrolb-type="hyperimage"][data-astrolb-loading="true"] {
+  display: block;
+  min-height: 120px;
+  border-radius: 4px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.06) 0%,
+      rgba(0, 0, 0, 0.12) 50%,
+      rgba(0, 0, 0, 0.06) 100%
+    );
+  background-size: 200% 100%;
+  animation: hyperimage-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+[data-astrolb-type="hyperimage"][data-astrolb-loading="true"] img {
+  display: none;
+}
+
+@keyframes hyperimage-skeleton-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
