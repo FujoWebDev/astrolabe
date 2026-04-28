@@ -1,18 +1,16 @@
-import { mergeAttributes, type Editor } from "@tiptap/core";
+import { mergeAttributes } from "@tiptap/core";
 import {
   Image as ImageExtension,
   type ImageOptions,
 } from "@tiptap/extension-image";
 import { PasteDropHandler } from "./PasteDropHandler";
 import {
-  defaultStore,
   generateSessionId,
-  removeOrphanedImages,
+  HyperimageLifecycle,
+  type ImageBlobStore,
   type ProcessorConfig,
 } from "./storage";
 import "./hyperimage.css";
-
-const IMAGES_HEARTBEAT_MS = 5 * 60 * 1000;
 
 // TODO: fix once tiptap fixes issues with types https://github.com/ueberdosis/tiptap/issues/6670
 type RenderHTMLType = {
@@ -23,49 +21,54 @@ type RenderHTMLType = {
   };
 };
 
+/**
+ * Configuration accepted by `Plugin.configure(...)`.
+ *
+ * Extends TipTap's `ImageOptions` with the fields hyperimage needs to keep
+ * originals around and resize previews.
+ */
 export type HyperimageOptions = ImageOptions & {
   HTMLAttributes: Partial<{
     "data-astrolb-type": string;
     "data-astrolb-id": string;
   }>;
+  /**
+   * Optional preview-pass settings. Controls how big a pasted image is allowed
+   * to get before it is resized for display, and when the original is kept in
+   * `storage`.
+   *
+   * Omit to use the defaults from `DEFAULT_PROCESSOR_CONFIG` (max 800px wide,
+   * re-encode above 500KB at quality 0.85, keep originals only when resized).
+   */
   imageOptions?: Partial<Omit<ProcessorConfig, "scopeId">>;
   /**
-   * Document ID for scoped storage cleanup.
+   * Required. Backend for keeping the full-fidelity original of every pasted
+   * image. Use `createIndexedDBBlobStore()` for cross-session persistence or
+   * `createInMemoryBlobStore()` when originals only need to outlive the
+   * current page.
+   */
+  storage: ImageBlobStore;
+  /**
+   * Optional tag for every original stored from this editor.
    *
-   * If provided, orphaned images for this document are cleaned up on editor init.
-   * If not provided, a session ID is auto-generated and images can be cleaned up
-   * according to age.
+   * When provided, originals tagged with this id survive cleanup on the next
+   * load of the same document. When omitted, a fresh session id is generated
+   * each load and originals from previous sessions get swept by the TTL.
+   *
+   * Pass your draft id, post id, or any stable string that identifies the
+   * document.
    */
   documentId?: string;
 };
 
-function setUpStorage({
-  editor,
-  scopeId,
-  trackedIds,
-  activeImageIds,
-}: {
-  editor: Editor;
-  scopeId: string;
-  trackedIds: Set<string>;
-  activeImageIds: string[];
-}) {
-  removeOrphanedImages(defaultStore, scopeId, activeImageIds).catch((err) =>
-    console.warn("Failed to reconcile storage:", err),
-  );
-
-  const heartbeat = setInterval(() => {
-    const ids = [...trackedIds];
-    if (ids.length > 0) {
-      defaultStore
-        .refreshLastUsed(ids)
-        .catch((err) => console.warn("Failed to touch images:", err));
-    }
-  }, IMAGES_HEARTBEAT_MS);
-
-  editor.on("destroy", () => clearInterval(heartbeat));
-}
-
+/**
+ * TipTap extension for images with paste/drop, preview resizing, and
+ * original-blob retention.
+ *
+ * Renders as `<figure data-astrolb-type="hyperimage"><img></figure>`, with a
+ * `data-astrolb-id` linking each node to its original in `storage`. See
+ * `HyperimageOptions` for the configurable surface.
+ */
 export const Plugin = ImageExtension.extend<HyperimageOptions>({
   name: "hyperimage",
 
@@ -80,17 +83,36 @@ export const Plugin = ImageExtension.extend<HyperimageOptions>({
           "data-astrolb-id": attributes.id,
         }),
       },
+      isPreview: {
+        default: false,
+        parseHTML: (element: HTMLElement) =>
+          element.dataset.astrolbIsPreview === "true",
+        renderHTML: (attributes: { isPreview: boolean }) =>
+          attributes.isPreview ? { "data-astrolb-is-preview": "true" } : {},
+      },
+      originalMissing: {
+        default: false,
+        parseHTML: () => false,
+        renderHTML: () => ({}),
+      },
     };
   },
 
   renderHTML({ HTMLAttributes, node }: RenderHTMLType) {
-    const { "data-astrolb-id": id, ...imgAttributes } = HTMLAttributes;
+    const {
+      "data-astrolb-id": id,
+      "data-astrolb-is-preview": isPreview,
+      ...imgAttributes
+    } = HTMLAttributes;
 
     return [
       "figure",
       {
         "data-astrolb-type": this.name,
         "data-astrolb-id": id,
+        ...(isPreview && {
+          "data-astrolb-is-preview": isPreview,
+        }),
       },
       [
         "img",
@@ -116,6 +138,8 @@ export const Plugin = ImageExtension.extend<HyperimageOptions>({
           }
           return {
             id: element.dataset.astrolbId,
+            isPreview: element.dataset.astrolbIsPreview === "true",
+            originalMissing: false,
             src: img.getAttribute("src"),
             alt: img.getAttribute("alt"),
             width: img.getAttribute("width"),
@@ -128,64 +152,46 @@ export const Plugin = ImageExtension.extend<HyperimageOptions>({
   },
 
   addStorage() {
+    const scopeId = this.options.documentId ?? generateSessionId();
+    const storage = this.options.storage;
+
+    if (!storage) {
+      throw new Error(
+        "Hyperimage requires storage. Configure the extension with an ImageBlobStore.",
+      );
+    }
+
     return {
-      trackedIds: new Set<string>(),
-      scopeId: generateSessionId(),
+      lifecycle: new HyperimageLifecycle({
+        storage,
+        scopeId,
+        nodeName: this.name,
+        reportError: (err, where) => console.warn(`[hyperimage:${where}]`, err),
+      }),
+      scopeId,
+      storage,
     };
   },
 
   onCreate() {
-    if (this.options.documentId) {
-      this.storage.scopeId = this.options.documentId;
-    }
-
-    const activeImageIds: string[] = [];
-    this.editor.state.doc.descendants((node) => {
-      if (node.type.name === this.name && node.attrs.id) {
-        activeImageIds.push(node.attrs.id);
-        this.storage.trackedIds.add(node.attrs.id);
-      }
-    });
-
     const editor = this.editor.options.element;
     if (editor instanceof HTMLElement) {
       editor.setAttribute("data-astrolb-scope-id", this.storage.scopeId);
     }
-
-    setUpStorage({
-      editor: this.editor,
-      scopeId: this.storage.scopeId,
-      trackedIds: this.storage.trackedIds,
-      activeImageIds,
+    this.storage.lifecycle.attach(this.editor).catch((err: unknown) => {
+      console.warn("[hyperimage] lifecycle.attach failed:", err);
     });
   },
 
   onTransaction({ transaction }) {
     if (!transaction.docChanged) return;
-
-    const currentIds = new Set<string>();
-    transaction.doc.descendants((node) => {
-      if (node.type.name === this.name && node.attrs.id) {
-        currentIds.add(node.attrs.id);
-      }
-    });
-
-    const deletedIds = [...this.storage.trackedIds].filter(
-      (id) => !currentIds.has(id),
-    );
-
-    if (deletedIds.length > 0) {
-      defaultStore
-        .deleteMany(deletedIds)
-        .catch((err) => console.warn("Failed to delete images:", err));
-    }
-
-    this.storage.trackedIds = currentIds;
+    this.storage.lifecycle.onDocChange(transaction.doc);
   },
 
   addProseMirrorPlugins() {
     return [
       PasteDropHandler(this.editor, {
+        storage: this.storage.storage,
         processorConfig: {
           ...this.options.imageOptions,
           scopeId: this.storage.scopeId,

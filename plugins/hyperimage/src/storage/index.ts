@@ -3,22 +3,33 @@ export {
   dataURLToBlob,
   createBlobURL,
   getImageDimensions,
-} from "../image-utils";
+} from "./image-utils";
 
 export {
-  type ImageStore,
-  type StoredImage,
-  type ImageMetadata,
   generateImageId,
   generateSessionId,
-  removeOrphanedImages,
-  type ReconcileResult,
-} from "../image-store";
+  type ImageBlobStore,
+  type StoredBlob,
+  type ImageMetadata,
+} from "./blob-store";
 
 export {
-  IndexedDBImageStore,
-  createIndexedDBStore,
-} from "../indexed-db-image-store";
+  IndexedDBBlobStore,
+  createIndexedDBBlobStore,
+  type RawRow,
+} from "./indexed-db-store";
+
+export {
+  createInMemoryBlobStore,
+  createInMemoryBlobStoreWithClock,
+} from "./in-memory-store";
+
+export {
+  HyperimageLifecycle,
+  HEARTBEAT_MS,
+  TTL_MS,
+  type LifecycleOpts,
+} from "./lifecycle";
 
 export {
   processImageForEditor,
@@ -27,7 +38,4 @@ export {
   type ProcessorConfig,
   type ProcessedImage,
   type StoragePolicy,
-} from "../image-processor";
-
-import { createIndexedDBStore } from "../indexed-db-image-store";
-export const defaultStore = createIndexedDBStore();
+} from "./image-processor";
