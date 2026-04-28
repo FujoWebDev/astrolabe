@@ -5,14 +5,19 @@ import {
   useCallback,
   type ComponentType,
 } from "react";
-import {
-  defaultStore,
-  blobToDataURL,
-  type ImageMetadata,
-} from "../src/storage";
+import { blobToDataURL } from "../src/storage/image-utils";
+import type { ImageMetadata } from "../src/storage/blob-store";
+import { IndexedDBBlobStore } from "../src/storage/indexed-db-store";
 
 const TWENTY_MINUTES = 20 * 60 * 1000;
 const REFRESH_INTERVAL = 10_000;
+export const debugStore = new IndexedDBBlobStore();
+
+let activeRefresh: (() => Promise<unknown>) | null = null;
+
+export const refreshPanel = async (): Promise<void> => {
+  await activeRefresh?.();
+};
 
 function formatDuration(ms: number): string {
   const seconds = Math.floor(ms / 1000);
@@ -133,8 +138,10 @@ function EventLog({ entries }: { entries: LogEntry[] }) {
 
 export function StorageDebugPanel({
   containerRef,
+  storage = debugStore,
 }: {
   containerRef: React.RefObject<HTMLDivElement | null>;
+  storage?: IndexedDBBlobStore;
 }) {
   const [scopes, setScopes] = useState<ScopeData[]>([]);
   const [log, setLog] = useState<LogEntry[]>([]);
@@ -146,7 +153,8 @@ export function StorageDebugPanel({
   }, []);
 
   const refresh = useCallback(async () => {
-    const ids = await defaultStore.listIds();
+    const storedRows = await storage.listAll();
+    const ids = storedRows.map((row) => row.id);
     const currentIds = new Set(ids);
 
     const known = knownIdsRef.current;
@@ -157,19 +165,17 @@ export function StorageDebugPanel({
     knownIdsRef.current = currentIds;
 
     const byScope = new Map<string, ScopeImage[]>();
-    for (const id of ids) {
-      const stored = await defaultStore.get(id);
-      if (stored) {
-        const scope = stored.scopeId ?? "unknown";
-        const dataUrl = await blobToDataURL(stored.originalBlob);
-        if (!byScope.has(scope)) byScope.set(scope, []);
-        byScope.get(scope)!.push({
-          dataUrl,
-          metadata: stored.metadata,
-          timestamp: stored.timestamp,
-          lastUsed: stored.lastUsed,
-        });
-      }
+    for (const stored of storedRows) {
+      const raw = await storage.getRaw(stored.id);
+      const scope = stored.scopeId ?? "unknown";
+      const dataUrl = await blobToDataURL(stored.blob);
+      if (!byScope.has(scope)) byScope.set(scope, []);
+      byScope.get(scope)!.push({
+        dataUrl,
+        metadata: stored.metadata,
+        timestamp: raw?.timestamp ?? 0,
+        lastUsed: raw?.lastUsed ?? 0,
+      });
     }
 
     const sorted = [...byScope.entries()]
@@ -185,7 +191,7 @@ export function StorageDebugPanel({
 
     setScopes(sorted);
     return sorted;
-  }, [addLog]);
+  }, [addLog, storage]);
 
   useEffect(() => {
     const check = () => {
@@ -204,13 +210,15 @@ export function StorageDebugPanel({
     let cancelled = false;
 
     (async () => {
-      const pruned = await defaultStore.deleteOlderThan(TWENTY_MINUTES);
+      const pruned = await storage.deleteOlderThan(TWENTY_MINUTES);
       if (cancelled) return;
       if (pruned.deleted > 0) {
         addLog(`Pruned ${pruned.deleted} stale image(s)`);
       }
 
-      knownIdsRef.current = new Set(await defaultStore.listIds());
+      knownIdsRef.current = new Set(
+        (await storage.listAll()).map((row) => row.id),
+      );
       if (cancelled) return;
 
       const result = await refresh();
@@ -229,7 +237,14 @@ export function StorageDebugPanel({
     return () => {
       cancelled = true;
     };
-  }, [refresh, addLog]);
+  }, [refresh, addLog, storage]);
+
+  useEffect(() => {
+    activeRefresh = refresh;
+    return () => {
+      if (activeRefresh === refresh) activeRefresh = null;
+    };
+  }, [refresh]);
 
   useEffect(() => {
     const interval = setInterval(refresh, REFRESH_INTERVAL);
@@ -260,7 +275,7 @@ export function StorageDebugPanel({
     <div style={{ marginTop: 20, padding: 10, borderTop: "1px solid #ccc" }}>
       <button
         onClick={async () => {
-          await defaultStore.clear();
+          await storage.clear();
           knownIdsRef.current = new Set();
           addLog("Cleared all originals");
           await refresh();
@@ -277,9 +292,11 @@ export function StorageDebugPanel({
       </button>
       <button
         onClick={async () => {
-          const result = await defaultStore.deleteOlderThan(TWENTY_MINUTES);
+          const result = await storage.deleteOlderThan(TWENTY_MINUTES);
           if (result.deleted > 0) {
-            knownIdsRef.current = new Set(await defaultStore.listIds());
+            knownIdsRef.current = new Set(
+              (await storage.listAll()).map((row) => row.id),
+            );
             addLog(`Cleared ${result.deleted} expired image(s)`);
           } else {
             addLog("No expired images to clear");
@@ -296,6 +313,21 @@ export function StorageDebugPanel({
         }}
       >
         Clear Expired{expiredCount > 0 ? ` (${expiredCount})` : ""}
+      </button>
+      <button
+        onClick={() => {
+          void refresh();
+        }}
+        style={{
+          padding: "8px 16px",
+          cursor: "pointer",
+          background: "#e7f3fe",
+          borderColor: "#1565c0",
+          marginBottom: 10,
+          marginLeft: 8,
+        }}
+      >
+        Refresh
       </button>
 
       <div
@@ -335,16 +367,26 @@ export function StorageDebugPanel({
   );
 }
 
-function StorageDebugWrapper({ Story }: { Story: ComponentType }) {
+function StorageDebugWrapper({
+  Story,
+  storage,
+}: {
+  Story: ComponentType;
+  storage: IndexedDBBlobStore;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   return (
     <div ref={containerRef}>
       <Story />
-      <StorageDebugPanel containerRef={containerRef} />
+      <StorageDebugPanel containerRef={containerRef} storage={storage} />
     </div>
   );
 }
 
-export function withStorageDebugPanel(Story: ComponentType) {
-  return <StorageDebugWrapper Story={Story} />;
+export function withStorageDebugPanel(
+  storage: IndexedDBBlobStore = debugStore,
+) {
+  return function StorageDebugDecorator(Story: ComponentType) {
+    return <StorageDebugWrapper Story={Story} storage={storage} />;
+  };
 }
