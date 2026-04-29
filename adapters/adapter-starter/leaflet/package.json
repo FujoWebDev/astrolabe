@@ -25,7 +25,6 @@
     "@fujocoded/astdapters-mdast-starter": "workspace:*"
   },
   "dependencies": {
-    "@atproto/api": "^0.17.7",
     "mdast-util-to-markdown": "catalog:mdast"
   },
   "devDependencies": {

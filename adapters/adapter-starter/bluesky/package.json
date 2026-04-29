@@ -26,8 +26,7 @@
 		"LICENSE"
 	],
 	"peerDependencies": {
-		"@fujocoded/astdapters-mdast-starter": "workspace:*",
-		"astrolabe-test-utils": "workspace:*"
+		"@fujocoded/astdapters-mdast-starter": "workspace:*"
 	},
 	"dependencies": {
 		"@atproto/api": "^0.17.7",

@@ -7,7 +7,7 @@ export default defineConfig([
     dts: true,
     clean: true,
     unbundle: true,
-    external: ["@atproto/api", "@playwright/test"],
+    external: ["@atproto/api"],
   },
   {
     name: "helpers",
@@ -22,7 +22,6 @@ export default defineConfig([
 			"@tiptap/core",
 			"react",
 			"react-dom",
-			"astrolabe-test-utils",
 		],
   },
 ]);
