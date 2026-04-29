@@ -39,6 +39,7 @@
 		"@tiptap/react": "catalog:",
 		"@tiptap/starter-kit": "catalog:",
 		"@types/mdast": "catalog:mdast",
+		"astrolabe-test-utils": "workspace:*",
 		"mdast-util-to-string": "catalog:mdast",
 		"unist-util-visit": "catalog:mdast"
 	}

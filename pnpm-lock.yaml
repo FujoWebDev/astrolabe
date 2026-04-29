@@ -130,6 +130,9 @@ importers:
       '@types/mdast':
         specifier: catalog:mdast
         version: 4.0.4
+      astrolabe-test-utils:
+        specifier: workspace:*
+        version: link:../../../addons/test-utils
       mdast-util-to-string:
         specifier: catalog:mdast
         version: 4.0.0
