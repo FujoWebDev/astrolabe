@@ -7,6 +7,5 @@ export default defineConfig([
     dts: true,
     clean: true,
     unbundle: true,
-    external: ["@atproto/api", "@playwright/test"],
   },
 ]);
